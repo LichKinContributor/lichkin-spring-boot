@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>pom</packaging>
+
+  <groupId>com.lichkin.springframework.boot</groupId>
+  <artifactId>lichkin-spring-boot-parent</artifactId>
+  <version>1.0.0.RELEASE</version>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <com.lichkin.springframework.boot.version>${project.version}</com.lichkin.springframework.boot.version>
+
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+    <start-class>com.lichkin.LKMain</start-class>
+
+    <springframework.boot.version>2.0.0.RELEASE</springframework.boot.version>
+  </properties>
+
+  <modules>
+    <!-- starter -->
+    <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-base</module>
+    <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-database</module>
+    <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-database-secondary</module>
+    <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-quartz</module>
+    <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-web</module>
+    <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-web-api</module>
+    <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-web-front</module>
+    <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-web-back</module>
+    <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-web-admin</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-base</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-database</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-database-secondary</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-quartz</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-web</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-web-api</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-web-front</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-web-back</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-web-admin</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+</project>
