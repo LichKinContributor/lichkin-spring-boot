@@ -32,10 +32,14 @@
     <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-web-front</module>
     <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-web-back</module>
     <module>../lichkin-spring-boot-starters/lichkin-spring-boot-starter-web-admin</module>
+
+    <!-- entity -->
+    <module>../lichkin-spring-boot-entities/lichkin-spring-boot-entity-SysUser</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
+	  <!-- starter -->
       <dependency>
         <groupId>com.lichkin.springframework.boot</groupId>
         <artifactId>lichkin-spring-boot-starter-base</artifactId>
@@ -79,6 +83,13 @@
       <dependency>
         <groupId>com.lichkin.springframework.boot</groupId>
         <artifactId>lichkin-spring-boot-starter-web-admin</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+
+	  <!-- starter -->
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-entity-SysUser</artifactId>
         <version>${com.lichkin.springframework.boot.version}</version>
       </dependency>
     </dependencies>
