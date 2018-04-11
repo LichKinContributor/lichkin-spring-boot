@@ -4,7 +4,23 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
 
+
   <artifactId>lichkin-spring-boot-starter-base</artifactId>
+
+
+  <name>lichkin-spring-boot-starter-base</name>
+  <description>使用springboot基础封装</description>
+  <url>http://codes.lichkin.com/spring-boot-starter-base</url>
+  <organization>
+    <name>SuZhou LichKin Information Technology Co., Ltd.</name>
+    <url>http://www.lichkin.com</url>
+  </organization>
+  <developers>
+    <developer>
+      <name>XuXin Zhuang</name>
+      <email>zhuangxuxin@hotmail.com</email>
+    </developer>
+  </developers>
 
   <parent>
     <groupId>com.lichkin.springframework.boot</groupId>
@@ -14,12 +30,39 @@
   </parent>
 
   <dependencies>
+    <!-- lichkin framework -->
+    <dependency>
+      <groupId>com.lichkin.framework</groupId>
+      <artifactId>lichkin-framework-log</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.lichkin.framework</groupId>
+      <artifactId>lichkin-framework-defines</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.lichkin.framework</groupId>
+      <artifactId>lichkin-framework-utils</artifactId>
+    </dependency>
+    <!-- springboot -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-dependencies</artifactId>
       <version>${springframework.boot.version}</version>
       <type>pom</type>
       <scope>import</scope>
+    </dependency>
+    <!-- springboot starter -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
     </dependency>
   </dependencies>
 

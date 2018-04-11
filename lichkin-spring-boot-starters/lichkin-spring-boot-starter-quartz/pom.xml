@@ -4,7 +4,23 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
 
+
   <artifactId>lichkin-spring-boot-starter-quartz</artifactId>
+
+
+  <name>lichkin-spring-boot-starter-quartz</name>
+  <description>使用springboot基础封装</description>
+  <url>http://codes.lichkin.com/spring-boot-starter-quartz</url>
+  <organization>
+    <name>SuZhou LichKin Information Technology Co., Ltd.</name>
+    <url>http://www.lichkin.com</url>
+  </organization>
+  <developers>
+    <developer>
+      <name>XuXin Zhuang</name>
+      <email>zhuangxuxin@hotmail.com</email>
+    </developer>
+  </developers>
 
   <parent>
     <groupId>com.lichkin.springframework.boot</groupId>
@@ -14,6 +30,7 @@
   </parent>
 
   <dependencies>
+    <!-- lichkin starter -->
     <dependency>
       <groupId>com.lichkin.springframework.boot</groupId>
       <artifactId>lichkin-spring-boot-starter-database</artifactId>
