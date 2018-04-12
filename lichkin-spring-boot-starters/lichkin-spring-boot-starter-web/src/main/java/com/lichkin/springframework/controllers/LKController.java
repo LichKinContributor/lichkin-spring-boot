@@ -38,6 +38,30 @@ public abstract class LKController extends LKFramework {
 	 * @param locale 国际化类型
 	 * @return 验证成功返回值
 	 */
+	protected Long checkLong(Long num, LKCodeEnum errorCode) {
+		return checkLong(num, errorCode, (Locale) request.getAttribute("locale"));
+	}
+
+
+	/**
+	 * 验证数字
+	 * @param num 待验证数字
+	 * @param errorCode 错误编码
+	 * @param locale 国际化类型
+	 * @return 验证成功返回值
+	 */
+	protected Long checkLong(String num, LKCodeEnum errorCode) {
+		return checkLong(num, errorCode, (Locale) request.getAttribute("locale"));
+	}
+
+
+	/**
+	 * 验证数字
+	 * @param num 待验证数字
+	 * @param errorCode 错误编码
+	 * @param locale 国际化类型
+	 * @return 验证成功返回值
+	 */
 	protected Integer checkInteger(Integer num, LKCodeEnum errorCode) {
 		return checkInteger(num, errorCode, (Locale) request.getAttribute("locale"));
 	}
@@ -52,6 +76,54 @@ public abstract class LKController extends LKFramework {
 	 */
 	protected Integer checkInteger(String num, LKCodeEnum errorCode) {
 		return checkInteger(num, errorCode, (Locale) request.getAttribute("locale"));
+	}
+
+
+	/**
+	 * 验证数字
+	 * @param num 待验证数字
+	 * @param errorCode 错误编码
+	 * @param locale 国际化类型
+	 * @return 验证成功返回值
+	 */
+	protected Short checkShort(Short num, LKCodeEnum errorCode) {
+		return checkShort(num, errorCode, (Locale) request.getAttribute("locale"));
+	}
+
+
+	/**
+	 * 验证数字
+	 * @param num 待验证数字
+	 * @param errorCode 错误编码
+	 * @param locale 国际化类型
+	 * @return 验证成功返回值
+	 */
+	protected Short checkShort(String num, LKCodeEnum errorCode) {
+		return checkShort(num, errorCode, (Locale) request.getAttribute("locale"));
+	}
+
+
+	/**
+	 * 验证数字
+	 * @param num 待验证数字
+	 * @param errorCode 错误编码
+	 * @param locale 国际化类型
+	 * @return 验证成功返回值
+	 */
+	protected Byte checkByte(Byte num, LKCodeEnum errorCode) {
+		return checkByte(num, errorCode, (Locale) request.getAttribute("locale"));
+	}
+
+
+	/**
+	 * 验证数字
+	 * @param num 待验证数字
+	 * @param errorCode 错误编码
+	 * @param locale 国际化类型
+	 * @return 验证成功返回值
+	 */
+	protected Byte checkByte(String num, LKCodeEnum errorCode) {
+		return checkByte(num, errorCode, (Locale) request.getAttribute("locale"));
 	}
 
 }

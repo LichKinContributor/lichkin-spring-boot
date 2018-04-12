@@ -53,7 +53,11 @@ public class LKErrorControllerAdvice {
 			errorCode = LKErrorCodesEnum.INTERNAL_SERVER_ERROR;
 		}
 
-		LKResponseBean<Object> responseBean = new LKResponseBean<>(errorCode.getCode(), LKI18NReader4ErrorCodes.read(locale, errorCode));
+		Integer code = errorCode.getCode();
+		if (code == null) {
+			code = -999;
+		}
+		LKResponseBean<Object> responseBean = new LKResponseBean<>(code, LKI18NReader4ErrorCodes.read(locale, errorCode));
 
 		if (request.getRequestURI().endsWith(".html")) {
 			// 页面请求异常处理

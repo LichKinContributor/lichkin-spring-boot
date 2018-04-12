@@ -23,27 +23,27 @@ public class LKMappedBaseEntity extends LKMappedNormalEntity implements LKBaseIn
 	private static final long serialVersionUID = -8888886666660002L;
 
 	/** 新增操作系统编码 */
-	@Column(name = "INSERT_SYSTEM_TAG", length = 64)
+	@Column(nullable = false, length = 64)
 	protected String insertSystemTag = LKFrameworkStatics.SYSTEM_TAG;
 
 	/** 新增操作时间（yyyyMMddHHmmssSSS） */
-	@Column(name = "INSERT_TIME", length = 17)
+	@Column(nullable = false, length = 17)
 	protected String insertTime = LKDateTimeUtils.now();
 
 	/** 新增操作人登录ID */
-	@Column(name = "INSERT_LOGIN_ID", length = 64)
+	@Column(nullable = false, length = 64)
 	protected String insertLoginId = "";
 
 	/** 更新操作系统编码 */
-	@Column(name = "UPDATE_SYSTEM_TAG", length = 64)
+	@Column(nullable = false, length = 64)
 	protected String updateSystemTag = LKFrameworkStatics.SYSTEM_TAG;
 
 	/** 更新操作时间（yyyyMMddHHmmssSSS） */
-	@Column(name = "UPDATE_TIME", length = 17)
+	@Column(nullable = false, length = 17)
 	protected String updateTime = LKDateTimeUtils.now();
 
 	/** 更新操作人登录ID */
-	@Column(name = "UPDATE_LOGIN_ID", length = 64)
+	@Column(nullable = false, length = 64)
 	protected String updateLoginId = "";
 
 }

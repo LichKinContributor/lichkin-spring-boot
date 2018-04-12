@@ -153,9 +153,9 @@ public class LKMain {
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.show-sql", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.hibernate.ddl-auto", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.hibernate.naming.physical-strategy", null);
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.properties.hibernate.dialect", null);
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.driverClassName", null);
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.url", null);
+					// LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.properties.hibernate.dialect", null);
+					// LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.driver-class-name", null);
+					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jdbc-url", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.username", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.password", null);
 				}

@@ -23,28 +23,33 @@ public abstract class LKMappedBaseSysEntity extends LKMappedBaseEntity implement
 	private static final long serialVersionUID = -8888886666660003L;
 
 	/** 系统编码 */
-	@Column(name = "SYSTEM_TAG", length = 64)
+	@Column(nullable = false, length = 64)
 	protected String systemTag = LKFrameworkStatics.SYSTEM_TAG;
 
 	/** 业务ID */
-	@Column(name = "BUS_ID", length = 64)
+	@Column(nullable = false, length = 64)
 	protected String busId = "";
 
 	/** 校验码（MD5） */
-	@Column(name = "CHECK_CODE", length = 32)
+	@Column(nullable = false, length = 32)
 	protected String checkCode = "";
 
 
-	/**
-	 * 初始化校验码
-	 * @return 校验码
-	 */
-	protected String initCheckCode(Object... strs) {
+	@Override
+	public void updateCheckCode() {
 		StringBuffer sb = new StringBuffer(systemTag).append(usingStatus).append(insertSystemTag).append(insertTime).append(insertLoginId).append(updateSystemTag).append(updateTime).append(updateLoginId).append(busId);
-		for (Object str : strs) {
-			sb.append(str);
+		Object[] objs = getCheckCodeFieldValues();
+		for (Object obj : objs) {
+			sb.append(obj);
 		}
-		return LKMD5Encrypter.encrypt(sb.toString(), id);
+		setCheckCode(LKMD5Encrypter.encrypt(sb.toString(), id));
 	}
+
+
+	/**
+	 * 获取生成校验码所需对字段值
+	 * @return 字段值数组
+	 */
+	protected abstract Object[] getCheckCodeFieldValues();
 
 }

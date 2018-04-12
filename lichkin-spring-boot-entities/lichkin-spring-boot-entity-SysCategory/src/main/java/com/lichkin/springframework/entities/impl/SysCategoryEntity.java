@@ -1,4 +1,4 @@
-package com.lichkin.springframework.entities;
+package com.lichkin.springframework.entities.impl;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,8 +45,8 @@ public class SysCategoryEntity extends LKMappedBaseSysEntity implements LKCatego
 
 
 	@Override
-	public void updateCheckCode() {
-		setCheckCode(initCheckCode(parentCode, categoryCode, categoryName, categoryValue, orderId));
+	protected Object[] getCheckCodeFieldValues() {
+		return new Object[] { parentCode, categoryCode, categoryName, categoryValue, orderId };
 	}
 
 }
