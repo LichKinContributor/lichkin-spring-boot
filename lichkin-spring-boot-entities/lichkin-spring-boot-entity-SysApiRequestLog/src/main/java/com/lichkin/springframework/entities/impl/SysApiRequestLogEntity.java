@@ -61,9 +61,17 @@ public class SysApiRequestLogEntity extends LKMappedBaseSysEntity {
 	@Column(nullable = false, length = 32)
 	private String osVersion;
 
+	/** 生产厂商 */
+	@Column(nullable = false, length = 64)
+	private String brand;
+
 	/** 机型信息 */
 	@Column(nullable = false, length = 128)
 	private String model;
+
+	/** 设备唯一标识 */
+	@Column(nullable = false, length = 64)
+	private String uuid;
 
 	/** 屏幕宽 */
 	private Short screenWidth;
@@ -74,7 +82,7 @@ public class SysApiRequestLogEntity extends LKMappedBaseSysEntity {
 
 	@Override
 	protected Object[] getCheckCodeFieldValues() {
-		return new Object[] { appKey, clientType, versionX, versionY, versionZ, locale, token, osVersion, model, screenWidth, screenHeight };
+		return new Object[] { appKey, clientType, versionX, versionY, versionZ, locale, token, osVersion, brand, model, uuid, screenWidth, screenHeight };
 	}
 
 }
