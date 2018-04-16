@@ -315,6 +315,14 @@
         <artifactId>spring-boot-starter-freemarker</artifactId>
         <version>${springframework.boot.version}</version>
       </dependency>
+
+      <!-- devtools -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <version>${springframework.boot.version}</version>
+        <optional>true</optional>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
