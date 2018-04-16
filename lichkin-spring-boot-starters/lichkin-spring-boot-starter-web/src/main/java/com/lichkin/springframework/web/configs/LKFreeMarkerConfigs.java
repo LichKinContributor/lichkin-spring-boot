@@ -26,6 +26,7 @@ public class LKFreeMarkerConfigs {
 		FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
 		resolver.setSuffix(".ftl");
 		resolver.setRequestContextAttribute("request");
+		resolver.setContentType("text/html;charset=UTF-8");
 		return resolver;
 	}
 
