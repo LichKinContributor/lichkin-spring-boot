@@ -13,7 +13,7 @@ import com.lichkin.framework.defines.enums.LKCodeEnum;
  * 控制器类
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKController extends LKFramework {
+class LKController extends LKFramework {
 
 	@Autowired
 	protected HttpServletRequest request;

@@ -12,7 +12,7 @@ import com.lichkin.springframework.services.LKApiService;
  * 接口控制器类定义
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiController<I extends LKRequestBean, O> extends LKController {
+public abstract class LKApiController<I extends LKRequestBean, O> extends LKDatasController {
 
 	/**
 	 * 请求处理方法

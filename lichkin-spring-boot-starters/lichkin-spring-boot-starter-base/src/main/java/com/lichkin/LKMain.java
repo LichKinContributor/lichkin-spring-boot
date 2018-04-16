@@ -153,8 +153,6 @@ public class LKMain {
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.show-sql", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.hibernate.ddl-auto", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.hibernate.naming.physical-strategy", null);
-					// LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.properties.hibernate.dialect", null);
-					// LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.driver-class-name", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jdbc-url", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.username", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.password", null);
@@ -164,9 +162,7 @@ public class LKMain {
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jpa.show-sql", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jpa.hibernate.ddl-auto", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jpa.hibernate.naming.physical-strategy", null);
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jpa.properties.hibernate.dialect", null);
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.driverClassName", null);
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.url", null);
+					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jdbc-url", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.username", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.password", null);
 				}
