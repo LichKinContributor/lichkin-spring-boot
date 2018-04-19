@@ -169,6 +169,7 @@ public class LKMain {
 
 				if (ArrayUtils.contains(PROFILES, "web")) {
 					LKFrameworkStatics.WEB_DEBUG = LKPropertiesUtils.validateConfigValue("lichkin.framework.web.debug", LKFrameworkStatics.WEB_DEBUG);
+					LKFrameworkStatics.WEB_REQUEST_SUFFIX_PATTERN = LKPropertiesUtils.validateConfigValue("lichkin.framework.web.requestSuffixPattern", LKFrameworkStatics.WEB_REQUEST_SUFFIX_PATTERN);
 				}
 
 				if (ArrayUtils.contains(PROFILES, "admin")) {

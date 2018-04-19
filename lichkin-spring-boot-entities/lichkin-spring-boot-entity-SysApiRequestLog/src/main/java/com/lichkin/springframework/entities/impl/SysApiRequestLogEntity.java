@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.Pattern;
 
 import com.lichkin.framework.defines.enums.impl.LKClientTypeEnum;
 import com.lichkin.springframework.entities.suppers.LKMappedBaseSysEntity;
@@ -24,6 +25,14 @@ public class SysApiRequestLogEntity extends LKMappedBaseSysEntity {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1560109149982803644L;
+
+	/**
+	 * 国际化
+	 * @see Locale
+	 */
+	@Pattern(regexp = "([A-Za-z]{2}){1}(_[A-Za-z]{2})?")
+	@Column(nullable = false, length = 5)
+	private String locale;
 
 	/** 客户端唯一标识 */
 	@Column(nullable = false, length = 128)
@@ -45,13 +54,6 @@ public class SysApiRequestLogEntity extends LKMappedBaseSysEntity {
 	/** 客户端版本号（小版本号） */
 	@Column(nullable = false)
 	private Short versionZ;
-
-	/**
-	 * 国际化
-	 * @see Locale
-	 */
-	@Column(nullable = false, length = 5)
-	private String locale;
 
 	/** 登录后获取得 */
 	@Column(nullable = false, length = 64)

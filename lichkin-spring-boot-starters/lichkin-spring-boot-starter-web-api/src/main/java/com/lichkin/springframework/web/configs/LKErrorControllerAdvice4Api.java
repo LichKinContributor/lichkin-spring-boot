@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.lichkin.framework.defines.annotations.LKController4Datas;
+import com.lichkin.framework.defines.annotations.LKController4Api;
 import com.lichkin.framework.defines.beans.LKResponseBean;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
@@ -15,11 +15,11 @@ import com.lichkin.framework.log.LKLogFactory;
  * 数据请求控制器类执行错误处理
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-@ControllerAdvice(annotations = LKController4Datas.class)
-public class LKErrorControllerAdvice4Datas {
+@ControllerAdvice(annotations = LKController4Api.class)
+public class LKErrorControllerAdvice4Api {
 
 	/** 日志对象 */
-	private static final LKLog LOGGER = LKLogFactory.getLog(LKErrorControllerAdvice4Datas.class);
+	private static final LKLog LOGGER = LKLogFactory.getLog(LKErrorControllerAdvice4Api.class);
 
 
 	/**

@@ -1,18 +1,21 @@
 package com.lichkin.springframework.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.lichkin.framework.defines.annotations.LKController4Api;
 import com.lichkin.framework.defines.beans.LKRequestBean;
-import com.lichkin.framework.defines.beans.LKResponseBean;
-import com.lichkin.framework.utils.i18n.LKI18NUtils;
 import com.lichkin.springframework.services.LKApiService;
+import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 /**
- * 接口控制器类定义
+ * API数据请求控制器类定义
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiController<I extends LKRequestBean, O> extends LKDatasController {
+@LKController4Api
+public abstract class LKApiController<I extends LKRequestBean, O> extends LKController {
 
 	/**
 	 * 请求处理方法
@@ -20,9 +23,9 @@ public abstract class LKApiController<I extends LKRequestBean, O> extends LKData
 	 * @return 出参
 	 */
 	@PostMapping
-	public LKResponseBean<O> invoke(@RequestBody I in) {
-		request.setAttribute("locale", LKI18NUtils.getLocale(in.getLocale()));
-		return new LKResponseBean<>(getService().handle(validateIn(in)));
+	public Object invoke(@Valid @RequestBody I in) {
+		in.setLocale(LKRequestUtils.getLocale(request).toString());
+		return getService().handle(validateIn(in));
 	}
 
 

@@ -23,7 +23,8 @@ public class LKFreeMarkerConfigs {
 
 	@Bean
 	public FreeMarkerViewResolver freeMarkerViewResolver() {
-		FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
+		FreeMarkerViewResolver resolver = new LKFreeMarkerViewResolver();
+		resolver.setOrder(1);
 		resolver.setSuffix(".ftl");
 		resolver.setRequestContextAttribute("request");
 		resolver.setContentType("text/html;charset=UTF-8");
