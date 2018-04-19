@@ -74,6 +74,7 @@ public class LKMain {
 		String logLevelOrg = VALUE_LOG_LEVEL_ORG;
 		String logLevelNet = VALUE_LOG_LEVEL_NET;
 
+		boolean existTriggerFile = false;
 		if (ArrayUtils.isNotEmpty(args)) {
 			// 遍历主参数
 			for (int i = args.length - 1; i >= 0; i--) {
@@ -116,6 +117,8 @@ public class LKMain {
 					}
 
 					args = ArrayUtils.remove(args, i);
+				} else if (arg.startsWith("--spring.devtools.restart.trigger-file=")) {
+					existTriggerFile = true;
 				}
 			}
 		}
@@ -126,6 +129,9 @@ public class LKMain {
 		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_ORG + logLevelOrg);
 		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_NET + logLevelNet);
 		args = ArrayUtils.add(args, createProfilesActiveArg());
+		if (!existTriggerFile) {
+			args = ArrayUtils.add(args, "--spring.devtools.restart.trigger-file=restart.trigger-file");
+		}
 
 		LOGGER.warn("systemId[%s] -> main args after analyzed. %s", SYSTEM_ID, ArrayUtils.toString(args));
 
