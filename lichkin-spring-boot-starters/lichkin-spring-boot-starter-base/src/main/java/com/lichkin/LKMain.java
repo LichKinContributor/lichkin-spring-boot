@@ -118,6 +118,9 @@ public class LKMain {
 
 					args = ArrayUtils.remove(args, i);
 				} else if (arg.startsWith("--spring.devtools.restart.trigger-file=")) {
+					if (arg.equals("--spring.devtools.restart.trigger-file=null")) {
+						args = ArrayUtils.remove(args, i);
+					}
 					existTriggerFile = true;
 				}
 			}
