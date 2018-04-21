@@ -30,6 +30,7 @@ import com.lichkin.springframework.utils.LKPropertiesUtils;
 
 /**
  * 项目主类
+ * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 @SpringBootApplication // 自动配置
 public class LKMain {
