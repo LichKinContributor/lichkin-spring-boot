@@ -1,18 +1,4 @@
-<#-- 内嵌页面的HTML文档基本结构扩展，只有body以内的内容会被使用,本质上只是HTML文档片段。 -->
-<#-- 引入宏文件 -->
-<#import "/spring.ftl" as spring/>
-<#import "/lichkin.ftl" as lichkin/>
-
-<#-- 参数定义 -->
-<#assign
-  ctx=request.getContextPath()
-  requestUri=springMacroRequestContext.requestUri
-  mappingUri=requestUri?substring(0,requestUri?index_of('.html'))
-  webjarsLichKin="${ctx}/webjars"
->
-
-<#-- 引入宏文件，此处的宏需要依赖于环境，不能使用import。 -->
-<#include "/lichkin-static-resource-provider.ftl"/>
+<#include "/_define.ftl"/>
 
 <#macro html type="">
 
@@ -33,7 +19,7 @@
 		</#if>
 		<#if section="link">
 			<link href="${ctx}/res/img/favicon.ico" type="image/x-icon" rel="shortcut icon">
-			<@lichkin@cssTag url="${webjarsLichKin}/lichkin-${type}${compressSuffix}.css" />
+			<@lichkin@cssTag url="${ctx}/webjars/lichkin-${type}${compressSuffix}.css" />
 			<#nested "link"/>
 		</#if>
 		<#if section="style">
@@ -48,9 +34,9 @@
 			<script type="text/javascript">let _CTX='${ctx}';</script>
 		</#if>
 		<#if section="javascript-links">
-			<@lichkin@jsTag url="${ctx}/webjars/jquery-3.3.1/jquery-3.3.1.min.js"/>
-			<@lichkin@jsTag url="${webjarsLichKin}/lichkin${compressSuffix}.js" />
-			<@lichkin@jsTag url="${webjarsLichKin}/lichkin-${type}${compressSuffix}.js" />
+			<@lichkin@jsTag url="${ctx}/webjars/jquery-3.3.1/jquery-3.3.1${compressSuffix}.js"/>
+			<@lichkin@jsTag url="${ctx}/webjars/lichkin${compressSuffix}.js" />
+			<@lichkin@jsTag url="${ctx}/webjars/lichkin-${type}${compressSuffix}.js" />
 			<#nested "javascript-links"/>
 		</#if>
 		<#if section="javascript-contents">
