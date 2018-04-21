@@ -47,18 +47,6 @@
       <groupId>com.lichkin.framework</groupId>
       <artifactId>lichkin-framework-data</artifactId>
     </dependency>
-    <!-- springboot -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-dependencies</artifactId>
-      <version>${springframework.boot.version}</version>
-      <type>pom</type>
-      <scope>import</scope>
-    </dependency>
     <!-- springboot starter -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
