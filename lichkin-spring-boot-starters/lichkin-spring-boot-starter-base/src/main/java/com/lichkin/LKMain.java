@@ -45,6 +45,9 @@ public class LKMain {
 	/** Profiles启用配置 */
 	private static final String SPRING_PROFILES_ACTIVE = "--spring.profiles.active=";
 
+	/** 是否启用重启文件 */
+	private static final String RESTART_TRIGGER = "--restart.trigger=true";
+
 	/** context环境 */
 	public static ConfigurableEnvironment env = null;
 
@@ -75,7 +78,6 @@ public class LKMain {
 		String logLevelOrg = VALUE_LOG_LEVEL_ORG;
 		String logLevelNet = VALUE_LOG_LEVEL_NET;
 
-		boolean existTriggerFile = false;
 		if (ArrayUtils.isNotEmpty(args)) {
 			// 遍历主参数
 			for (int i = args.length - 1; i >= 0; i--) {
@@ -118,11 +120,9 @@ public class LKMain {
 					}
 
 					args = ArrayUtils.remove(args, i);
-				} else if (arg.startsWith("--spring.devtools.restart.trigger-file=")) {
-					if (arg.equals("--spring.devtools.restart.trigger-file=null")) {
-						args = ArrayUtils.remove(args, i);
-					}
-					existTriggerFile = true;
+				} else if (arg.startsWith(RESTART_TRIGGER)) {
+					args = ArrayUtils.remove(args, i);
+					args = ArrayUtils.add(args, "--spring.devtools.restart.trigger-file=restart.trigger-file");
 				}
 			}
 		}
@@ -133,9 +133,6 @@ public class LKMain {
 		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_ORG + logLevelOrg);
 		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_NET + logLevelNet);
 		args = ArrayUtils.add(args, createProfilesActiveArg());
-		if (!existTriggerFile) {
-			args = ArrayUtils.add(args, "--spring.devtools.restart.trigger-file=restart.trigger-file");
-		}
 
 		LOGGER.warn("systemId[%s] -> main args after analyzed. %s", SYSTEM_ID, ArrayUtils.toString(args));
 
