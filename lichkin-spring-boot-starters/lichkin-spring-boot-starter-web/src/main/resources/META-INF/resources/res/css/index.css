@@ -1,0 +1,35 @@
+@charset "UTF-8";
+.companyName {
+    font-size: 16pt;
+    color: #FFFFFF;
+    padding-top: 16pt;
+    padding-bottom: 16pt;
+}
+
+.copyright {
+    font-size: 10pt;
+    color: #67AEE6;
+}
+
+#topDiv {
+    background-color: #67AEE6;
+    text-align: center;
+}
+
+#centerDiv {
+    text-align: center;
+    vertical-align: top;
+}
+
+#bottomDiv {
+    background-color: #E6F4FF;
+    text-align: center;
+    padding-top: 10pt;
+    padding-bottom: 10pt;
+}
+
+#logo {
+    width: 500px;
+    height: 500px;
+    vertical-align: top;
+}

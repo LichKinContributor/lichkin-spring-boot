@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 
@@ -57,6 +59,13 @@ public class LKWebMvcConfigurerAdapter implements WebMvcConfigurer {
 		if (mappingJackson2XmlHttpMessageConverter != null) {
 			converters.add(mappingJackson2XmlHttpMessageConverter);
 		}
+	}
+
+
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+		registry.addViewController("/").setViewName("redirect:/index.html");
+		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
 	}
 
 }
