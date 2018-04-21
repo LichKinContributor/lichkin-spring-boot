@@ -1,6 +1,9 @@
-<#include "/includes/web/html-head.ftl">
-<#include "/includes/web/head-end.ftl">
-<body>
-404 Not Found
-</body>
-<#include "/includes/web/html-end.ftl">
+<#include "/macro/html-lichkin.ftl"/>
+<@html "web";section>
+	<#if section="body-attributes">style="background-color:rgb(230,0,0);"</#if>
+	<#if section="body-content">
+		Not Found
+	</#if>
+	<#if section="javascript">
+	</#if>
+</@html>
