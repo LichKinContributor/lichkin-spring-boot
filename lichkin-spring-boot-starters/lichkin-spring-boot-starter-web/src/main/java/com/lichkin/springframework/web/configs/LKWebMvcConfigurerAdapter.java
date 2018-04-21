@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.VersionResourceResolver;
 
 import com.lichkin.framework.defines.LKFrameworkStatics;
 
@@ -30,8 +31,16 @@ public class LKWebMvcConfigurerAdapter implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/res/**").addResourceLocations("/res/", "classpath:/META-INF/resources/res/", "classpath*:/META-INF/resources/res/");// 添加资源
-		registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/", "classpath:/META-INF/resources/webjars/", "classpath*:/META-INF/resources/webjars/");// 添加资源
+		// 增加MD5资源解析器
+		VersionResourceResolver versionResourceResolver = new VersionResourceResolver().addContentVersionStrategy("/**");
+		int aYear = 31556926;
+
+		registry.addResourceHandler("/res/**")// 资源请求地址
+				.addResourceLocations("/res/", "classpath:/META-INF/resources/res/", "classpath*:/META-INF/resources/res/")// 资源映射路径
+				.setCachePeriod(aYear).resourceChain(true).addResolver(versionResourceResolver);// 增加解析器
+		registry.addResourceHandler("/webjars/**")// 资源请求地址
+				.addResourceLocations("/webjars/", "classpath:/META-INF/resources/webjars/", "classpath*:/META-INF/resources/webjars/")// 资源映射路径
+				.setCachePeriod(aYear).resourceChain(true).addResolver(versionResourceResolver);// 增加解析器
 	}
 
 
