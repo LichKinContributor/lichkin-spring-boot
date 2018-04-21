@@ -9,7 +9,6 @@
   ctx=request.getContextPath()
   requestUri=springMacroRequestContext.requestUri
   mappingUri=requestUri?substring(0,requestUri?index_of('.html'))
-  webjarsLichKin="${ctx}/webjars"
 >
 
 <#-- 引入宏文件，此处的宏需要依赖于环境，不能使用import。 -->
