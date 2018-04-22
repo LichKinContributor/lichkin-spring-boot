@@ -19,7 +19,7 @@
 		</#if>
 		<#if section="link">
 			<link href="${ctx}/res/img/favicon.ico" type="image/x-icon" rel="shortcut icon">
-			<@lichkin@cssTag url="${ctx}/webjars/lichkin-${type}${compressSuffix}.css" />
+			<@lichkin@cssTag url="${ctx}/webjars/LichKin-UI/1.0.0/lichkin-${type}${compressSuffix}.css" />
 			<#nested "link"/>
 		</#if>
 		<#if section="style">
@@ -35,8 +35,8 @@
 		</#if>
 		<#if section="javascript-links">
 			<@lichkin@jsTag url="${ctx}/webjars/jquery/3.3.1/jquery${compressSuffix}.js"/>
-			<@lichkin@jsTag url="${ctx}/webjars/lichkin${compressSuffix}.js" />
-			<@lichkin@jsTag url="${ctx}/webjars/lichkin-${type}${compressSuffix}.js" />
+			<@lichkin@jsTag url="${ctx}/webjars/LichKin-UI/1.0.0/lichkin${compressSuffix}.js" />
+			<@lichkin@jsTag url="${ctx}/webjars/LichKin-UI/1.0.0/lichkin-${type}${compressSuffix}.js" />
 			<#nested "javascript-links"/>
 		</#if>
 		<#if section="javascript-contents">
