@@ -34,7 +34,7 @@
 			<script type="text/javascript">let _CTX='${ctx}';</script>
 		</#if>
 		<#if section="javascript-links">
-			<@lichkin@jsTag url="${ctx}/webjars/jquery-3.3.1/jquery-3.3.1${compressSuffix}.js"/>
+			<@lichkin@jsTag url="${ctx}/webjars/jquery/3.3.1/jquery${compressSuffix}.js"/>
 			<@lichkin@jsTag url="${ctx}/webjars/lichkin${compressSuffix}.js" />
 			<@lichkin@jsTag url="${ctx}/webjars/lichkin-${type}${compressSuffix}.js" />
 			<#nested "javascript-links"/>
