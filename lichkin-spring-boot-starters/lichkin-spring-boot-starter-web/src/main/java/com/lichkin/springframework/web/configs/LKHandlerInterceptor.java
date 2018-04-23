@@ -124,7 +124,7 @@ public class LKHandlerInterceptor implements HandlerInterceptor {
 		// TODO 4、控制器类执行完成，返回视图待解析时，视图中产生bug，暂未被框架捕获，springMVC框架输出错误日志。
 		// 综上所述，所有异常情况的产生都被处理了，其中1、2的异常在拦截器链内，3、4的异常在拦截器链外。
 		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
-		if (requestInfo.getRequestUri().endsWith(".html") && !(boolean) request.getAttribute("errorOccurs")) {
+		if (requestInfo.getRequestUri().endsWith(LKFrameworkStatics.WEB_MAPPING_PAGES) && !(boolean) request.getAttribute("errorOccurs")) {
 			LOGGER.info(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, null), "exceptionClassName", "exceptionMessage", "responseBean"));
 		}
 	}

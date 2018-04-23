@@ -1,5 +1,6 @@
 package com.lichkin.springframework.controllers;
 
+import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.annotations.LKController4Pages;
 
 /**
@@ -8,5 +9,8 @@ import com.lichkin.framework.defines.annotations.LKController4Pages;
  */
 @LKController4Pages
 public class LKPagesController extends LKController {
+
+	/** 映射符号 */
+	protected static final String MAPPING = LKFrameworkStatics.WEB_MAPPING_PAGES;
 
 }

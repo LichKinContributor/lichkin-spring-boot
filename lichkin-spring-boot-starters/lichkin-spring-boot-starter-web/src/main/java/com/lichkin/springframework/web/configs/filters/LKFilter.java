@@ -17,6 +17,7 @@ import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
 import com.lichkin.framework.utils.LKIpUtils;
 import com.lichkin.springframework.web.beans.LKRequestInfo;
+import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 /**
  * 过滤器
@@ -58,7 +59,7 @@ public abstract class LKFilter implements Filter {
 
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest req = (HttpServletRequest) request;
-			requestInfo.setRequestUri(req.getRequestURI());
+			requestInfo.setRequestUri(LKRequestUtils.getRequestURI(req));
 			requestInfo.setRequestIp(LKIpUtils.getIp(req));
 
 			if (logger.isDebugEnabled()) {

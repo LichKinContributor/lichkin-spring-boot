@@ -94,4 +94,19 @@ public class LKRequestUtils {
 		return ((ServletServerHttpRequest) request).getServletRequest();
 	}
 
+
+	/**
+	 * 获取请求路径
+	 * @param request 请求对象
+	 * @return 请求路径
+	 */
+	public static String getRequestURI(HttpServletRequest request) {
+		final String cotextPath = request.getContextPath();
+		String requestURI = request.getRequestURI().replaceFirst(cotextPath, "");
+		if (requestURI.contains(";")) {
+			requestURI = requestURI.substring(0, requestURI.indexOf(";"));
+		}
+		return requestURI;
+	}
+
 }

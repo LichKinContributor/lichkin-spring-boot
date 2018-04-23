@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -64,8 +65,14 @@ public class LKWebMvcConfigurerAdapter implements WebMvcConfigurer {
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/").setViewName("redirect:/index.html");
+		registry.addViewController("/").setViewName("redirect:/index" + LKFrameworkStatics.WEB_MAPPING_PAGES);
 		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+	}
+
+
+	@Override
+	public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
+		handlers.add(new LKHandlerMethodReturnValueHandler4Pages());
 	}
 
 }
