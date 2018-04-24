@@ -1,5 +1,6 @@
 package com.lichkin.springframework.controllers;
 
+import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.annotations.LKController4Datas;
 
 /**
@@ -8,5 +9,8 @@ import com.lichkin.framework.defines.annotations.LKController4Datas;
  */
 @LKController4Datas
 public class LKDatasController extends LKController {
+
+	/** 映射符号 */
+	protected static final String MAPPING = LKFrameworkStatics.WEB_MAPPING_DATAS;
 
 }
