@@ -31,7 +31,7 @@
 		<#if section="body-attributes"><#nested "body-attributes"/></#if>
 		<#if section="body-content">
 			<#nested "body-content"/>
-			<script type="text/javascript">let _CTX='${ctx}';</script>
+			<script type="text/javascript">let _CTX='${ctx}',_MAPPING_PAGES='${mappingPages}',_MAPPING_DATAS='${mappingDatas}',_MAPPING_API='${mappingApi}';</script>
 		</#if>
 		<#if section="javascript-links">
 			<@lichkin@jsTag url="${ctx}/webjars/jquery/jquery${compressSuffix}.js"/>

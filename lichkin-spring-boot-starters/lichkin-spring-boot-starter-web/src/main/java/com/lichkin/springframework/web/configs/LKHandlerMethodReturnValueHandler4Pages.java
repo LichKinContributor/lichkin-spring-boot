@@ -37,6 +37,11 @@ public class LKHandlerMethodReturnValueHandler4Pages implements HandlerMethodRet
 		if (returnValue != null) {
 			mavContainer.addAllAttributes(((LKPage) returnValue).getAttributes());
 		}
+
+		// 存入mapping信息
+		mavContainer.addAttribute("mappingPages", LKFrameworkStatics.WEB_MAPPING_PAGES);
+		mavContainer.addAttribute("mappingDatas", LKFrameworkStatics.WEB_MAPPING_DATAS);
+		mavContainer.addAttribute("mappingApi", LKFrameworkStatics.WEB_MAPPING_API);
 	}
 
 }
