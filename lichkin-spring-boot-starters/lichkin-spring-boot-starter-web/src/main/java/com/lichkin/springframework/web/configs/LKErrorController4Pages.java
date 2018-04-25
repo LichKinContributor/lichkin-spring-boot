@@ -27,8 +27,15 @@ public class LKErrorController4Pages {
 
 	@RequestMapping(value = "/**/*" + LKFrameworkStatics.WEB_MAPPING_PAGES, produces = "text/html")
 	public ModelAndView noMapping(HttpServletRequest request) {
+		// 记录日志
 		LKErrorLogger.logError(LOGGER, new LKRuntimeException(LKErrorCodesEnum.NOT_FOUND), request);
-		return new ModelAndView("/error/404");
+		// 使用404页面响应
+		ModelAndView mv = new ModelAndView("/error/404");
+		// 存入mapping信息
+		mv.addObject("mappingPages", LKFrameworkStatics.WEB_MAPPING_PAGES);
+		mv.addObject("mappingDatas", LKFrameworkStatics.WEB_MAPPING_DATAS);
+		mv.addObject("mappingApi", LKFrameworkStatics.WEB_MAPPING_API);
+		return mv;
 	}
 
 }

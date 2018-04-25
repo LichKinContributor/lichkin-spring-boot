@@ -5,11 +5,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
+import com.lichkin.framework.defines.annotations.LKController4Pages;
+
 /**
  * 静态资源文件请求处理
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-@ControllerAdvice
+@ControllerAdvice(annotations = LKController4Pages.class)
 public class LKStaticResourcesController {
 
 	@Autowired

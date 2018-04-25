@@ -2,10 +2,13 @@ package com.lichkin.springframework.web.configs;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
+import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.annotations.LKController4Pages;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
@@ -21,6 +24,9 @@ public class LKErrorControllerAdvice4Pages {
 	/** 日志对象 */
 	private static final LKLog LOGGER = LKLogFactory.getLog(LKErrorControllerAdvice4Pages.class);
 
+	@Autowired
+	private ResourceUrlProvider provider;
+
 
 	/**
 	 * 异常处理
@@ -35,7 +41,13 @@ public class LKErrorControllerAdvice4Pages {
 		// 记录日志
 		LKErrorLogger.logError(LOGGER, ex, request);
 		// 使用500页面响应
-		return new ModelAndView("/error/500");
+		ModelAndView mv = new ModelAndView("/error/500");
+		// 存入mapping信息
+		mv.addObject("mappingPages", LKFrameworkStatics.WEB_MAPPING_PAGES);
+		mv.addObject("mappingDatas", LKFrameworkStatics.WEB_MAPPING_DATAS);
+		mv.addObject("mappingApi", LKFrameworkStatics.WEB_MAPPING_API);
+		mv.addObject("provider", provider);
+		return mv;
 	}
 
 }
