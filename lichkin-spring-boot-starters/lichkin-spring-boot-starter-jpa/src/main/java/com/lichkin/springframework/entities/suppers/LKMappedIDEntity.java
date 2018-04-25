@@ -32,6 +32,6 @@ public class LKMappedIDEntity implements LKIDInterface {
 	@GenericGenerator(name = "uuid", strategy = "uuid.hex")
 	@GeneratedValue(generator = "uuid")
 	@Column(nullable = false, length = 64)
-	protected String id;
+	private String id;
 
 }

@@ -86,7 +86,7 @@ class LKErrorLogger {
 				List<ObjectError> errors = ((MethodArgumentNotValidException) ex).getBindingResult().getAllErrors();
 				StringBuffer sb = new StringBuffer();
 				for (ObjectError error : errors) {
-					sb.append(LKI18NReader4ErrorCodes.read(LKRequestUtils.getLocale(request), error.getCodes()[0])).append(";");
+					sb.append(LKI18NReader4ErrorCodes.read(LKRequestUtils.getLocale(request), "validation@" + error.getCodes()[0])).append("@#@");
 				}
 				errorMessage = sb.toString();
 			}

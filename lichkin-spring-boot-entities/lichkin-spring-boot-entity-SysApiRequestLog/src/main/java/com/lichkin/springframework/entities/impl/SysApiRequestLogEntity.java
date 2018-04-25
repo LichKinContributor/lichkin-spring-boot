@@ -60,7 +60,7 @@ public class SysApiRequestLogEntity extends LKMappedBaseSysEntity {
 	private String token = "";
 
 	/** 客户端系统版本 */
-	@Column(nullable = false, length = 32)
+	@Column(nullable = false, length = 16)
 	private String osVersion;
 
 	/** 生产厂商 */
@@ -84,7 +84,7 @@ public class SysApiRequestLogEntity extends LKMappedBaseSysEntity {
 
 	@Override
 	protected Object[] getCheckCodeFieldValues() {
-		return new Object[] { appKey, clientType, versionX, versionY, versionZ, locale, token, osVersion, brand, model, uuid, screenWidth, screenHeight };
+		return new Object[] { locale, appKey, clientType, versionX, versionY, versionZ, token, osVersion, brand, model, uuid, screenWidth, screenHeight };
 	}
 
 }

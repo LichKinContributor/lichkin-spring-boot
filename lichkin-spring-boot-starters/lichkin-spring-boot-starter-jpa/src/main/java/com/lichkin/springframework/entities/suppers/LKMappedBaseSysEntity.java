@@ -24,25 +24,33 @@ public abstract class LKMappedBaseSysEntity extends LKMappedBaseEntity implement
 
 	/** 系统编码 */
 	@Column(nullable = false, length = 64)
-	protected String systemTag = LKFrameworkStatics.SYSTEM_TAG;
+	private String systemTag = LKFrameworkStatics.SYSTEM_TAG;
 
 	/** 业务ID */
 	@Column(nullable = false, length = 64)
-	protected String busId = "";
+	private String busId = "";
 
 	/** 校验码（MD5） */
 	@Column(nullable = false, length = 32)
-	protected String checkCode = "";
+	private String checkCode = "";
 
 
 	@Override
 	public void updateCheckCode() {
-		StringBuffer sb = new StringBuffer(systemTag).append(usingStatus).append(insertSystemTag).append(insertTime).append(insertLoginId).append(updateSystemTag).append(updateTime).append(updateLoginId).append(busId);
+		StringBuffer sb = new StringBuffer(getSystemTag()).append(getBusId())
+
+				.append(getInsertSystemTag()).append(getInsertTime()).append(getInsertLoginId())
+
+				.append(getUpdateSystemTag()).append(getUpdateTime()).append(getUpdateLoginId())
+
+				.append(getUsingStatus());
+
 		Object[] objs = getCheckCodeFieldValues();
 		for (Object obj : objs) {
 			sb.append(obj);
 		}
-		setCheckCode(LKMD5Encrypter.encrypt(sb.toString(), id));
+
+		setCheckCode(LKMD5Encrypter.encrypt(sb.toString(), getId()));
 	}
 
 

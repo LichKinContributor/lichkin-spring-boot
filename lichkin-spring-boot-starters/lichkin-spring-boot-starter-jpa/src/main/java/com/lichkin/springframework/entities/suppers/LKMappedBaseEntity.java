@@ -24,26 +24,26 @@ public class LKMappedBaseEntity extends LKMappedNormalEntity implements LKBaseIn
 
 	/** 新增操作系统编码 */
 	@Column(nullable = false, length = 64)
-	protected String insertSystemTag = LKFrameworkStatics.SYSTEM_TAG;
+	private String insertSystemTag = LKFrameworkStatics.SYSTEM_TAG;
 
 	/** 新增操作时间（yyyyMMddHHmmssSSS） */
 	@Column(nullable = false, length = 17)
-	protected String insertTime = LKDateTimeUtils.now();
+	private String insertTime = LKDateTimeUtils.now();
 
 	/** 新增操作人登录ID */
 	@Column(nullable = false, length = 64)
-	protected String insertLoginId = "";
+	private String insertLoginId = "";
 
 	/** 更新操作系统编码 */
 	@Column(nullable = false, length = 64)
-	protected String updateSystemTag = LKFrameworkStatics.SYSTEM_TAG;
+	private String updateSystemTag = LKFrameworkStatics.SYSTEM_TAG;
 
 	/** 更新操作时间（yyyyMMddHHmmssSSS） */
 	@Column(nullable = false, length = 17)
-	protected String updateTime = LKDateTimeUtils.now();
+	private String updateTime = LKDateTimeUtils.now();
 
 	/** 更新操作人登录ID */
 	@Column(nullable = false, length = 64)
-	protected String updateLoginId = "";
+	private String updateLoginId = "";
 
 }
