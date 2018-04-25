@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lichkin.framework.defines.annotations.LKController4Api;
 import com.lichkin.framework.defines.beans.LKRequestBean;
+import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.springframework.services.LKApiService;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
 
@@ -23,7 +24,7 @@ public abstract class LKApiController<I extends LKRequestBean, O> extends LKCont
 	 * @return 出参
 	 */
 	@PostMapping
-	public Object invoke(@Valid @RequestBody I in) {
+	public Object invoke(@Valid @RequestBody I in) throws LKException {
 		in.setLocale(LKRequestUtils.getLocale(request).toString());
 		return getService().handle(validateIn(in));
 	}
