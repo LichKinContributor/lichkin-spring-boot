@@ -17,7 +17,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@JsonPropertyOrder({ "requestId", "requestTime", "requestUri", "requestIp", "handlerClassName", "handlerMethod", "exceptionClassName", "exceptionMessage", "responseTime", "elapsedTime", "responseBean" })
+@JsonPropertyOrder({ "requestId", "requestTime", "requestUri", "requestIp", "requestDatas", "handlerClassName", "handlerMethod", "exceptionClassName", "exceptionMessage", "responseTime", "elapsedTime", "responseBean" })
 public class LKResponseInfo extends LKRequestInfo {
 
 	/**
@@ -29,6 +29,7 @@ public class LKResponseInfo extends LKRequestInfo {
 		requestTime = requestInfo.requestTime;
 		requestUri = requestInfo.requestUri;
 		requestIp = requestInfo.requestIp;
+		requestDatas = requestInfo.requestDatas;
 		handlerClassName = requestInfo.handlerClassName;
 		handlerMethod = requestInfo.handlerMethod;
 		exceptionClassName = requestInfo.exceptionClassName;

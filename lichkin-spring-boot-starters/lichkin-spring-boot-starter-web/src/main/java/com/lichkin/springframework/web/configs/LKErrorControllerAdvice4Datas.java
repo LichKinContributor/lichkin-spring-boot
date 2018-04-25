@@ -2,9 +2,8 @@ package com.lichkin.springframework.web.configs;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.lichkin.framework.defines.annotations.LKController4Datas;
 import com.lichkin.framework.defines.beans.LKResponseBean;
@@ -15,7 +14,7 @@ import com.lichkin.framework.log.LKLogFactory;
  * 数据请求控制器类执行错误处理
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-@ControllerAdvice(annotations = LKController4Datas.class)
+@RestControllerAdvice(annotations = LKController4Datas.class)
 public class LKErrorControllerAdvice4Datas {
 
 	/** 日志对象 */
@@ -28,7 +27,6 @@ public class LKErrorControllerAdvice4Datas {
 	 * @param request 请求对象
 	 * @return 统一响应对象
 	 */
-	@ResponseBody
 	@ExceptionHandler(value = Exception.class)
 	public LKResponseBean<Object> handle(Exception ex, HttpServletRequest request) {
 		return LKErrorLogger.logError(LOGGER, ex, request);

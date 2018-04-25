@@ -1,7 +1,6 @@
 package com.lichkin.springframework.web.configs.filters.impl;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
@@ -18,7 +17,7 @@ import com.lichkin.springframework.web.configs.filters.LKFilter;
 public class LKFilter4Pages extends LKFilter {
 
 	@Override
-	protected void beforeChain(ServletRequest request, ServletResponse response, FilterChain chain) {
+	protected void beforeChain(LKHttpServletRequestWrapper request, ServletResponse response, FilterChain chain) {
 		super.beforeChain(request, response, chain);
 
 		// 解析页面需要使用到的变量

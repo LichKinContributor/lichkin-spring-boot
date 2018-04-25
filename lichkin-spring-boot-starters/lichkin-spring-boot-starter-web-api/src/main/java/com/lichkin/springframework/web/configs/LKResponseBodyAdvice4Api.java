@@ -20,10 +20,10 @@ import com.lichkin.springframework.web.beans.LKResponseInfo;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 /**
- * 数据请求响应处理
+ * API数据请求响应处理
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-@ControllerAdvice
+@ControllerAdvice(annotations = LKController4Api.class)
 public class LKResponseBodyAdvice4Api implements ResponseBodyAdvice<Object> {
 
 	/** 日志对象 */
@@ -32,8 +32,7 @@ public class LKResponseBodyAdvice4Api implements ResponseBodyAdvice<Object> {
 
 	@Override
 	public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-		// 标注有@LKController4Datas注解的类才会进行处理
-		return returnType.getDeclaringClass().getAnnotation(LKController4Api.class) != null;
+		return true;
 	}
 
 

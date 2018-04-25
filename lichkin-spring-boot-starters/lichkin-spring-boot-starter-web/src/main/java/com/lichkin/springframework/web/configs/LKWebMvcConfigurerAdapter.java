@@ -1,12 +1,14 @@
 package com.lichkin.springframework.web.configs;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -49,17 +51,19 @@ public class LKWebMvcConfigurerAdapter implements WebMvcConfigurer {
 
 	@Override
 	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-		// 改变默认都消息转换器顺序
-		HttpMessageConverter<?> mappingJackson2XmlHttpMessageConverter = null;
-		for (int i = converters.size() - 1; i >= 0; i--) {
-			final HttpMessageConverter<?> converter = converters.get(i);
-			if (converter.getClass() == MappingJackson2XmlHttpMessageConverter.class) {
-				mappingJackson2XmlHttpMessageConverter = converters.remove(i);
+		// 增加自定义消息转换器
+		converters.add(0, new MappingJackson2HttpMessageConverter() {
+
+			@Override
+			public boolean canRead(Type type, Class<?> contextClass, MediaType mediaType) {
+				// 增加对页面请求，使用了@RequestBody注解的参数进行注入解析。
+				if (MediaType.TEXT_HTML.getType().equals(mediaType.getType()) && MediaType.TEXT_HTML.getSubtype().equals(mediaType.getSubtype())) {
+					return true;
+				}
+				return super.canRead(type, contextClass, mediaType);
 			}
-		}
-		if (mappingJackson2XmlHttpMessageConverter != null) {
-			converters.add(mappingJackson2XmlHttpMessageConverter);
-		}
+
+		});
 	}
 
 
