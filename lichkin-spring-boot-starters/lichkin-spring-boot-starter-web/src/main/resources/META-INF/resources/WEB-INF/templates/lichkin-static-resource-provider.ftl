@@ -9,7 +9,7 @@
 	<#if type!="">
 		<#if result=="">
 			<#-- 没有输入地址，处理为当前页面对应的脚本文件。 -->
-			<#assign result = "${provider.getForLookupPath('${ctx}/res/${type}${mappingUri}.${type}')}"/>
+			<#assign result = "${ctx}${provider.getForLookupPath('/res/${type}${mappingUri}.${type}')}"/>
 		<#else>
 			<#if type=="js"||type=="css">
 				<#-- 补全结尾符 -->
@@ -21,12 +21,12 @@
 			<#if result?starts_with("http")>
 				<#-- http开头表示引入站外脚本，直接引入。 -->
 				<#assign result = "${result}"/>
-			<#elseif result?starts_with("${ctx}/res/${type}")>
+			<#elseif result?starts_with("/res/${type}")>
 				<#-- 符合框架约定的，按照约定引入。 -->
-				<#assign result = "${provider.getForLookupPath('${result}')}"/>
-			<#elseif result?starts_with("${ctx}/webjars")>
+				<#assign result = "${ctx}${provider.getForLookupPath('${result}')}"/>
+			<#elseif result?starts_with("/webjars")>
 				<#-- 符合框架约定的，按照约定引入。 -->
-				<#assign result = "${provider.getForLookupPath('${result}')}"/>
+				<#assign result = "${ctx}${provider.getForLookupPath('${result}')}"/>
 			<#else>
 				<#-- 不符合框架约定的，不予引入。 -->
 				<#assign result="">

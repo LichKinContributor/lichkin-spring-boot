@@ -19,7 +19,7 @@
 		</#if>
 		<#if section="link">
 			<link href="${ctx}/res/img/favicon.ico" type="image/x-icon" rel="shortcut icon">
-			<@lichkin@cssTag url="${ctx}/webjars/LichKin-UI/lichkin-${type}${compressSuffix}.css" />
+			<@lichkin@cssTag url="/webjars/LichKin-UI/lichkin-${type}${compressSuffix}.css" />
 			<#nested "link"/>
 		</#if>
 		<#if section="style">
@@ -34,9 +34,9 @@
 			<script type="text/javascript">let _CTX='${ctx}',_LANG='${language!"zh-CN"}',_MAPPING_PAGES='${mappingPages}',_MAPPING_DATAS='${mappingDatas}',_MAPPING_API='${mappingApi}';</script>
 		</#if>
 		<#if section="javascript-links">
-			<@lichkin@jsTag url="${ctx}/webjars/jquery/jquery${compressSuffix}.js"/>
-			<@lichkin@jsTag url="${ctx}/webjars/LichKin-UI/lichkin${compressSuffix}.js" />
-			<@lichkin@jsTag url="${ctx}/webjars/LichKin-UI/lichkin-${type}${compressSuffix}.js" />
+			<@lichkin@jsTag url="/webjars/jquery/jquery${compressSuffix}.js"/>
+			<@lichkin@jsTag url="/webjars/LichKin-UI/lichkin${compressSuffix}.js" />
+			<@lichkin@jsTag url="/webjars/LichKin-UI/lichkin-${type}${compressSuffix}.js" />
 			<#nested "javascript-links"/>
 		</#if>
 		<#if section="javascript-contents">

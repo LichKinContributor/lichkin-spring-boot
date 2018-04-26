@@ -13,7 +13,7 @@
 	    <div class="companyName">苏州鑫宏利业信息科技有限公司</div>
 	  </div>
 	  <div id="centerDiv">
-	    <img id="logo" src="${ctx}/res/img/favicon.ico" />
+	  	<@lichkin@imgTag id="logo" url="/res/img/favicon.ico"/>
 	  </div>
 	  <div id="bottomDiv">
 	    <div class="copyright">©2014-2018</div>
