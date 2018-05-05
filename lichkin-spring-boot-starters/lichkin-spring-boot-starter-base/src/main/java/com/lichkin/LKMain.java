@@ -10,6 +10,7 @@ import static com.lichkin.framework.log.log4j2.LKLog4j2Log.VALUE_LOG_LEVEL_SYSTE
 import static com.lichkin.framework.log.log4j2.LKLog4j2Log.VALUE_LOG_TAG;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -55,7 +56,7 @@ public class LKMain {
 	public static final String SYSTEM_ID = LKRandomUtils.create(32);
 
 	/** 默认加载的Profiles */
-	private static String[] PROFILES = { "db", "db2", "web", "admin", "common", "development" };
+	private static String[] PROFILES = { "base", "db", "db2", "web", "admin", "common-base", "common-db", "common-db2", "common-web", "common-admin", "common", "development" };
 
 	/** 配置的Profiles */
 	private static String[] CONFIGED_PROFILES;
@@ -152,6 +153,14 @@ public class LKMain {
 
 				// 读取系统配置属性
 				LKFrameworkStatics.DEFAULT_LOCALE = LKI18NUtils.getLocale(LKPropertiesUtils.validateConfigValue("lichkin.framework.system.locale", LKFrameworkStatics.DEFAULT_LOCALE.toString()));
+				String locales = LKPropertiesUtils.validateConfigValue("lichkin.framework.system.implemented.locales", LKFrameworkStatics.DEFAULT_LOCALE.toString());
+				String[] localeArr = locales.split("\\|");
+				for (String locale : localeArr) {
+					Locale l = LKI18NUtils.getLocale(locale);
+					if (!ArrayUtils.contains(LKFrameworkStatics.IMPLEMENTED_LOCALE_ARR, l)) {
+						LKFrameworkStatics.IMPLEMENTED_LOCALE_ARR = ArrayUtils.add(LKFrameworkStatics.IMPLEMENTED_LOCALE_ARR, l);
+					}
+				}
 				LKFrameworkStatics.SYSTEM_TAG = LKPropertiesUtils.validateConfigValue("lichkin.framework.system.tag", LKFrameworkStatics.SYSTEM_TAG);
 				LKFrameworkStatics.SYSTEM_NAME = LKPropertiesUtils.validateConfigValue("lichkin.framework.system.name", LKFrameworkStatics.SYSTEM_NAME);
 				LKFrameworkStatics.SYSTEM_DEBUG = LKPropertiesUtils.validateConfigValue("lichkin.framework.system.debug", LKFrameworkStatics.SYSTEM_DEBUG);
@@ -176,7 +185,6 @@ public class LKMain {
 
 				if (ArrayUtils.contains(PROFILES, "web")) {
 					LKFrameworkStatics.WEB_DEBUG = LKPropertiesUtils.validateConfigValue("lichkin.framework.web.debug", LKFrameworkStatics.WEB_DEBUG);
-					LKFrameworkStatics.WEB_REQUEST_SUFFIX_PATTERN = LKPropertiesUtils.validateConfigValue("lichkin.framework.web.requestSuffixPattern", LKFrameworkStatics.WEB_REQUEST_SUFFIX_PATTERN);
 				}
 
 				if (ArrayUtils.contains(PROFILES, "admin")) {
@@ -209,6 +217,7 @@ public class LKMain {
 	private static void analyzeProfileDB() {
 		if (!ClassUtils.isPresent("com.lichkin.springframework.db.configs.LKDBPrimaryConfigs", null)) {
 			PROFILES = ArrayUtils.removeElement(PROFILES, "db");
+			PROFILES = ArrayUtils.removeElement(PROFILES, "common-db");
 		}
 	}
 
@@ -220,6 +229,7 @@ public class LKMain {
 	private static void analyzeProfileDB2() {
 		if (!ClassUtils.isPresent("com.lichkin.springframework.db.configs.LKDBSecondaryConfigs", null)) {
 			PROFILES = ArrayUtils.removeElement(PROFILES, "db2");
+			PROFILES = ArrayUtils.removeElement(PROFILES, "common-db2");
 		}
 	}
 
@@ -231,6 +241,7 @@ public class LKMain {
 	private static void analyzeProfileWeb() {
 		if (!ClassUtils.isPresent("com.lichkin.springframework.web.configs.LKWebMvcConfigurerAdapter", null)) {
 			PROFILES = ArrayUtils.removeElement(PROFILES, "web");
+			PROFILES = ArrayUtils.removeElement(PROFILES, "common-web");
 		}
 	}
 
@@ -242,6 +253,7 @@ public class LKMain {
 	private static void analyzeProfileAdmin() {
 		if (!ClassUtils.isPresent("com.lichkin.springframework.web.admin.configs.LKAdminConfigs", null)) {
 			PROFILES = ArrayUtils.removeElement(PROFILES, "admin");
+			PROFILES = ArrayUtils.removeElement(PROFILES, "common-admin");
 		}
 	}
 

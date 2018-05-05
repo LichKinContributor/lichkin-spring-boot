@@ -25,10 +25,14 @@ public class LKRequestUtils {
 	 */
 	public static Locale getLocale(HttpServletRequest request) {
 		Locale locale = analyzeLocale(request);
-		if (locale.getLanguage().equals("en")) {
-			return Locale.ENGLISH;
+		if (!locale.getLanguage().equals("en")) {
+			for (Locale implementedLocale : LKFrameworkStatics.IMPLEMENTED_LOCALE_ARR) {
+				if (implementedLocale.equals(locale)) {
+					return locale;
+				}
+			}
 		}
-		return locale;
+		return Locale.ENGLISH;
 	}
 
 
@@ -43,7 +47,6 @@ public class LKRequestUtils {
 		if (attribut != null) {
 			Locale locale = LKI18NUtils.getLocale(((Locale) attribut).toString(), null);
 			if (locale != null) {
-				request.setAttribute("locale", locale);
 				return locale;
 			}
 		}
@@ -51,28 +54,23 @@ public class LKRequestUtils {
 		// 从参数中取
 		Locale parameter = LKI18NUtils.getLocale(request.getParameter("locale"), null);
 		if (parameter != null) {
-			request.setAttribute("locale", parameter);
 			return parameter;
 		}
 
 		// 从头中取
 		Locale header = LKI18NUtils.getLocale(request.getHeader("Accept-Language"), null);
 		if (header != null) {
-			request.setAttribute("locale", header);
 			return header;
 		}
 
 		// 取默认值
 		Locale locale = request.getLocale();
 		if ((locale != null) && !locale.equals(Locale.ROOT)) {
-			request.setAttribute("locale", locale);
 			return locale;
 		}
 
 		// 返回默认值
-		locale = LKFrameworkStatics.DEFAULT_LOCALE;
-		request.setAttribute("locale", locale);
-		return locale;
+		return LKFrameworkStatics.DEFAULT_LOCALE;
 	}
 
 

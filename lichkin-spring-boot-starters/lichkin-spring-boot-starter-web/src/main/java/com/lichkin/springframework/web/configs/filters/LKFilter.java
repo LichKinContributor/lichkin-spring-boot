@@ -79,6 +79,7 @@ public abstract class LKFilter implements Filter {
 			requestInfo.setRequestDatas(requestDatas);
 			logger.info(LKJsonUtils.toJsonWithIncludes(requestInfo, "requestId", "requestTime", "requestUri", "requestIp", "requestDatas"));
 
+			request.setAttribute("locale", LKRequestUtils.getLocale(request));
 			request.setAttribute("requestInfo", requestInfo);
 			request.setAttribute("errorOccurs", false);
 		} else {

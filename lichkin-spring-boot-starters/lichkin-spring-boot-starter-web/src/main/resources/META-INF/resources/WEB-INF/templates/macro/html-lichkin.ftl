@@ -31,11 +31,12 @@
 		<#if section="body-attributes"><#nested "body-attributes"/></#if>
 		<#if section="body-content">
 			<#nested "body-content"/>
-			<script type="text/javascript">let _CTX='${ctx}',_LANG='${language!"zh-CN"}',_MAPPING_PAGES='${mappingPages}',_MAPPING_DATAS='${mappingDatas}',_MAPPING_API='${mappingApi}';</script>
+			<script type="text/javascript">let _CTX='${ctx}',_LANG='${locale}',_MAPPING_PAGES='${mappingPages}',_MAPPING_DATAS='${mappingDatas}',_MAPPING_API='${mappingApi}';</script>
 		</#if>
 		<#if section="javascript-links">
 			<@lichkin@jsTag url="/webjars/jquery/jquery${compressSuffix}.js"/>
 			<@lichkin@jsTag url="/webjars/LichKin-UI/lichkin${compressSuffix}.js" />
+			<@lichkin@jsTag url="/webjars/LichKin-UI/i18n/${locale}${compressSuffix}.js" />
 			<@lichkin@jsTag url="/webjars/LichKin-UI/lichkin-${type}${compressSuffix}.js" />
 			<#nested "javascript-links"/>
 		</#if>

@@ -4,8 +4,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
-import org.joda.time.DateTime;
-
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.springframework.web.configs.filters.LKFilter;
 
@@ -24,9 +22,8 @@ public class LKFilter4Pages extends LKFilter {
 		if (LKFrameworkStatics.WEB_DEBUG) {
 			request.setAttribute("compressSuffix", "");
 		} else {
-			request.setAttribute("compressSuffix", "-min");
+			request.setAttribute("compressSuffix", ".min");
 		}
-		request.setAttribute("requestSuffix", DateTime.now().toString(LKFrameworkStatics.WEB_REQUEST_SUFFIX_PATTERN));
 	}
 
 }
