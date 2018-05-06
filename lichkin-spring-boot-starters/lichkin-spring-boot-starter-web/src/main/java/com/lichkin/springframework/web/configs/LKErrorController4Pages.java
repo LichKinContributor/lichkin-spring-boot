@@ -19,7 +19,7 @@ import com.lichkin.framework.log.LKLogFactory;
  */
 @LKController4Pages
 @Controller
-public class LKErrorController4Pages {
+public class LKErrorController4Pages extends LKErrorController {
 
 	/** 日志对象 */
 	private static final LKLog LOGGER = LKLogFactory.getLog(LKErrorController4Pages.class);

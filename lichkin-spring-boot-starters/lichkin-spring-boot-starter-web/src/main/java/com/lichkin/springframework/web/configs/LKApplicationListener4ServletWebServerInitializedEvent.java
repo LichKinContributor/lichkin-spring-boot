@@ -1,6 +1,8 @@
 package com.lichkin.springframework.web.configs;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.lichkin.LKMain;
@@ -42,7 +45,7 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 
 	@Override
 	public void onApplicationEvent(ServletWebServerInitializedEvent event) {
-		LOGGER.warn("onApplicationEvent -> ServletWebServerInitializedEvent");
+		LOGGER.info("onApplicationEvent -> ServletWebServerInitializedEvent");
 
 		// 验证框架约定
 		ApplicationContext context = LKApplicationContext.getContext();
@@ -74,7 +77,7 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 				Object value = entry.getValue();
 				Class<?> beanClass = value.getClass();
 				String beanName = beanClass.getName();
-				if (!beanName.startsWith("org.springframework") && !beanName.equals("com.lichkin.springframework.web.configs.LKErrorController4Pages") && !beanName.equals("com.lichkin.springframework.web.configs.LKErrorController4Datas") && !beanName.equals("com.lichkin.springframework.web.configs.LKErrorController4Api")) {
+				if (!beanName.startsWith("org.springframework") && !beanClass.getSuperclass().equals(LKErrorController.class)) {
 					LOGGER.info(String.format("check controller[%s] managed by key[%s]", beanName, key));
 
 					// 验证包
@@ -83,17 +86,17 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 					// 验证类注解
 					RequestMapping requestMapping = beanClass.getAnnotation(RequestMapping.class);
 					if (requestMapping == null) {
-						throw new LKFrameworkException(String.format("controller[%s] must be annotated with @RequestMapping.", beanName));
+						throw new LKFrameworkException(String.format("controller[%s]. must be annotated with [%s].", beanName, RequestMapping.class.getName()));
 					}
 					String[] controllerMappings = requestMapping.value();
 					if (controllerMappings.length != 1) {
-						throw new LKFrameworkException(String.format("controller[%s] @RequestMapping values must be only one.", beanName));
+						throw new LKFrameworkException(String.format("controller[%s] annotation[%s][values] must be only one.", beanName, RequestMapping.class.getName()));
 					}
 
 					// 验证接口数据请求
 					String controllerMapping = LKStringUtils.toStandardPath(controllerMappings[0]);
 					if (controllerMapping.startsWith(LKFrameworkStatics.WEB_MAPPING_API) && !beanClass.getSuperclass().getName().equals("com.lichkin.springframework.controllers.LKApiController")) {
-						throw new LKFrameworkException(String.format("controller[%s] @RequestMapping values must be only one.", beanName));
+						throw new LKFrameworkException(String.format("controller[%s] annotation[%s][values] must be only one.", beanName, RequestMapping.class.getName()));
 					}
 
 					// 页面请求控制器
@@ -111,7 +114,7 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 
 						// 页面请求返回值验证
 						if ((pagesAnnotation != null) && !method.getReturnType().equals(LKPage.class)) {
-							throw new LKFrameworkException(String.format("check controller[%s], method[%s]. the class annotated with %s can only contains method with return value as type %s.", beanName, methodName, LKController4Pages.class.getName(), LKPage.class.getName()));
+							throw new LKFrameworkException(String.format("check controller[%s], method[%s]. the class annotated with [%s] can only contains method with return value as type [%s].", beanName, methodName, LKController4Pages.class.getName(), LKPage.class.getName()));
 						}
 
 						// 支持的两种注解
@@ -120,28 +123,28 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 
 						if (getMapping == null) {
 							if (postMapping == null) {
-								throw new LKFrameworkException(String.format("controller[%s], method[%s] must be annotated with @GetMapping or @PostMapping.", beanName, methodName));
+								throw new LKFrameworkException(String.format("controller[%s], method[%s]. must be annotated with [%s] or [%s].", beanName, methodName, GetMapping.class.getName(), PostMapping.class.getName()));
 							} else {
 								String[] mappings = postMapping.value();
 								for (String mapping : mappings) {
-									checkMapping(true, controllerMapping, beanName, methodName, mapping, pagesAnnotation, datasAnnotation);
+									checkMapping(true, method, controllerMapping, beanName, methodName, mapping, pagesAnnotation, datasAnnotation);
 								}
 							}
 						} else {
 							if (postMapping == null) {
 								String[] mappings = getMapping.value();
 								for (String mapping : mappings) {
-									checkMapping(false, controllerMapping, beanName, methodName, mapping, pagesAnnotation, datasAnnotation);
+									checkMapping(false, method, controllerMapping, beanName, methodName, mapping, pagesAnnotation, datasAnnotation);
 								}
 							} else {
-								throw new LKFrameworkException(String.format("controller[%s], method[%s] must be annotated with @GetMapping or @PostMapping.", beanName, methodName));
+								throw new LKFrameworkException(String.format("controller[%s], method[%s]. must be annotated with [%s] or [%s].", beanName, methodName, GetMapping.class.getName(), PostMapping.class.getName()));
 							}
 						}
 					}
 				}
 			}
 			if (!indexPageImplemented) {
-				throw new LKFrameworkException("mapping /index" + LKFrameworkStatics.WEB_MAPPING_PAGES + " no found.");
+				throw new LKFrameworkException("mapping [/index" + LKFrameworkStatics.WEB_MAPPING_PAGES + "] no found.");
 			}
 		}
 	}
@@ -150,7 +153,34 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 	/**
 	 * 约定校验
 	 */
-	private void checkMapping(Boolean isPost, String controllerMapping, String beanName, String methodName, String mapping, LKController4Pages pagesAnnotation, LKController4Datas datasAnnotation) {
+	private void checkMapping(Boolean isPost, Method method, String controllerMapping, String beanName, String methodName, String mapping, LKController4Pages pagesAnnotation, LKController4Datas datasAnnotation) {
+		// 请求参数验证
+		checkParameter: if ((pagesAnnotation != null) || (datasAnnotation != null)) {
+			Parameter[] parameters = method.getParameters();
+			if (parameters.length == 0) {
+				break checkParameter;
+			}
+			if (parameters.length != 1) {
+				throw new LKFrameworkException(String.format("controller[%s], method[%s]. must be one parameter.", beanName, methodName));
+			}
+			boolean hasRequestBodyAnnotation = false;
+			Annotation[] parameterAnnotations = method.getParameterAnnotations()[0];
+			for (Annotation parameterAnnotation : parameterAnnotations) {
+				if (parameterAnnotation.annotationType().equals(RequestBody.class)) {
+					hasRequestBodyAnnotation = true;
+				}
+			}
+			if (isPost) {
+				if (!hasRequestBodyAnnotation) {
+					throw new LKFrameworkException(String.format("controller[%s], method[%s]. must be one parameter annotated with [%s].", beanName, methodName, RequestBody.class.getName()));
+				}
+			} else {
+				if ((pagesAnnotation != null) && hasRequestBodyAnnotation) {
+					throw new LKFrameworkException(String.format("controller[%s], method[%s]. must be one parameter and not annotated with [%s].", beanName, methodName, RequestBody.class.getName()));
+				}
+			}
+		}
+
 		String fullMapping = LKStringUtils.joinPath(controllerMapping, mapping);
 		if (fullMapping.equals("/index" + LKFrameworkStatics.WEB_MAPPING_PAGES)) {
 			indexPageImplemented = !isPost;
@@ -158,17 +188,17 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 
 		// 类上标注了约定的注解，但是方法映射的不是约定值。
 		if ((pagesAnnotation != null) && !mapping.endsWith(LKFrameworkStatics.WEB_MAPPING_PAGES)) {
-			throw new LKFrameworkException(String.format("check controller[%s], method[%s], mapping[%s]. the class annotated with %s can only contains method with mapping that ends with %s.", beanName, methodName, mapping, LKController4Pages.class.getName(), LKFrameworkStatics.WEB_MAPPING_PAGES));
+			throw new LKFrameworkException(String.format("check controller[%s], method[%s], mapping[%s]. the class annotated with [%s] can only contains method with mapping that ends with [%s].", beanName, methodName, mapping, LKController4Pages.class.getName(), LKFrameworkStatics.WEB_MAPPING_PAGES));
 		}
 		if ((datasAnnotation != null) && !mapping.endsWith(LKFrameworkStatics.WEB_MAPPING_DATAS)) {
-			throw new LKFrameworkException(String.format("check controller[%s], method[%s], mapping[%s]. the class annotated with %s can only contains method with mapping that ends with %s.", beanName, methodName, mapping, LKController4Datas.class.getName(), LKFrameworkStatics.WEB_MAPPING_DATAS));
+			throw new LKFrameworkException(String.format("check controller[%s], method[%s], mapping[%s]. the class annotated with [%s] can only contains method with mapping that ends with [%s].", beanName, methodName, mapping, LKController4Datas.class.getName(), LKFrameworkStatics.WEB_MAPPING_DATAS));
 		}
 		// 符合映射约定值，但是没有在类上标注约定的注解。
 		if (mapping.endsWith(LKFrameworkStatics.WEB_MAPPING_PAGES) && (pagesAnnotation == null)) {
-			throw new LKFrameworkException(String.format("check controller[%s], method[%s], mapping[%s]. method must in the class annotated with %s.", beanName, methodName, mapping, LKController4Pages.class.getName()));
+			throw new LKFrameworkException(String.format("check controller[%s], method[%s], mapping[%s]. method must in the class annotated with [%s].", beanName, methodName, mapping, LKController4Pages.class.getName()));
 		}
 		if (mapping.endsWith(LKFrameworkStatics.WEB_MAPPING_DATAS) && (datasAnnotation == null) && isPost) {
-			throw new LKFrameworkException(String.format("check controller[%s], method[%s], mapping[%s]. method must in the class annotated with %s.", beanName, methodName, mapping, LKController4Datas.class.getName()));
+			throw new LKFrameworkException(String.format("check controller[%s], method[%s], mapping[%s]. method must in the class annotated with [%s].", beanName, methodName, mapping, LKController4Datas.class.getName()));
 		}
 	}
 

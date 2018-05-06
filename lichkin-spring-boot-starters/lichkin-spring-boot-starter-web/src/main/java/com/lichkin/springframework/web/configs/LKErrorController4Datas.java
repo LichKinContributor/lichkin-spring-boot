@@ -20,7 +20,7 @@ import com.lichkin.framework.log.LKLogFactory;
  */
 @LKController4Datas
 @RestController
-public class LKErrorController4Datas {
+public class LKErrorController4Datas extends LKErrorController {
 
 	/** 日志对象 */
 	private static final LKLog LOGGER = LKLogFactory.getLog(LKErrorController4Datas.class);
