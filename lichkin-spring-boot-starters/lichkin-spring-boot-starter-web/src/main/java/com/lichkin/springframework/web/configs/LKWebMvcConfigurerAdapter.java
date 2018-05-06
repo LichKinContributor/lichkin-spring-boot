@@ -40,6 +40,10 @@ public class LKWebMvcConfigurerAdapter implements WebMvcConfigurer {
 		VersionResourceResolver versionResourceResolver = new VersionResourceResolver().addContentVersionStrategy("/**");
 		int aYear = 31556926;
 
+		if (LKFrameworkStatics.WEB_DEBUG) {
+			aYear = 10;
+		}
+
 		registry.addResourceHandler("/res/**")// 资源请求地址
 				.addResourceLocations("/res/", "classpath:/META-INF/resources/res/", "classpath*:/META-INF/resources/res/")// 资源映射路径
 				.setCachePeriod(aYear).resourceChain(true).addResolver(versionResourceResolver);// 增加解析器
