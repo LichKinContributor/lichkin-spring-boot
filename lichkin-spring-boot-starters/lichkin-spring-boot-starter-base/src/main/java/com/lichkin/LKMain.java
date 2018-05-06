@@ -165,7 +165,7 @@ public class LKMain {
 				LKFrameworkStatics.SYSTEM_NAME = LKPropertiesUtils.validateConfigValue("lichkin.framework.system.name", LKFrameworkStatics.SYSTEM_NAME);
 				LKFrameworkStatics.SYSTEM_DEBUG = LKPropertiesUtils.validateConfigValue("lichkin.framework.system.debug", LKFrameworkStatics.SYSTEM_DEBUG);
 
-				if (ArrayUtils.contains(PROFILES, "db")) {
+				if (ENV_DB) {
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.show-sql", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.hibernate.ddl-auto", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.hibernate.naming.physical-strategy", null);
@@ -174,7 +174,7 @@ public class LKMain {
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.password", null);
 				}
 
-				if (ArrayUtils.contains(PROFILES, "db2")) {
+				if (ENV_DB2) {
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jpa.show-sql", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jpa.hibernate.ddl-auto", null);
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jpa.hibernate.naming.physical-strategy", null);
@@ -183,11 +183,11 @@ public class LKMain {
 					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.password", null);
 				}
 
-				if (ArrayUtils.contains(PROFILES, "web")) {
+				if (ENV_WEB) {
 					LKFrameworkStatics.WEB_DEBUG = LKPropertiesUtils.validateConfigValue("lichkin.framework.web.debug", LKFrameworkStatics.WEB_DEBUG);
 				}
 
-				if (ArrayUtils.contains(PROFILES, "admin")) {
+				if (ENV_ADMIN) {
 					LKFrameworkStatics.WEB_ADMIN_DEBUG = LKPropertiesUtils.validateConfigValue("lichkin.framework.web.admin.debug", LKFrameworkStatics.WEB_ADMIN_DEBUG);
 				}
 			}
@@ -210,6 +210,10 @@ public class LKMain {
 	}
 
 
+	/** 是否包含数据库环境 */
+	public static boolean ENV_DB = false;
+
+
 	/**
 	 * 解析数据库环境
 	 * @return 依赖数据库环境返回true，否则返回false。
@@ -218,8 +222,14 @@ public class LKMain {
 		if (!ClassUtils.isPresent("com.lichkin.springframework.db.configs.LKDBPrimaryConfigs", null)) {
 			PROFILES = ArrayUtils.removeElement(PROFILES, "db");
 			PROFILES = ArrayUtils.removeElement(PROFILES, "common-db");
+		} else {
+			ENV_DB = true;
 		}
 	}
+
+
+	/** 是否包含数据库从库环境 */
+	public static boolean ENV_DB2 = false;
 
 
 	/**
@@ -230,8 +240,14 @@ public class LKMain {
 		if (!ClassUtils.isPresent("com.lichkin.springframework.db.configs.LKDBSecondaryConfigs", null)) {
 			PROFILES = ArrayUtils.removeElement(PROFILES, "db2");
 			PROFILES = ArrayUtils.removeElement(PROFILES, "common-db2");
+		} else {
+			ENV_DB2 = true;
 		}
 	}
+
+
+	/** 是否包含WEB环境 */
+	public static boolean ENV_WEB = false;
 
 
 	/**
@@ -242,8 +258,14 @@ public class LKMain {
 		if (!ClassUtils.isPresent("com.lichkin.springframework.web.configs.LKWebMvcConfigurerAdapter", null)) {
 			PROFILES = ArrayUtils.removeElement(PROFILES, "web");
 			PROFILES = ArrayUtils.removeElement(PROFILES, "common-web");
+		} else {
+			ENV_WEB = true;
 		}
 	}
+
+
+	/** 是否包含ADMIN环境 */
+	public static boolean ENV_ADMIN = false;
 
 
 	/**
@@ -254,6 +276,8 @@ public class LKMain {
 		if (!ClassUtils.isPresent("com.lichkin.springframework.web.admin.configs.LKAdminConfigs", null)) {
 			PROFILES = ArrayUtils.removeElement(PROFILES, "admin");
 			PROFILES = ArrayUtils.removeElement(PROFILES, "common-admin");
+		} else {
+			ENV_ADMIN = true;
 		}
 	}
 
