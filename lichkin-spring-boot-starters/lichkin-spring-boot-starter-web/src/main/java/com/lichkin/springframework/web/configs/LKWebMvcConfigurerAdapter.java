@@ -30,7 +30,7 @@ public class LKWebMvcConfigurerAdapter implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(final InterceptorRegistry registry) {
-		registry.addInterceptor(new LKHandlerInterceptor()).addPathPatterns("/**/*" + LKFrameworkStatics.WEB_MAPPING_PAGES, "/**/*" + LKFrameworkStatics.WEB_MAPPING_DATAS, LKFrameworkStatics.WEB_MAPPING_API + "**");// 添加拦截器
+		registry.addInterceptor(new LKHandlerInterceptor()).addPathPatterns("/**/*" + LKFrameworkStatics.WEB_MAPPING_PAGES, "/**/*" + LKFrameworkStatics.WEB_MAPPING_DATAS, LKFrameworkStatics.WEB_MAPPING_API + "/**");// 添加拦截器
 	}
 
 

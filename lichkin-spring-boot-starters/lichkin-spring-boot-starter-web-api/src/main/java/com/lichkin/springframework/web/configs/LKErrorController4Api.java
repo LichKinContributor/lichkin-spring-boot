@@ -26,7 +26,7 @@ public class LKErrorController4Api extends LKErrorController {
 	private static final LKLog LOGGER = LKLogFactory.getLog(LKErrorController4Api.class);
 
 
-	@RequestMapping(value = LKFrameworkStatics.WEB_MAPPING_API + "**", produces = "application/json")
+	@RequestMapping(value = LKFrameworkStatics.WEB_MAPPING_API + "/**", produces = "application/json")
 	public LKResponseBean<Object> noMapping(HttpServletRequest request, HttpServletResponse response) {
 		return LKErrorLogger.logError(LOGGER, new LKRuntimeException(LKErrorCodesEnum.NOT_FOUND), request);
 	}
