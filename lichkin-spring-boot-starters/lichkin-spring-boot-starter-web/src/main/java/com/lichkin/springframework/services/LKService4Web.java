@@ -1,32 +1,23 @@
-package com.lichkin.springframework.controllers;
+package com.lichkin.springframework.services;
 
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.lichkin.framework.defines.LKFramework;
 import com.lichkin.framework.defines.enums.LKCodeEnum;
 import com.lichkin.framework.utils.i18n.LKI18NReader4ErrorCodes;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 /**
- * 控制器类
+ * 用于WEB项目的服务类
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-class LKController extends LKFramework {
-
-	@Autowired
-	protected HttpServletRequest request;
-
+public abstract class LKService4Web extends LKService {
 
 	/**
 	 * 获取当前请求的国际化对象
 	 * @return 国际化对象
 	 */
 	protected Locale getLocale() {
-		return LKRequestUtils.getLocale(request);
+		return LKRequestUtils.getLocale(LKRequestUtils.getRequest());
 	}
 
 
