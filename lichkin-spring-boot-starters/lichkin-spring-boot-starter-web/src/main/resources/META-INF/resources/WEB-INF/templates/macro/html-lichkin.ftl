@@ -2,7 +2,12 @@
 
 <#macro html type="">
 
-<#if type!="">
+<#assign calculateType=type>
+<#if !(_$??)>
+	<#assign calculateType="web">
+</#if>
+
+<#if calculateType!="">
 	<#include "html.ftl"/>
 
 	<@html ;section>
@@ -12,14 +17,14 @@
 		<#if section="meta">
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-			<#if type=="web">
+			<#if calculateType=="web">
 			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 			</#if>
 			<#nested "meta"/>
 		</#if>
 		<#if section="link">
 			<link href="${ctx}/res/img/favicon.ico" type="image/x-icon" rel="shortcut icon">
-			<@lichkin@cssTag url="/webjars/LichKin-UI/lichkin-${type}${compressSuffix}.css" />
+			<@lichkin@cssTag url="/webjars/LichKin-UI/lichkin-${calculateType}${compressSuffix}.css" />
 			<#nested "link"/>
 		</#if>
 		<#if section="style">
@@ -37,7 +42,7 @@
 			<@lichkin@jsTag url="/webjars/jquery/jquery${compressSuffix}.js"/>
 			<@lichkin@jsTag url="/webjars/LichKin-UI/lichkin${compressSuffix}.js" />
 			<@lichkin@jsTag url="/webjars/LichKin-UI/i18n/${locale}${compressSuffix}.js" />
-			<@lichkin@jsTag url="/webjars/LichKin-UI/lichkin-${type}${compressSuffix}.js" />
+			<@lichkin@jsTag url="/webjars/LichKin-UI/lichkin-${calculateType}${compressSuffix}.js" />
 			<#nested "javascript-links"/>
 		</#if>
 		<#if section="javascript-contents">
