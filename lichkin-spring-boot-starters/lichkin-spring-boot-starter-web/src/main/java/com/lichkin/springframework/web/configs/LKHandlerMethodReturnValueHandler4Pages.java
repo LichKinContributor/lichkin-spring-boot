@@ -1,5 +1,7 @@
 package com.lichkin.springframework.web.configs;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.MethodParameter;
@@ -25,13 +27,21 @@ public class LKHandlerMethodReturnValueHandler4Pages implements HandlerMethodRet
 
 	@Override
 	public void handleReturnValue(Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
-		LKRequestInfo requestInfo = (LKRequestInfo) ((HttpServletRequest) webRequest.getNativeRequest()).getAttribute("requestInfo");
+		HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+
+		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
 		String requestUri = requestInfo.getRequestUri();
 
 		// 根据requestUri动态设定视图名，视图名为请求对应的目录的模板。
 		String viewName = requestUri.substring(0, requestUri.lastIndexOf(LKFrameworkStatics.WEB_MAPPING_PAGES));
 		mavContainer.addAttribute("mappingUri", viewName);
 		mavContainer.setViewName(viewName);
+
+		Enumeration<String> parameterNames = request.getParameterNames();
+		for (; parameterNames.hasMoreElements();) {
+			String parameterName = parameterNames.nextElement();
+			mavContainer.addAttribute(parameterName, request.getParameter(parameterName));
+		}
 
 		// 将数据放入视图模型中
 		if (returnValue != null) {
