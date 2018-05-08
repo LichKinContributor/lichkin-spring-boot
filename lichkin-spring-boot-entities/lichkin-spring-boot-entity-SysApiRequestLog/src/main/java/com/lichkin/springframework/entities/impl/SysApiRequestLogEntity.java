@@ -24,7 +24,7 @@ import lombok.Setter;
 public class SysApiRequestLogEntity extends LKMappedBaseSysEntity {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = 1560109149982803644L;
+	private static final long serialVersionUID = 8888886666666001L;
 
 	/**
 	 * 国际化

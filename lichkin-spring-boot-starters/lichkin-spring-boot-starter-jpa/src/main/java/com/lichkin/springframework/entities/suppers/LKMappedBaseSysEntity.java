@@ -37,7 +37,7 @@ public abstract class LKMappedBaseSysEntity extends LKMappedBaseEntity implement
 
 	@Override
 	public void updateCheckCode() {
-		StringBuffer sb = new StringBuffer(getSystemTag()).append(getBusId())
+		StringBuffer sb = new StringBuffer(getSystemTag()).append(getBusId()).append(getCompId())
 
 				.append(getInsertSystemTag()).append(getInsertTime()).append(getInsertLoginId())
 
