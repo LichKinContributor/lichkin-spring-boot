@@ -42,6 +42,7 @@
 			<@lichkin@jsTag url="/webjars/jquery/jquery${compressSuffix}.js"/>
 			<@lichkin@jsTag url="/webjars/LichKin-UI/lichkin${compressSuffix}.js" />
 			<@lichkin@jsTag url="/webjars/LichKin-UI/i18n/${locale}${compressSuffix}.js" />
+			<@lichkin@jsTag url="/res/js/i18n/${locale}.js" />
 			<@lichkin@jsTag url="/webjars/LichKin-UI/lichkin-${calculateType}${compressSuffix}.js" />
 			<#nested "javascript-links"/>
 		</#if>
