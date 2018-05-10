@@ -30,6 +30,7 @@
 		</#if>
 		<#if section="style">
 			<style>#lichkin-html{padding:0px;margin:0px;border:none;}.lichkin-body{padding:0px;margin:0px;border:none;}</style>
+			<style id="lichkin-icons"></style>
 			<style>
 				<#nested "style"/>
 			</style>
@@ -48,7 +49,13 @@
 			<#nested "javascript-links"/>
 		</#if>
 		<#if section="javascript-contents">
+			LK.UI.icons = ['sysMgmt','roleMgmt','userMgmt','dictMgmt','loginLog','sysOperLog','sysErrorLog','appMgmt','appVersionMgmt','appBannerMgmt','appNewsMgmt','appFeedbackMgmt','appScoreMgmt','websiteMgmt','websiteBannerMgmt','websiteNewsMgmt','compMgmt','deptMgmt','employeeMgmt','workflowMgmt','dictTimeMgmt','employeeAttendance'];
 			<#nested "javascript-contents"/>
+			var $iconsStyle = $('#lichkin-icons');
+			for (var i = 0; i < LK.UI.icons.length; i++) {
+				var icon = LK.UI.icons[i];
+				$iconsStyle.append('.lichkin-icon-' + icon + '{background-image:url("../../res/img/icons/' + icon + '.png") !important;}');
+			}
 		</#if>
 	</@html>
 <#else>
