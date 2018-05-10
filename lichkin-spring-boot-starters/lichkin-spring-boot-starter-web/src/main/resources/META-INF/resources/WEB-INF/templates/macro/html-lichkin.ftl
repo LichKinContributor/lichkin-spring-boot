@@ -2,8 +2,9 @@
 
 <#macro html type="">
 
+<#assign _$=_$!"">
 <#assign calculateType=type>
-<#if !(_$??)>
+<#if type=="" && _$=="">
 	<#assign calculateType="web">
 </#if>
 
