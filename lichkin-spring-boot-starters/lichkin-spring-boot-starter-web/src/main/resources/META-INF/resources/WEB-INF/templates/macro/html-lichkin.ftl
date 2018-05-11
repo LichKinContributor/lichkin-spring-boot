@@ -49,7 +49,7 @@
 			<#nested "javascript-links"/>
 		</#if>
 		<#if section="javascript-contents">
-			LK.UI.icons = ['sysMgmt','roleMgmt','userMgmt','dictMgmt','loginLog','sysOperLog','sysErrorLog','appMgmt','appVersionMgmt','appBannerMgmt','appNewsMgmt','appFeedbackMgmt','appScoreMgmt','websiteMgmt','websiteBannerMgmt','websiteNewsMgmt','compMgmt','deptMgmt','employeeMgmt','workflowMgmt','dictTimeMgmt','employeeAttendance'];
+			LK.UI.icons = ['starter','starter-back','starter-closed','sysMgmt','roleMgmt','userMgmt','dictMgmt','loginLog','sysOperLog','sysErrorLog','appMgmt','appVersionMgmt','appBannerMgmt','appNewsMgmt','appFeedbackMgmt','appScoreMgmt','websiteMgmt','websiteBannerMgmt','websiteNewsMgmt','compMgmt','deptMgmt','employeeMgmt','workflowMgmt','dictTimeMgmt','employeeAttendance'];
 			<#nested "javascript-contents"/>
 			var $iconsStyle = $('#lichkin-icons');
 			for (var i = 0; i < LK.UI.icons.length; i++) {
