@@ -1,6 +1,6 @@
 <#include "/macro/html-lichkin.ftl"/>
 
-<@html "web";section>
+<@html ;section>
 	<#if section="link">
 		<#-- 引入对应的样式文件 -->
 		<@lichkin@cssTag/>
