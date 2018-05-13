@@ -21,7 +21,7 @@ import lombok.Setter;
 public class SysAppVersionEntity extends LKMappedBaseSysEntity {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -29356283776495834L;
+	private static final long serialVersionUID = -8888886666666002L;
 
 	/** 客户端唯一标识 */
 	@Column(nullable = false, length = 128)
