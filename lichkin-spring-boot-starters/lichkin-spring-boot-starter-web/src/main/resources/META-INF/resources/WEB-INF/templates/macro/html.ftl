@@ -16,11 +16,15 @@
 	<body id="lichkin-body" class="lichkin-body" <#nested "body-attributes"/>>
 		<#-- HTML文本body以内的内容 -->
 		<#nested "body-content"/>
+		<#-- 脚本代码 -->
+		<script id="lichkin-javascript-contents-before-links" type="text/javascript">
+			<#nested "javascript-contents-before-links"/>
+		</script>
 		<#-- 脚本文件引入，此处引用可减少脚本文件的DOM操作代码。 -->
 		<#nested "javascript-links"/>
 		<#-- 脚本代码 -->
-		<script type="text/javascript">
-			<#nested "javascript-contents"/>
+		<script id="lichkin-javascript-contents-after-links" type="text/javascript">
+			<#nested "javascript-contents-after-links"/>
 		</script>
 	</body>
 </html>
