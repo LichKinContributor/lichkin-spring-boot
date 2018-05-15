@@ -38,6 +38,30 @@ public class LKDBPrimaryConfigs extends LKDBConfigs {
 	/** 数据源 */
 	private DataSource primaryDataSource;
 
+
+	public DataSource getSecondaryDataSource() {
+		return primaryDataSource;
+	}
+
+
+	/** 实体类管理对象工厂 */
+	private LocalContainerEntityManagerFactoryBean primaryLocalContainerEntityManagerFactoryBean;
+
+
+	public LocalContainerEntityManagerFactoryBean getSecondaryLocalContainerEntityManagerFactoryBean() {
+		return primaryLocalContainerEntityManagerFactoryBean;
+	}
+
+
+	/** 事务管理对象 */
+	private PlatformTransactionManager primaryPlatformTransactionManager;
+
+
+	public PlatformTransactionManager getSecondaryPlatformTransactionManager() {
+		return primaryPlatformTransactionManager;
+	}
+
+
 	/** 是否显示SQL语句 */
 	@Value(value = "${lichkin.framework.db.primary.jpa.show-sql}")
 	private String showSql;
@@ -73,7 +97,7 @@ public class LKDBPrimaryConfigs extends LKDBConfigs {
 	@Bean(name = "primaryLocalContainerEntityManagerFactoryBean")
 	@DependsOn(value = "primaryDataSource")
 	public LocalContainerEntityManagerFactoryBean primaryLocalContainerEntityManagerFactoryBean(final EntityManagerFactoryBuilder builder) {
-		return builder.dataSource(primaryDataSource)
+		primaryLocalContainerEntityManagerFactoryBean = builder.dataSource(primaryDataSource)
 
 				.properties(buildJpaProperties(showSql, ddlAuto, namingPhysicalStrategy))
 
@@ -82,6 +106,7 @@ public class LKDBPrimaryConfigs extends LKDBConfigs {
 				.persistenceUnit("primaryPersistenceUnit")
 
 				.build();
+		return primaryLocalContainerEntityManagerFactoryBean;
 	}
 
 
@@ -94,7 +119,8 @@ public class LKDBPrimaryConfigs extends LKDBConfigs {
 	@Bean(name = "primaryPlatformTransactionManager")
 	@DependsOn(value = "primaryLocalContainerEntityManagerFactoryBean")
 	public PlatformTransactionManager primaryPlatformTransactionManager(final EntityManagerFactoryBuilder builder) {
-		return new JpaTransactionManager(primaryLocalContainerEntityManagerFactoryBean(builder).getObject());
+		primaryPlatformTransactionManager = new JpaTransactionManager(primaryLocalContainerEntityManagerFactoryBean(builder).getObject());
+		return primaryPlatformTransactionManager;
 	}
 
 }
