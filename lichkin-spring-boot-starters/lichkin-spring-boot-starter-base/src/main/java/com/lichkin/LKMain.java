@@ -56,7 +56,21 @@ public class LKMain {
 	public static final String SYSTEM_ID = LKRandomUtils.create(32);
 
 	/** 默认加载的Profiles */
-	private static String[] PROFILES = { "base", "db", "db2", "web", "admin", "common-base", "common-db", "common-db2", "common-web", "common-admin", "common", "development" };
+	private static String[] PROFILES = {
+
+			"common-base", "base",
+
+			"common-db", "db",
+
+			"common-db2", "db2",
+
+			"common-web", "web",
+
+			"common-admin", "admin",
+
+			"development"
+
+	};
 
 	/** 配置的Profiles */
 	private static String[] CONFIGED_PROFILES;
