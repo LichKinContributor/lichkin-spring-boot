@@ -33,7 +33,7 @@
     <!-- lichkin starter -->
     <dependency>
       <groupId>com.lichkin.springframework.boot</groupId>
-      <artifactId>lichkin-spring-boot-starter-base</artifactId>
+      <artifactId>lichkin-spring-boot-starter-database</artifactId>
     </dependency>
   </dependencies>
 
