@@ -63,15 +63,15 @@ public class LKDBPrimaryConfigs extends LKDBConfigs {
 
 
 	/** 是否显示SQL语句 */
-	@Value(value = "${lichkin.framework.db.primary.jpa.show-sql}")
+	@Value(value = "${lichkin.framework.db.primary.jpa.show-sql:false}")
 	private String showSql;
 
 	/** 建表方式 */
-	@Value(value = "${lichkin.framework.db.primary.jpa.hibernate.ddl-auto}")
+	@Value(value = "${lichkin.framework.db.primary.jpa.hibernate.ddl-auto:none}")
 	private String ddlAuto;
 
 	/** 命名策略 */
-	@Value(value = "${lichkin.framework.db.primary.jpa.hibernate.naming.physical-strategy}")
+	@Value(value = "${lichkin.framework.db.primary.jpa.hibernate.naming.physical-strategy:com.lichkin.springframework.db.configs.LKPhysicalNamingStrategy}")
 	private String namingPhysicalStrategy;
 
 
