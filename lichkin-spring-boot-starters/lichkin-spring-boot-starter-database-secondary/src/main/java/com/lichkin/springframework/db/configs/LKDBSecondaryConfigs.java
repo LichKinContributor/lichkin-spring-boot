@@ -17,7 +17,6 @@ import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -58,7 +57,6 @@ public class LKDBSecondaryConfigs extends LKDBConfigs {
 	 * 构建数据源
 	 * @return 数据源
 	 */
-	@Primary
 	@Bean(name = DATA_SOURCE)
 	@ConfigurationProperties(prefix = CONFIG_KEY_PREFIX)
 	public DataSource primaryDataSource() {
@@ -72,7 +70,6 @@ public class LKDBSecondaryConfigs extends LKDBConfigs {
 	 * @param builder 实体类管理对象工厂
 	 * @return 实体类管理对象工厂
 	 */
-	@Primary
 	@Bean(name = LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
 	@DependsOn(value = DATA_SOURCE)
 	public LocalContainerEntityManagerFactoryBean primaryLocalContainerEntityManagerFactoryBean(final EntityManagerFactoryBuilder builder) {
@@ -94,7 +91,6 @@ public class LKDBSecondaryConfigs extends LKDBConfigs {
 	 * @param builder 实体类管理对象工厂
 	 * @return 事务管理对象
 	 */
-	@Primary
 	@Bean(name = PLATFORM_TRANSACTION_MANAGER)
 	@DependsOn(value = LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
 	public PlatformTransactionManager primaryPlatformTransactionManager(final EntityManagerFactoryBuilder builder) {
