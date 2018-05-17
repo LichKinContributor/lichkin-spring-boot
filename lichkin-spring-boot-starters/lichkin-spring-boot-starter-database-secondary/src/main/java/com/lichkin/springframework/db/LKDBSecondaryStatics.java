@@ -23,6 +23,9 @@ public interface LKDBSecondaryStatics {
 	/** 数据源定义KEY */
 	public static final String DATA_SOURCE = KEY + "DataSource";
 
+	/** 数据源属性定义KEY */
+	public static final String DATA_SOURCE_PORPERTEIS = KEY + "DataSourceProperties";
+
 	/** 事务管理对象定义KEY */
 	public static final String PLATFORM_TRANSACTION_MANAGER = KEY + "PlatformTransactionManager";
 

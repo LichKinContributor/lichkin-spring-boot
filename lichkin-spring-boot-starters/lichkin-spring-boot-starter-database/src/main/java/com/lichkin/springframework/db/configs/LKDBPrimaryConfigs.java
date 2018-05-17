@@ -3,6 +3,7 @@ package com.lichkin.springframework.db.configs;
 import static com.lichkin.springframework.db.LKDBPrimaryStatics.CONFIG_KEY_PREFIX;
 import static com.lichkin.springframework.db.LKDBPrimaryStatics.DAO_PACKAGES;
 import static com.lichkin.springframework.db.LKDBPrimaryStatics.DATA_SOURCE;
+import static com.lichkin.springframework.db.LKDBPrimaryStatics.DATA_SOURCE_PORPERTEIS;
 import static com.lichkin.springframework.db.LKDBPrimaryStatics.ENTITY_PACKAGES;
 import static com.lichkin.springframework.db.LKDBPrimaryStatics.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN;
 import static com.lichkin.springframework.db.LKDBPrimaryStatics.PERSISTENCE_UNIT;
@@ -11,6 +12,7 @@ import static com.lichkin.springframework.db.LKDBPrimaryStatics.PLATFORM_TRANSAC
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -23,6 +25,8 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import com.zaxxer.hikari.HikariDataSource;
 
 /**
  * 数据库配置
@@ -55,14 +59,28 @@ public class LKDBPrimaryConfigs extends LKDBConfigs {
 
 
 	/**
+	 * 构建数据源属性
+	 * @return 数据源属性
+	 */
+	@Primary
+	@Bean(name = DATA_SOURCE_PORPERTEIS)
+	@ConfigurationProperties(prefix = CONFIG_KEY_PREFIX)
+	public DataSourceProperties dataSourceProperties() {
+		return new DataSourceProperties();
+	}
+
+
+	/**
 	 * 构建数据源
+	 * @param properties 数据源属性
 	 * @return 数据源
 	 */
 	@Primary
 	@Bean(name = DATA_SOURCE)
+	@DependsOn(value = DATA_SOURCE_PORPERTEIS)
 	@ConfigurationProperties(prefix = CONFIG_KEY_PREFIX)
-	public DataSource primaryDataSource() {
-		dataSource = DataSourceBuilder.create().build();
+	public DataSource primaryDataSource(DataSourceProperties properties) {
+		dataSource = DataSourceBuilder.create().type(HikariDataSource.class).build();
 		return dataSource;
 	}
 
