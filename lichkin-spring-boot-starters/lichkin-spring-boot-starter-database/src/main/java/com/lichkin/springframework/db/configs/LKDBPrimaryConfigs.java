@@ -1,5 +1,13 @@
 package com.lichkin.springframework.db.configs;
 
+import static com.lichkin.springframework.db.LKDBPrimaryStatics.CONFIG_KEY_PREFIX;
+import static com.lichkin.springframework.db.LKDBPrimaryStatics.DAO_PACKAGES;
+import static com.lichkin.springframework.db.LKDBPrimaryStatics.DATA_SOURCE;
+import static com.lichkin.springframework.db.LKDBPrimaryStatics.ENTITY_PACKAGES;
+import static com.lichkin.springframework.db.LKDBPrimaryStatics.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN;
+import static com.lichkin.springframework.db.LKDBPrimaryStatics.PERSISTENCE_UNIT;
+import static com.lichkin.springframework.db.LKDBPrimaryStatics.PLATFORM_TRANSACTION_MANAGER;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -16,62 +24,33 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.lichkin.framework.defines.LKFrameworkStatics;
-
 /**
- * 主数据库配置
+ * 数据库配置
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
 
-		entityManagerFactoryRef = "primaryLocalContainerEntityManagerFactoryBean",
+		entityManagerFactoryRef = LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN,
 
-		transactionManagerRef = "primaryPlatformTransactionManager",
+		transactionManagerRef = PLATFORM_TRANSACTION_MANAGER,
 
-		basePackages = { LKFrameworkStatics.DB_PRIMARY_DAO_PACKAGES }
+		basePackages = { DAO_PACKAGES }
 
 )
 public class LKDBPrimaryConfigs extends LKDBConfigs {
 
-	/** 数据源 */
-	private DataSource primaryDataSource;
-
-
-	public DataSource getSecondaryDataSource() {
-		return primaryDataSource;
-	}
-
-
-	/** 实体类管理对象工厂 */
-	private LocalContainerEntityManagerFactoryBean primaryLocalContainerEntityManagerFactoryBean;
-
-
-	public LocalContainerEntityManagerFactoryBean getSecondaryLocalContainerEntityManagerFactoryBean() {
-		return primaryLocalContainerEntityManagerFactoryBean;
-	}
-
-
-	/** 事务管理对象 */
-	private PlatformTransactionManager primaryPlatformTransactionManager;
-
-
-	public PlatformTransactionManager getSecondaryPlatformTransactionManager() {
-		return primaryPlatformTransactionManager;
-	}
-
-
 	/** 是否显示SQL语句 */
-	@Value(value = "${lichkin.framework.db.primary.jpa.show-sql:false}")
+	@Value(value = "${" + CONFIG_KEY_PREFIX + ".jpa.show-sql:false}")
 	private String showSql;
 
 	/** 建表方式 */
-	@Value(value = "${lichkin.framework.db.primary.jpa.hibernate.ddl-auto:none}")
+	@Value(value = "${" + CONFIG_KEY_PREFIX + ".jpa.hibernate.ddl-auto:none}")
 	private String ddlAuto;
 
 	/** 命名策略 */
-	@Value(value = "${lichkin.framework.db.primary.jpa.hibernate.naming.physical-strategy:com.lichkin.springframework.db.configs.LKPhysicalNamingStrategy}")
+	@Value(value = "${" + CONFIG_KEY_PREFIX + ".jpa.hibernate.naming.physical-strategy:com.lichkin.springframework.db.configs.LKPhysicalNamingStrategy}")
 	private String namingPhysicalStrategy;
 
 
@@ -80,11 +59,11 @@ public class LKDBPrimaryConfigs extends LKDBConfigs {
 	 * @return 数据源
 	 */
 	@Primary
-	@Bean(name = "primaryDataSource")
-	@ConfigurationProperties(prefix = "lichkin.framework.db.primary")
+	@Bean(name = DATA_SOURCE)
+	@ConfigurationProperties(prefix = CONFIG_KEY_PREFIX)
 	public DataSource primaryDataSource() {
-		primaryDataSource = DataSourceBuilder.create().build();
-		return primaryDataSource;
+		dataSource = DataSourceBuilder.create().build();
+		return dataSource;
 	}
 
 
@@ -94,19 +73,19 @@ public class LKDBPrimaryConfigs extends LKDBConfigs {
 	 * @return 实体类管理对象工厂
 	 */
 	@Primary
-	@Bean(name = "primaryLocalContainerEntityManagerFactoryBean")
-	@DependsOn(value = "primaryDataSource")
+	@Bean(name = LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
+	@DependsOn(value = DATA_SOURCE)
 	public LocalContainerEntityManagerFactoryBean primaryLocalContainerEntityManagerFactoryBean(final EntityManagerFactoryBuilder builder) {
-		primaryLocalContainerEntityManagerFactoryBean = builder.dataSource(primaryDataSource)
+		localContainerEntityManagerFactoryBean = builder.dataSource(dataSource)
 
 				.properties(buildJpaProperties(showSql, ddlAuto, namingPhysicalStrategy))
 
-				.packages(LKFrameworkStatics.DB_PRIMARY_ENTITY_PACKAGES)
+				.packages(ENTITY_PACKAGES)
 
-				.persistenceUnit("primaryPersistenceUnit")
+				.persistenceUnit(PERSISTENCE_UNIT)
 
 				.build();
-		return primaryLocalContainerEntityManagerFactoryBean;
+		return localContainerEntityManagerFactoryBean;
 	}
 
 
@@ -116,11 +95,11 @@ public class LKDBPrimaryConfigs extends LKDBConfigs {
 	 * @return 事务管理对象
 	 */
 	@Primary
-	@Bean(name = "primaryPlatformTransactionManager")
-	@DependsOn(value = "primaryLocalContainerEntityManagerFactoryBean")
+	@Bean(name = PLATFORM_TRANSACTION_MANAGER)
+	@DependsOn(value = LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
 	public PlatformTransactionManager primaryPlatformTransactionManager(final EntityManagerFactoryBuilder builder) {
-		primaryPlatformTransactionManager = new JpaTransactionManager(primaryLocalContainerEntityManagerFactoryBean(builder).getObject());
-		return primaryPlatformTransactionManager;
+		platformTransactionManager = new JpaTransactionManager(primaryLocalContainerEntityManagerFactoryBean(builder).getObject());
+		return platformTransactionManager;
 	}
 
 }

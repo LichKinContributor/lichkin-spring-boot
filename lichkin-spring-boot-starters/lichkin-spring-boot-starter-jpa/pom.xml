@@ -30,6 +30,11 @@
   </parent>
 
   <dependencies>
+    <!-- lichkin framework -->
+    <dependency>
+      <groupId>com.lichkin.framework</groupId>
+      <artifactId>lichkin-framework-db</artifactId>
+    </dependency>
     <!-- springboot starter -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
