@@ -10,7 +10,6 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.HibernateException;
-import org.hibernate.query.NativeQuery;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -121,8 +120,7 @@ public abstract class LKBaseDao implements LKDao {
 	 * @return SQL查询对象
 	 */
 	private <T> Query createSQLQuery(final Class<T> clazz, final boolean allMappingAliases, final String sql, final Pageable pageable) {
-		final Query query = getEntityManager().createNativeQuery(sql);
-		query.unwrap(NativeQuery.class);
+		final Query query = getEntityManager().createNativeQuery(sql, clazz);
 		setPageable(query, pageable);
 		return query;
 	}
@@ -178,14 +176,13 @@ public abstract class LKBaseDao implements LKDao {
 		final boolean isSQL = true;
 
 		// 条数查询语句
-		final String cntSql = "select count(1) as one from (" + sql + ") LK";
+		final String cntSql = "select count(1) as one from (" + sql + ") AS LK";
 
 		// 记录日志
 		logSql(isSQL, cntSql, params);
 
 		// 创建查询
 		final Query cntQuery = getEntityManager().createNativeQuery(cntSql);
-		cntQuery.unwrap(NativeQuery.class);
 
 		// 设置参数
 		setParams(isSQL, cntQuery, params);

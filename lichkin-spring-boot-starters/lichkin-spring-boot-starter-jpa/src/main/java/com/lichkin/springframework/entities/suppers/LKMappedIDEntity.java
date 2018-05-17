@@ -36,6 +36,6 @@ public class LKMappedIDEntity implements LKIDInterface {
 
 	/** 公司ID */
 	@Column(nullable = false, length = 32)
-	private String compId = "";
-	
+	private String compId = "ROOT";
+
 }
