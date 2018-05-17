@@ -27,7 +27,7 @@ public interface LKDBSecondaryStatics {
 	public static final String PLATFORM_TRANSACTION_MANAGER = KEY + "PlatformTransactionManager";
 
 	/** dao对象名称 */
-	public static final String DAO_NAME = "dao";
+	public static final String DAO_NAME = "dao2";
 
 	/** dao扫描包 */
 	public static final String DAO_PACKAGES = LKFrameworkStatics.DB_SECONDARY_DAO_PACKAGES;
