@@ -23,8 +23,14 @@ public interface LKDBSecondaryStatics {
 	/** 数据源定义KEY */
 	public static final String DATA_SOURCE = KEY + "DataSource";
 
-	/** 数据源属性定义KEY */
-	public static final String DATA_SOURCE_PORPERTEIS = KEY + "DataSourceProperties";
+	/** JPA属性定义KEY */
+	public static final String JPA_PORPERTEIS = KEY + "JPAProperties";
+
+	/** JPA配置前缀 */
+	public static final String JPA_PORPERTEIS_CONFIG_KEY_PREFIX = CONFIG_KEY_PREFIX + ".jpa";
+
+	/** 数据源配置前缀 */
+	public static final String DATA_SOURCE_PORPERTEIS_CONFIG_KEY_PREFIX = CONFIG_KEY_PREFIX + ".datasource";
 
 	/** 事务管理对象定义KEY */
 	public static final String PLATFORM_TRANSACTION_MANAGER = KEY + "PlatformTransactionManager";

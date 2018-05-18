@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort.Order;
 
 import com.lichkin.framework.db.statics.LKSQLStatics;
 import com.lichkin.framework.db.vos.LKOneVo;
+import com.lichkin.framework.db.vos.LKSqlUpdateVo;
 import com.lichkin.framework.db.vos.LKSqlVo;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
@@ -159,7 +160,7 @@ public abstract class LKBaseDao implements LKDao {
 				}
 			} else {
 				for (int i = 0; i < params.length; i++) {
-					query.setParameter(i + 1, params[i]);
+					query.setParameter(i, params[i]);
 				}
 			}
 		}
@@ -321,6 +322,7 @@ public abstract class LKBaseDao implements LKDao {
 	 * @param allMappingAliases 是否全映射
 	 * @return 列表
 	 */
+	@SuppressWarnings("deprecation")
 	private <T> List<T> getList(final boolean isSQL, final LKSqlVo sqlVo, final Class<T> clazz, final boolean allMappingAliases) {
 		final String sql = sqlVo.getSql();
 		final Object[] params = sqlVo.getParams();
@@ -348,6 +350,7 @@ public abstract class LKBaseDao implements LKDao {
 	 * @param allMappingAliases 是否全映射
 	 * @return 分页
 	 */
+	@SuppressWarnings("deprecation")
 	private <T> Page<T> getPage(final boolean isSQL, final LKSqlVo sqlVo, final Class<T> clazz, Pageable pageable, final boolean allMappingAliases) {
 		final String sql = sqlVo.getSql();
 		final Object[] params = sqlVo.getParams();
@@ -444,9 +447,10 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public int executeUpdateBySql(final LKSqlVo sqlVo) {
-		final boolean isSQL = true;
+	public int executeUpdate(LKSqlUpdateVo sqlVo) {
+		final boolean isSQL = sqlVo.isSQL();
 		final String sql = sqlVo.getSql();
 		final Object[] params = sqlVo.getParams();
 
@@ -454,7 +458,12 @@ public abstract class LKBaseDao implements LKDao {
 		logSql(isSQL, sql, params);
 
 		// 创建更新
-		final Query query = getEntityManager().createNativeQuery(sql);
+		Query query = null;
+		if (isSQL) {
+			query = getEntityManager().createNativeQuery(sql);
+		} else {
+			query = getEntityManager().createQuery(sql);
+		}
 
 		// 设置参数
 		setParams(isSQL, query, params);
@@ -484,12 +493,7 @@ public abstract class LKBaseDao implements LKDao {
 
 	@Override
 	public <T> T findOneById(final Class<T> clazz, final String id) {
-		final LKSqlVo sqlVo = new LKSqlVo();
-		sqlVo.appendSql("from");
-		sqlVo.appendSql(clazz.getName());
-		sqlVo.appendSql("where id = ?");
-		sqlVo.addParam(id);
-		return findOneByHql(sqlVo, clazz);
+		return findOneByHql(new LKSqlVo(String.format("from %s where id = ?", clazz.getName()), id), clazz);
 	}
 
 

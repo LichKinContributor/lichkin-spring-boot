@@ -179,24 +179,6 @@ public class LKMain {
 				LKFrameworkStatics.SYSTEM_NAME = LKPropertiesUtils.validateConfigValue("lichkin.framework.system.name", LKFrameworkStatics.SYSTEM_NAME);
 				LKFrameworkStatics.SYSTEM_DEBUG = LKPropertiesUtils.validateConfigValue("lichkin.framework.system.debug", LKFrameworkStatics.SYSTEM_DEBUG);
 
-				if (ENV_DB) {
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.show-sql", "false");
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.hibernate.ddl-auto", "none");
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jpa.hibernate.naming.physical-strategy", "com.lichkin.springframework.db.configs.LKPhysicalNamingStrategy");
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.jdbc-url", null);
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.username", null);
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.primary.password", null);
-				}
-
-				if (ENV_DB2) {
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jpa.show-sql", "false");
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jpa.hibernate.ddl-auto", "none");
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jpa.hibernate.naming.physical-strategy", "com.lichkin.springframework.db.configs.LKPhysicalNamingStrategy");
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.jdbc-url", null);
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.username", null);
-					LKPropertiesUtils.validateConfigValue("lichkin.framework.db.secondary.password", null);
-				}
-
 				if (ENV_WEB) {
 					LKFrameworkStatics.WEB_DEBUG = LKPropertiesUtils.validateConfigValue("lichkin.framework.web.debug", LKFrameworkStatics.WEB_DEBUG);
 				}

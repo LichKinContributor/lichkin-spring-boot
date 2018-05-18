@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.lichkin.framework.db.vos.LKSqlUpdateVo;
 import com.lichkin.framework.db.vos.LKSqlVo;
 
 /**
@@ -25,7 +26,7 @@ public interface LKDao {
 	/**
 	 * 查询列表
 	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询对象
+	 * @param sqlVo 查询语句对象
 	 * @param clazz 查询结果映射对象
 	 * @param allMappingAliases 是否全映射
 	 * @return 列表
@@ -36,7 +37,7 @@ public interface LKDao {
 	/**
 	 * 查询列表
 	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询对象
+	 * @param sqlVo 查询语句对象
 	 * @param clazz 查询结果映射对象
 	 * @return 列表
 	 */
@@ -46,7 +47,7 @@ public interface LKDao {
 	/**
 	 * 查询分页
 	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询对象
+	 * @param sqlVo 查询语句对象
 	 * @param clazz 查询结果映射对象
 	 * @param pageable 分页信息
 	 * @param allMappingAliases 是否全映射
@@ -58,7 +59,7 @@ public interface LKDao {
 	/**
 	 * 查询分页
 	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询对象
+	 * @param sqlVo 查询语句对象
 	 * @param clazz 查询结果映射对象
 	 * @param pageable 分页信息
 	 * @return 分页
@@ -69,7 +70,7 @@ public interface LKDao {
 	/**
 	 * 获取对象
 	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询条件对象
+	 * @param sqlVo 查询语句对象
 	 * @param clazz 查询结果映射对象
 	 * @param allMappingAliases 是否全映射
 	 * @return 对象
@@ -80,7 +81,7 @@ public interface LKDao {
 	/**
 	 * 获取对象
 	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询条件对象
+	 * @param sqlVo 查询语句对象
 	 * @param clazz 查询结果映射对象
 	 * @return 对象
 	 */
@@ -89,7 +90,7 @@ public interface LKDao {
 
 	/**
 	 * 获取字符串（必须使用select count(1) as one from t的形式）
-	 * @param sqlVo 查询条件对象
+	 * @param sqlVo 查询语句对象
 	 * @return 字符串
 	 */
 	public String queryStringBySql(LKSqlVo sqlVo);
@@ -97,7 +98,7 @@ public interface LKDao {
 
 	/**
 	 * 获取数字（必须使用select count(1) as one from t的形式）
-	 * @param sqlVo 查询条件对象
+	 * @param sqlVo 查询语句对象
 	 * @return 字符串
 	 */
 	public Long queryLongBySql(LKSqlVo sqlVo);
@@ -108,13 +109,13 @@ public interface LKDao {
 	 * @param sqlVo 更新条件对象
 	 * @return 影响的条数
 	 */
-	public int executeUpdateBySql(LKSqlVo sqlVo);
+	public int executeUpdate(LKSqlUpdateVo sqlVo);
 
 
 	/**
 	 * 查询列表
 	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询对象
+	 * @param sqlVo 查询语句对象
 	 * @param clazz 查询结果映射对象
 	 * @return 列表
 	 */
@@ -124,7 +125,7 @@ public interface LKDao {
 	/**
 	 * 查询分页
 	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询对象
+	 * @param sqlVo 查询语句对象
 	 * @param clazz 查询结果映射对象
 	 * @param pageable 分页信息
 	 * @return 分页
@@ -135,7 +136,7 @@ public interface LKDao {
 	/**
 	 * 获取对象
 	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询条件对象
+	 * @param sqlVo 查询语句对象
 	 * @param clazz 查询结果映射对象
 	 * @return 对象
 	 */

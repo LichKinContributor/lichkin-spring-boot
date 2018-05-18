@@ -1,31 +1,29 @@
 package com.lichkin.springframework.db.configs;
 
-import static com.lichkin.springframework.db.LKDBSecondaryStatics.CONFIG_KEY_PREFIX;
 import static com.lichkin.springframework.db.LKDBSecondaryStatics.DAO_PACKAGES;
 import static com.lichkin.springframework.db.LKDBSecondaryStatics.DATA_SOURCE;
-import static com.lichkin.springframework.db.LKDBSecondaryStatics.DATA_SOURCE_PORPERTEIS;
+import static com.lichkin.springframework.db.LKDBSecondaryStatics.DATA_SOURCE_PORPERTEIS_CONFIG_KEY_PREFIX;
 import static com.lichkin.springframework.db.LKDBSecondaryStatics.ENTITY_PACKAGES;
+import static com.lichkin.springframework.db.LKDBSecondaryStatics.JPA_PORPERTEIS;
+import static com.lichkin.springframework.db.LKDBSecondaryStatics.JPA_PORPERTEIS_CONFIG_KEY_PREFIX;
 import static com.lichkin.springframework.db.LKDBSecondaryStatics.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN;
 import static com.lichkin.springframework.db.LKDBSecondaryStatics.PERSISTENCE_UNIT;
 import static com.lichkin.springframework.db.LKDBSecondaryStatics.PLATFORM_TRANSACTION_MANAGER;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.zaxxer.hikari.HikariDataSource;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 /**
  * 数据库配置
@@ -42,77 +40,50 @@ import com.zaxxer.hikari.HikariDataSource;
 		basePackages = { DAO_PACKAGES }
 
 )
+@Getter(value = AccessLevel.PACKAGE)
 public class LKDBSecondaryConfigs extends LKDBConfigs {
 
-	/** 是否显示SQL语句 */
-	@Value(value = "${" + CONFIG_KEY_PREFIX + ".jpa.show-sql:false}")
-	private String showSql;
-
-	/** 建表方式 */
-	@Value(value = "${" + CONFIG_KEY_PREFIX + ".jpa.hibernate.ddl-auto:none}")
-	private String ddlAuto;
-
-	/** 命名策略 */
-	@Value(value = "${" + CONFIG_KEY_PREFIX + ".jpa.hibernate.naming.physical-strategy:com.lichkin.springframework.db.configs.LKPhysicalNamingStrategy}")
-	private String namingPhysicalStrategy;
-
-
-	/**
-	 * 构建数据源属性
-	 * @return 数据源属性
-	 */
-	@Bean(name = DATA_SOURCE_PORPERTEIS)
-	@ConfigurationProperties(prefix = CONFIG_KEY_PREFIX)
-	public DataSourceProperties dataSourceProperties() {
-		return new DataSourceProperties();
+	@Bean(name = JPA_PORPERTEIS)
+	@ConfigurationProperties(prefix = JPA_PORPERTEIS_CONFIG_KEY_PREFIX)
+	@Override
+	public LKJpaProperties jpaProperties() {
+		return super.jpaProperties();
 	}
 
 
-	/**
-	 * 构建数据源
-	 * @param properties 数据源属性
-	 * @return 数据源
-	 */
 	@Bean(name = DATA_SOURCE)
-	@DependsOn(value = DATA_SOURCE_PORPERTEIS)
-	@ConfigurationProperties(prefix = CONFIG_KEY_PREFIX)
-	public DataSource primaryDataSource(DataSourceProperties properties) {
-		dataSource = DataSourceBuilder.create().type(HikariDataSource.class).build();
-		return dataSource;
+	@ConfigurationProperties(prefix = DATA_SOURCE_PORPERTEIS_CONFIG_KEY_PREFIX)
+	@Override
+	public DataSource dataSource() {
+		return super.dataSource();
 	}
 
 
-	/**
-	 * 配置实体类管理对象工厂
-	 * @param builder 实体类管理对象工厂
-	 * @return 实体类管理对象工厂
-	 */
 	@Bean(name = LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
-	@DependsOn(value = DATA_SOURCE)
-	public LocalContainerEntityManagerFactoryBean primaryLocalContainerEntityManagerFactoryBean(final EntityManagerFactoryBuilder builder) {
-		localContainerEntityManagerFactoryBean = builder.dataSource(dataSource)
-
-				.properties(buildJpaProperties(showSql, ddlAuto, namingPhysicalStrategy))
-
-				.packages(ENTITY_PACKAGES)
-
-				.persistenceUnit(PERSISTENCE_UNIT)
-
-				.build();
-		return localContainerEntityManagerFactoryBean;
+	@DependsOn(value = { DATA_SOURCE, JPA_PORPERTEIS })
+	@Override
+	public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(EntityManagerFactoryBuilder builder) {
+		return super.localContainerEntityManagerFactoryBean(builder);
 	}
 
 
-	/**
-	 * 定义事务管理对象
-	 * @param builder 实体类管理对象工厂
-	 * @return 事务管理对象
-	 */
 	@Bean(name = PLATFORM_TRANSACTION_MANAGER)
-	@DependsOn(value = LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
-	public PlatformTransactionManager primaryPlatformTransactionManager(final EntityManagerFactoryBuilder builder) {
-		platformTransactionManager = new JpaTransactionManager(primaryLocalContainerEntityManagerFactoryBean(builder).getObject());
-		return platformTransactionManager;
+	@DependsOn(value = { DATA_SOURCE, JPA_PORPERTEIS, LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN })
+	@Override
+	public PlatformTransactionManager platformTransactionManager() {
+		return super.platformTransactionManager();
+	}
+
+
+	@Override
+	public String getPersistenceUnit() {
+		return PERSISTENCE_UNIT;
+	}
+
+
+	@Override
+	public String getEntityPackages() {
+		return ENTITY_PACKAGES;
 	}
 
 }
