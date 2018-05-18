@@ -15,7 +15,7 @@ import lombok.Getter;
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 @Getter
-class LKDBConfigs {
+public class LKDBConfigs {
 
 	/** 数据源 */
 	protected DataSource dataSource;
