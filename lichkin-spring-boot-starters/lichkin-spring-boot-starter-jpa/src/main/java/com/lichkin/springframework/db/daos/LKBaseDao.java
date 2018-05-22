@@ -99,13 +99,13 @@ public abstract class LKBaseDao implements LKDao {
 	/**
 	 * 创建查询对象
 	 * @param <E> 返回值类型为clazz参数定义的类型
-	 * @param sql SQL语句
+	 * @param hql HQL语句
 	 * @param params 参数
 	 * @param clazz 查询结果映射对象类型
 	 * @return 查询对象
 	 */
-	private <E> TypedQuery<E> createHQLQuery(String sql, Object[] params, Class<E> clazz) {
-		TypedQuery<E> query = getEntityManager().createQuery(sql, clazz);
+	private <E> TypedQuery<E> createHQLQuery(String hql, Object[] params, Class<E> clazz) {
+		TypedQuery<E> query = getEntityManager().createQuery(hql, clazz);
 
 		if (ArrayUtils.isNotEmpty(params)) {
 			for (int i = 0; i < params.length; i++) {
@@ -192,20 +192,20 @@ public abstract class LKBaseDao implements LKDao {
 
 
 	@Override
-	public <E> List<E> findList(String sql, Object[] params, Class<E> clazz) {
+	public <E> List<E> findList(String hql, Object[] params, Class<E> clazz) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
-		String sqlId = LKRandomUtils.create(32);
-		logBefore(false, sqlId, sql, params);
+		String hqlId = LKRandomUtils.create(32);
+		logBefore(false, hqlId, hql, params);
 
 		// 创建查询对象
-		TypedQuery<E> query = createHQLQuery(sql, params, clazz);
+		TypedQuery<E> query = createHQLQuery(hql, params, clazz);
 
 		// 执行查询
 		List<E> listEntity = query.getResultList();
 
 		// 记录结束日志
-		logAfter(false, sqlId, startTime);
+		logAfter(false, hqlId, startTime);
 
 		// 返回结果
 		return listEntity;
@@ -247,17 +247,17 @@ public abstract class LKBaseDao implements LKDao {
 
 
 	@Override
-	public <E> Page<E> findPage(String sql, Object[] params, Class<E> clazz, int pageNumber, int pageSize) {
+	public <E> Page<E> findPage(String hql, Object[] params, Class<E> clazz, int pageNumber, int pageSize) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
-		String sqlId = LKRandomUtils.create(32);
-		logBefore(false, sqlId, sql, params);
+		String hqlId = LKRandomUtils.create(32);
+		logBefore(false, hqlId, hql, params);
 
 		// 查询数据总数
-		long total = findLong(LKDaoUtils.createCountSQL(sql), params);
+		long total = findLong(LKDaoUtils.createCountSQL(hql), params);
 
 		// 创建查询对象
-		TypedQuery<E> query = createHQLQuery(sql, params, clazz);
+		TypedQuery<E> query = createHQLQuery(hql, params, clazz);
 
 		// 初始化分页信息
 		Pageable pageable = initPageable(query, pageNumber, pageSize);
@@ -266,7 +266,7 @@ public abstract class LKBaseDao implements LKDao {
 		List<E> listEntity = query.getResultList();
 
 		// 记录结束日志
-		logAfter(false, sqlId, startTime);
+		logAfter(false, hqlId, startTime);
 
 		// 返回结果
 		return new PageImpl<>(listEntity, pageable, total);
@@ -302,20 +302,20 @@ public abstract class LKBaseDao implements LKDao {
 
 
 	@Override
-	public <E> E findOne(String sql, Object[] params, Class<E> clazz) {
+	public <E> E findOne(String hql, Object[] params, Class<E> clazz) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
-		String sqlId = LKRandomUtils.create(32);
-		logBefore(false, sqlId, sql, params);
+		String hqlId = LKRandomUtils.create(32);
+		logBefore(false, hqlId, hql, params);
 
 		// 创建查询对象
-		TypedQuery<E> query = createHQLQuery(sql, params, clazz);
+		TypedQuery<E> query = createHQLQuery(hql, params, clazz);
 
 		// 执行查询
 		E entity = query.getSingleResult();
 
 		// 记录结束日志
-		logAfter(false, sqlId, startTime);
+		logAfter(false, hqlId, startTime);
 
 		// 返回结果
 		return entity;
@@ -347,20 +347,20 @@ public abstract class LKBaseDao implements LKDao {
 
 
 	@Override
-	public String findString(String sql, Object[] params) {
+	public String findString(String hql, Object[] params) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
-		String sqlId = LKRandomUtils.create(32);
-		logBefore(false, sqlId, sql, params);
+		String hqlId = LKRandomUtils.create(32);
+		logBefore(false, hqlId, hql, params);
 
 		// 创建查询对象
-		TypedQuery<String> query = createHQLQuery(sql, params, String.class);
+		TypedQuery<String> query = createHQLQuery(hql, params, String.class);
 
 		// 执行查询
 		Object obj = query.getSingleResult();
 
 		// 记录结束日志
-		logAfter(false, sqlId, startTime);
+		logAfter(false, hqlId, startTime);
 
 		// 返回结果
 		if (obj == null) {
@@ -395,20 +395,20 @@ public abstract class LKBaseDao implements LKDao {
 
 
 	@Override
-	public Long findLong(String sql, Object[] params) {
+	public Long findLong(String hql, Object[] params) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
-		String sqlId = LKRandomUtils.create(32);
-		logBefore(false, sqlId, sql, params);
+		String hqlId = LKRandomUtils.create(32);
+		logBefore(false, hqlId, hql, params);
 
 		// 创建查询对象
-		TypedQuery<Long> query = createHQLQuery(sql, params, Long.class);
+		TypedQuery<Long> query = createHQLQuery(hql, params, Long.class);
 
 		// 执行查询
 		Object obj = query.getSingleResult();
 
 		// 记录结束日志
-		logAfter(false, sqlId, startTime);
+		logAfter(false, hqlId, startTime);
 
 		// 返回结果
 		if (obj == null) {
