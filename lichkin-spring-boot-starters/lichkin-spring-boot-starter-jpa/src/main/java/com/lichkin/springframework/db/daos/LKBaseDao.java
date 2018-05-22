@@ -1,647 +1,420 @@
 package com.lichkin.springframework.db.daos;
 
-import static com.lichkin.framework.db.statics.LKSQLStatics.DEFAULT_PAGE_NUMBER;
-import static com.lichkin.framework.db.statics.LKSQLStatics.DEFAULT_PAGE_SIZE;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.hibernate.HibernateException;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 
-import com.lichkin.framework.db.statics.LKSQLStatics;
-import com.lichkin.framework.db.vos.LKOneVo;
-import com.lichkin.framework.db.vos.LKSqlUpdateVo;
-import com.lichkin.framework.db.vos.LKSqlVo;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
 import com.lichkin.framework.utils.LKDateTimeUtils;
-import com.lichkin.framework.utils.LKStringUtils;
-import com.lichkin.springframework.db.utils.LKEntityInitializer;
+import com.lichkin.framework.utils.LKRandomUtils;
 
 /**
- * 基本数据库访问类
+ * 数据库访问对象
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 public abstract class LKBaseDao implements LKDao {
 
 	/** 日志对象 */
-	protected final LKLog logger = LKLogFactory.getLog(getClass());
+	private final LKLog logger = LKLogFactory.getLog(getClass());
 
 
 	/**
-	 * 创建日志信息
-	 * @param isSQL true为SQL语句；fales为HQL语句。
-	 * @param sql SQL语句
-	 * @param params 参数列表
-	 * @return 日志信息
+	 * 记录开始日志
+	 * @param useSQL true:SQL;false:HQL.
+	 * @param sqlId 语句唯一标识
+	 * @param sql SQL/HQL语句
+	 * @param params 参数
 	 */
-	private StringBuilder createLogInfo(final boolean isSQL, final String sql, final Object[] params) {
-		final StringBuilder fullSql = new StringBuilder(isSQL ? "SQL: " : "HQL: ");
-		fullSql.append(sql);
-		if (ArrayUtils.isNotEmpty(params)) {
-			fullSql.append(" [params: ");
-			for (int i = 0; i < params.length; i++) {
-				fullSql.append(String.valueOf(params[i]));
-				if (i != (params.length - 1)) {
-					fullSql.append(", ");
-				}
-			}
-			fullSql.append("]");
-		}
-		return fullSql;
+	private void logBefore(boolean useSQL, String sqlId, String sql, Object[] params) {
+		logger.info("%s[%s] -> %s [params:%s]", useSQL ? "SQL" : "HQL", sqlId, sql, LKJsonUtils.toJson(params));
 	}
 
 
 	/**
-	 * 记录日志
-	 * @param isSQL true为SQL语句；fales为HQL语句。
-	 * @param sql SQL语句
-	 * @param params 参数列表
-	 */
-	private void logSql(final boolean isSQL, final String sql, final Object[] params) {
-		logger.info(createLogInfo(isSQL, sql, params).toString());
-	}
-
-
-	/**
-	 * 记录日志
-	 * @param isSQL true为SQL语句；fales为HQL语句。
-	 * @param sql SQL语句
-	 * @param params 参数列表
+	 * 记录结束日志
+	 * @param useSQL true:SQL;false:HQL.
+	 * @param sqlId 语句唯一标识
 	 * @param startTime 开始时间
-	 * @param endTime 结束时间
 	 */
-	private void logSql(final boolean isSQL, final String sql, final Object[] params, final long startTime, final long endTime) {
-		logger.info("query execution time is %sms, from %s to %s.【%s】", String.valueOf(endTime - startTime), formatTime(startTime), formatTime(endTime), createLogInfo(isSQL, sql, params).toString());
+	private DateTime logAfter(boolean useSQL, String sqlId, DateTime startTime) {
+		DateTime endTime = DateTime.now();
+		logger.info("%s[%s] -> %s execution time is %sms, from %s to %s.", useSQL ? "SQL" : "HQL", sqlId, useSQL ? "query" : "find", String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
+		return endTime;
 	}
 
 
 	/**
-	 * 转换成时间格式
-	 * @param millisencond 毫秒数
-	 * @return 时间字符串
+	 * 记录结束日志
+	 * @param sqlId 语句唯一标识
+	 * @param startTime 转换开始时间，查询结束时间。
 	 */
-	private String formatTime(final long millisencond) {
-		return LKDateTimeUtils.toString(new DateTime(millisencond));
+	private void logAfterConvert(String sqlId, DateTime startTime) {
+		DateTime endTime = DateTime.now();
+		logger.info("SQL[%s] -> convert execution time is %sms, from %s to %s.", sqlId, String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
 	}
 
 
 	/**
-	 * 设置分页信息
-	 * @param query 查询对象
-	 * @param pageable 分页信息
-	 */
-	private void setPageable(final Query query, final Pageable pageable) {
-		if (pageable != null) {
-			final int pageNumber = pageable.getPageNumber();
-			final int pageSize = pageable.getPageSize();
-			query.setFirstResult(pageNumber * pageSize);
-			query.setMaxResults(pageSize);
-		}
-	}
-
-
-	/**
-	 * 创建SQL查询对象
-	 * @param clazz 查询结果映射对象
-	 * @param allMappingAliases 是否全映射
+	 * 创建查询对象
 	 * @param sql SQL语句
-	 * @param pageable 分页信息
-	 * @return SQL查询对象
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @return 查询对象
 	 */
-	private <T> Query createSQLQuery(final Class<T> clazz, final boolean allMappingAliases, final String sql, final Pageable pageable) {
-		final Query query = getEntityManager().createNativeQuery(sql, clazz);
-		setPageable(query, pageable);
+	@SuppressWarnings("deprecation")
+	private <B> Query createSQLQuery(String sql, Object[] params, Class<B> clazz) {
+		Query query = getEntityManager().createNativeQuery(sql);
+
+		if (clazz.equals(Map.class)) {
+			query.unwrap(NativeQuery.class).setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		}
+
+		if (ArrayUtils.isNotEmpty(params)) {
+			for (int i = 0; i < params.length; i++) {
+				Object param = params[i];
+				if ((param != null) && param.getClass().isEnum()) {
+					param = param.toString();
+				}
+				query.setParameter(i + 1, param);
+			}
+		}
+
 		return query;
 	}
 
 
 	/**
-	 * 创建HQL查询对象
-	 * @param clazz 查询结果映射对象
+	 * 创建查询对象
+	 * @param <E> 返回值类型为clazz参数定义的类型
 	 * @param sql SQL语句
-	 * @param pageable 分页信息
-	 * @return HQL查询对象
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @return 查询对象
 	 */
-	private <T> Query createHQLQuery(final Class<T> clazz, final String sql, final Pageable pageable) {
-		final Query query = getEntityManager().createQuery(sql, clazz);
-		setPageable(query, pageable);
+	private <E> TypedQuery<E> createHQLQuery(String sql, Object[] params, Class<E> clazz) {
+		TypedQuery<E> query = getEntityManager().createQuery(sql, clazz);
+
+		if (ArrayUtils.isNotEmpty(params)) {
+			for (int i = 0; i < params.length; i++) {
+				query.setParameter(i, params[i]);
+			}
+		}
+
 		return query;
 	}
 
 
+	/** 默认分页大小 */
+	public static int DEFAULT_PAGE_SIZE = 25;
+
+
 	/**
-	 * 设置参数
-	 * @param isSQL 是否为SQL语句
+	 * 校验页码
+	 * @param pageNumber 页码
+	 * @return 页码
+	 */
+	private int checkPageNumber(int pageNumber) {
+		if (pageNumber < 0) {
+			pageNumber = 0;
+		}
+		return pageNumber;
+	}
+
+
+	/**
+	 * 每页数据量
+	 * @param pageSize 每页数据量
+	 * @return 每页数据量
+	 */
+	private int checkPageSize(int pageSize) {
+		if (pageSize <= 0) {
+			pageSize = DEFAULT_PAGE_SIZE;
+		}
+		return pageSize;
+	}
+
+
+	/**
+	 * 初始化分页信息
 	 * @param query 查询对象
-	 * @param params 参数数组
-	 * @return 参数
+	 * @param pageNumber 页码。正整数或0。从0开始。
+	 * @param pageSize 每页数据量。正整数。传入0时表示取框架约定的默认值。
+	 * @return 分页信息
 	 */
-	private void setParams(final boolean isSQL, final Query query, final Object[] params) {
-		if (params != null) {
-			if (isSQL) {
-				for (int i = 0; i < params.length; i++) {
-					Object param = params[i];
-					if ((param != null) && param.getClass().isEnum()) {
-						param = param.toString();
-					}
-					query.setParameter(i + 1, param);
-				}
-			} else {
-				for (int i = 0; i < params.length; i++) {
-					query.setParameter(i, params[i]);
-				}
-			}
-		}
-	}
-
-
-	/**
-	 * 查询条数
-	 * @param sql SQL语句
-	 * @param params 参数数组
-	 * @return 条数
-	 */
-	private long queryCountBySql(final String sql, final Object[] params) {
-		final boolean isSQL = true;
-
-		// 条数查询语句
-		final String cntSql = "select count(1) as one from (" + sql + ") AS LK";
-
-		// 记录日志
-		logSql(isSQL, cntSql, params);
-
-		// 创建查询
-		final Query cntQuery = getEntityManager().createNativeQuery(cntSql);
-
-		// 设置参数
-		setParams(isSQL, cntQuery, params);
-
-		// 执行查询
-		final Object result = cntQuery.getSingleResult();
-		if (result != null) {
-			final Object one = ((LKOneVo) result).getOne();
-			if (one != null) {
-				return Long.parseLong(one.toString());
-			}
-		}
-
-		return 0L;
-	}
-
-
-	/**
-	 * 查询条数
-	 * @param clazz 查询结果映射对象
-	 * @param sql SQL语句
-	 * @param params 参数数组
-	 * @return 条数
-	 */
-	private <T> long queryCountByHql(final Class<T> clazz, final String sql, final Object[] params) {
-		final boolean isSQL = false;
-
-		// 条数查询语句
-		final String entityName = clazz.getName();
-		final String upperCase = sql.toUpperCase();
-		String cntSql = "select count(LK) from " + entityName + " AS LK";
-		if (upperCase.contains(LKSQLStatics.WHERE)) {
-			cntSql = cntSql + LKSQLStatics.BLANKWHEREBLANK + sql.substring(upperCase.indexOf(LKSQLStatics.WHERE) + LKSQLStatics.WHERE.length());
-		}
-
-		// 记录日志
-		logSql(isSQL, cntSql, params);
-
-		// 创建查询
-		final Query cntQuery = getEntityManager().createQuery(cntSql);
-
-		// 设置参数
-		setParams(false, cntQuery, params);
-
-		// 执行查询
-		final Object result = cntQuery.getSingleResult();
-		if (result != null) {
-			return Long.parseLong(result.toString());
-		}
-		return 0L;
-	}
-
-
-	/**
-	 * 拼接排序
-	 * @param isSQL true为SQL语句；fales为HQL语句。
-	 * @param pageable 分页信息
-	 * @param sql SQL语句
-	 * @return 分页查询语句
-	 */
-	private String appendSorts(final boolean isSQL, final Pageable pageable, final String sql) {
-		final Sort sort = pageable.getSort();
-		if (sort == null) {
-			return sql;
-		}
-
-		final StringBuilder pageSql = new StringBuilder(sql);
-		pageSql.append(" ORDER BY");
-		for (final Order order : sort) {
-			if (order != null) {
-				final String property = order.getProperty();
-				final String direction = order.getDirection().toString();
-				pageSql.append(" ").append(isSQL ? LKStringUtils.humpToUnderline(property) : property).append(" ").append(direction).append(",");
-			}
-		}
-		return pageSql.deleteCharAt(pageSql.length() - 1).toString();
-	}
-
-
-	/**
-	 * 返回对象
-	 * @param list 列表
-	 * @return 对象
-	 */
-	private <T> T returnOne(final List<T> list) {
-		if ((list != null) && !list.isEmpty()) {
-			if (list.size() != 1) {
-				throw new HibernateException(String.format("you have %s results", String.valueOf(list.size())));
-			}
-			return list.get(0);
-		}
-		return null;
-	}
-
-
-	/**
-	 * 执行查询
-	 * @param isSQL true为SQL语句；fales为HQL语句。
-	 * @param query 查询对象
-	 * @param sql SQL语句
-	 * @param params 参数
-	 * @return 列表
-	 */
-	@SuppressWarnings("unchecked")
-	private <T> List<T> getResultList(final boolean isSQL, final Query query, final String sql, final Object[] params) {
-		final long startTime = System.currentTimeMillis();
-		final List<T> resultList = query.getResultList();
-		final long endTime = System.currentTimeMillis();
-		logSql(isSQL, sql, params, startTime, endTime);
-		return resultList;
-	}
-
-
-	/**
-	 * 执行更新
-	 * @param isSQL true为SQL语句；fales为HQL语句。
-	 * @param query 查询对象
-	 * @param sql SQL语句
-	 * @param params 参数
-	 * @return 更新的条数
-	 */
-	private <T> int executeUpdate(final boolean isSQL, final Query query, final String sql, final Object[] params) {
-		final long startTime = System.currentTimeMillis();
-		final int resultList = query.executeUpdate();
-		final long endTime = System.currentTimeMillis();
-		logSql(isSQL, sql, params, startTime, endTime);
-		return resultList;
-	}
-
-
-	/**
-	 * 获取列表
-	 * @param isSQL true为SQL语句；fales为HQL语句。
-	 * @param sqlVo 查询对象
-	 * @param clazz 查询结果映射对象
-	 * @param allMappingAliases 是否全映射
-	 * @return 列表
-	 */
-	@SuppressWarnings("deprecation")
-	private <T> List<T> getList(final boolean isSQL, final LKSqlVo sqlVo, final Class<T> clazz, final boolean allMappingAliases) {
-		final String sql = sqlVo.getSql();
-		final Object[] params = sqlVo.getParams();
-
-		// 记录日志
-		logSql(isSQL, sql, params);
-
-		// 创建查询
-		final Query query = isSQL ? createSQLQuery(clazz, allMappingAliases, sql, null) : createHQLQuery(clazz, sql, null);
-
-		// 设置参数
-		setParams(isSQL, query, params);
-
-		// 执行查询
-		return getResultList(isSQL, query, sql, params);
-	}
-
-
-	/**
-	 * 获取分页
-	 * @param isSQL true为SQL语句；fales为HQL语句。
-	 * @param sqlVo 查询对象
-	 * @param clazz 查询结果映射对象
-	 * @param pageable 分页信息
-	 * @param allMappingAliases 是否全映射
-	 * @return 分页
-	 */
-	@SuppressWarnings("deprecation")
-	private <T> Page<T> getPage(final boolean isSQL, final LKSqlVo sqlVo, final Class<T> clazz, Pageable pageable, final boolean allMappingAliases) {
-		final String sql = sqlVo.getSql();
-		final Object[] params = sqlVo.getParams();
-
-		// 记录日志
-		logSql(isSQL, sql, params);
-
-		// 查询条数
-		final long cnt = isSQL ? queryCountBySql(sql, params) : queryCountByHql(clazz, sql, params);
-
-		// 参数判断
-		if (pageable == null) {
-			pageable = PageRequest.of(DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE);
-		}
-		if (cnt == 0L) {
-			return new PageImpl<>(new ArrayList<T>(), pageable, cnt);
-		}
-
-		// 分页查询语句
-		final String pageSql = appendSorts(true, pageable, sql);
-
-		// 记录日志
-		logSql(isSQL, pageSql, params);
-
-		// 创建查询
-		final Query pageQuery = isSQL ? createSQLQuery(clazz, allMappingAliases, sql, pageable) : createHQLQuery(clazz, sql, pageable);
-		setPageable(pageQuery, pageable);
-
-		// 设置参数
-		setParams(isSQL, pageQuery, params);
-
-		// 执行查询
-		return new PageImpl<>(getResultList(isSQL, pageQuery, pageSql, params), pageable, cnt);
-	}
-
-
-	@Override
-	public <T> List<T> queryListBySql(final LKSqlVo sqlVo, final Class<T> clazz, final boolean allMappingAliases) {
-		return getList(true, sqlVo, clazz, allMappingAliases);
-	}
-
-
-	@Override
-	public <T> List<T> queryListBySql(final LKSqlVo sqlVo, final Class<T> clazz) {
-		return queryListBySql(sqlVo, clazz, false);
-	}
-
-
-	@Override
-	public <T> Page<T> queryPageBySql(final LKSqlVo sqlVo, final Class<T> clazz, final Pageable pageable, final boolean allMappingAliases) {
-		return getPage(true, sqlVo, clazz, pageable, allMappingAliases);
-	}
-
-
-	@Override
-	public <T> Page<T> queryPageBySql(final LKSqlVo sqlVo, final Class<T> clazz, final Pageable pageable) {
-		return queryPageBySql(sqlVo, clazz, pageable, false);
-	}
-
-
-	@Override
-	public <T> T queryOneBySql(final LKSqlVo sqlVo, final Class<T> clazz, final boolean allMappingAliases) {
-		return returnOne(queryListBySql(sqlVo, clazz, allMappingAliases));
-	}
-
-
-	@Override
-	public <T> T queryOneBySql(final LKSqlVo sqlVo, final Class<T> clazz) {
-		return queryOneBySql(sqlVo, clazz, false);
-	}
-
-
-	@Override
-	public String queryStringBySql(final LKSqlVo sqlVo) {
-		final LKOneVo oneVo = queryOneBySql(sqlVo, LKOneVo.class, true);
-		if (oneVo == null) {
-			return null;
-		}
-		final Object one = oneVo.getOne();
-		if (one == null) {
-			return null;
-		}
-		return one.toString();
-	}
-
-
-	@Override
-	public Long queryLongBySql(final LKSqlVo sqlVo) {
-		final String one = queryStringBySql(sqlVo);
-		if (one != null) {
-			return Long.parseLong(one);
-		}
-		return null;
-	}
-
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public int executeUpdate(LKSqlUpdateVo sqlVo) {
-		final boolean isSQL = sqlVo.isSQL();
-		final String sql = sqlVo.getSql();
-		final Object[] params = sqlVo.getParams();
-
-		// 记录日志
-		logSql(isSQL, sql, params);
-
-		// 创建更新
-		Query query = null;
-		if (isSQL) {
-			query = getEntityManager().createNativeQuery(sql);
-		} else {
-			query = getEntityManager().createQuery(sql);
-		}
-
-		// 设置参数
-		setParams(isSQL, query, params);
-
-		// 执行更新
-		return executeUpdate(isSQL, query, sql, params);
-	}
-
-
-	@Override
-	public <T> List<T> findListByHql(final LKSqlVo sqlVo, final Class<T> clazz) {
-		return getList(false, sqlVo, clazz, false);
-	}
-
-
-	@Override
-	public <T> Page<T> findPageByHql(final LKSqlVo sqlVo, final Class<T> clazz, final Pageable pageable) {
-		return getPage(false, sqlVo, clazz, pageable, false);
-	}
-
-
-	@Override
-	public <T> T findOneByHql(final LKSqlVo sqlVo, final Class<T> clazz) {
-		return returnOne(findListByHql(sqlVo, clazz));
-	}
-
-
-	@Override
-	public <T> T findOneById(final Class<T> clazz, final String id) {
-		return findOneByHql(new LKSqlVo(String.format("from %s where id = ?", clazz.getName()), id), clazz);
+	private Pageable initPageable(Query query, int pageNumber, int pageSize) {
+		pageNumber = checkPageNumber(pageNumber);
+		pageSize = checkPageSize(pageSize);
+		query.setFirstResult(pageNumber * pageSize);
+		query.setMaxResults(pageSize);
+		return PageRequest.of(pageNumber, pageSize);
 	}
 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T save(final Object t, final boolean merge) {
-		final long startTime = System.currentTimeMillis();
-		String json = null;
-		final StringBuilder logInfo = new StringBuilder();
-		try {
-			if (merge) {
-				logInfo.append("merge");
-				if (t instanceof List<?>) {
-					json = LKJsonUtils.toJson(t);
-					logInfo.append(" list【");
-					logInfo.append(t.getClass().getName());
-					logInfo.append("<");
-					logInfo.append(((List<?>) t).get(0).getClass().getName());
-					logInfo.append(">");
-					final List<?> list = (List<?>) t;
-					final List<T> ls = new ArrayList<>(list.size());
-					for (final Object e : list) {
-						final T s = (T) getEntityManager().merge(LKEntityInitializer.initEntity(e));
-						ls.add(s);
-					}
-					return (T) ls;
-				} else if (t instanceof Object[]) {
-					json = LKJsonUtils.toJson(t);
-					logInfo.append(" array【");
-					logInfo.append(((Object[]) t)[0].getClass().getName());
-					logInfo.append("[]");
-					final Object[] list = (Object[]) t;
-					final T[] ls = null;
-					for (final Object e : list) {
-						final T s = (T) getEntityManager().merge(LKEntityInitializer.initEntity(e));
-						ArrayUtils.add(ls, s);
-					}
-					return (T) ls;
-				} else {
-					json = LKJsonUtils.toJson(t);
-					logInfo.append(" one【");
-					return (T) getEntityManager().merge(LKEntityInitializer.initEntity(t));
-				}
-			} else {
-				logInfo.append("persist");
-				if (t instanceof List<?>) {
-					json = LKJsonUtils.toJson(t);
-					logInfo.append(" list【");
-					logInfo.append(t.getClass().getName());
-					logInfo.append("<");
-					logInfo.append(((List<?>) t).get(0).getClass().getName());
-					logInfo.append(">");
-					final List<?> list = (List<?>) t;
-					for (final Object e : list) {
-						getEntityManager().persist(LKEntityInitializer.initEntity(e));
-					}
-				} else if (t instanceof Object[]) {
-					json = LKJsonUtils.toJson(t);
-					logInfo.append(" array【");
-					logInfo.append(((Object[]) t)[0].getClass().getName());
-					logInfo.append("[]");
-					final Object[] list = (Object[]) t;
-					for (final Object e : list) {
-						getEntityManager().persist(LKEntityInitializer.initEntity(e));
-					}
-				} else {
-					json = LKJsonUtils.toJson(t);
-					logInfo.append(" one【");
-					getEntityManager().persist(LKEntityInitializer.initEntity(t));
-				}
-				return null;
-			}
-		} finally {
-			final long endTime = System.currentTimeMillis();
+	public <B> List<B> queryList(String sql, Object[] params, Class<B> clazz) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBefore(true, sqlId, sql, params);
 
-			logInfo.append(t.getClass().getName());
-			logInfo.append("】【");
-			logInfo.append(json);
-			logInfo.append("】, execution time is ");
-			logInfo.append(String.valueOf(endTime - startTime));
-			logInfo.append("ms, from ");
-			logInfo.append(formatTime(startTime));
-			logInfo.append(" to ");
-			logInfo.append(formatTime(endTime));
-			logger.info(logInfo.toString());
+		// 创建查询对象
+		Query query = createSQLQuery(sql, params, Map.class);
+
+		// 执行查询
+		List<Map<String, Object>> listMap = query.getResultList();
+
+		// 记录结束日志
+		DateTime enTime = logAfter(true, sqlId, startTime);
+
+		// 转换结果
+		List<B> listBean = LKDaoUtils.listMap2listBean(clazz, listMap);
+
+		// 记录转换结束日志
+		logAfterConvert(sqlId, enTime);
+
+		// 返回结果
+		return listBean;
+	}
+
+
+	@Override
+	public <E> List<E> findList(String sql, Object[] params, Class<E> clazz) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBefore(false, sqlId, sql, params);
+
+		// 创建查询对象
+		TypedQuery<E> query = createHQLQuery(sql, params, clazz);
+
+		// 执行查询
+		List<E> listEntity = query.getResultList();
+
+		// 记录结束日志
+		logAfter(false, sqlId, startTime);
+
+		// 返回结果
+		return listEntity;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <B> Page<B> queryPage(String sql, Object[] params, Class<B> clazz, int pageNumber, int pageSize) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBefore(true, sqlId, sql, params);
+
+		// 查询数据总数
+		long total = queryLong(LKDaoUtils.createCountSQL(sql), params);
+
+		// 创建查询对象
+		Query query = createSQLQuery(sql, params, Map.class);
+
+		// 初始化分页信息
+		Pageable pageable = initPageable(query, pageNumber, pageSize);
+
+		// 执行查询
+		List<Map<String, Object>> listMap = query.getResultList();
+
+		// 记录结束日志
+		DateTime enTime = logAfter(true, sqlId, startTime);
+
+		// 转换结果
+		List<B> listBean = LKDaoUtils.listMap2listBean(clazz, listMap);
+
+		// 记录转换结束日志
+		logAfterConvert(sqlId, enTime);
+
+		// 返回结果
+		return new PageImpl<>(listBean, pageable, total);
+	}
+
+
+	@Override
+	public <E> Page<E> findPage(String sql, Object[] params, Class<E> clazz, int pageNumber, int pageSize) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBefore(false, sqlId, sql, params);
+
+		// 查询数据总数
+		long total = findLong(LKDaoUtils.createCountSQL(sql), params);
+
+		// 创建查询对象
+		TypedQuery<E> query = createHQLQuery(sql, params, clazz);
+
+		// 初始化分页信息
+		Pageable pageable = initPageable(query, pageNumber, pageSize);
+
+		// 执行查询
+		List<E> listEntity = query.getResultList();
+
+		// 记录结束日志
+		logAfter(false, sqlId, startTime);
+
+		// 返回结果
+		return new PageImpl<>(listEntity, pageable, total);
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <B> B queryOne(String sql, Object[] params, Class<B> clazz) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBefore(true, sqlId, sql, params);
+
+		// 创建查询对象
+		Query query = createSQLQuery(sql, params, Map.class);
+
+		// 执行查询
+		Object map = query.getSingleResult();
+
+		// 记录结束日志
+		DateTime enTime = logAfter(true, sqlId, startTime);
+
+		// 转换结果
+		B bean = LKDaoUtils.map2bean(clazz, (Map<String, Object>) map);
+
+		// 记录转换结束日志
+		logAfterConvert(sqlId, enTime);
+
+		// 返回结果
+		return bean;
+	}
+
+
+	@Override
+	public <E> E findOne(String sql, Object[] params, Class<E> clazz) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBefore(false, sqlId, sql, params);
+
+		// 创建查询对象
+		TypedQuery<E> query = createHQLQuery(sql, params, clazz);
+
+		// 执行查询
+		E entity = query.getSingleResult();
+
+		// 记录结束日志
+		logAfter(false, sqlId, startTime);
+
+		// 返回结果
+		return entity;
+	}
+
+
+	@Override
+	public String queryString(String sql, Object[] params) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBefore(true, sqlId, sql, params);
+
+		// 创建查询对象
+		Query query = createSQLQuery(sql, params, String.class);
+
+		// 执行查询
+		Object obj = query.getSingleResult();
+
+		// 记录结束日志
+		logAfter(true, sqlId, startTime);
+
+		// 返回结果
+		if (obj == null) {
+			return null;
 		}
+		return obj.toString();
 	}
 
 
 	@Override
-	public <T> T save(final Object t) {
-		return save(t, true);
-	}
+	public String findString(String sql, Object[] params) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBefore(false, sqlId, sql, params);
 
+		// 创建查询对象
+		TypedQuery<String> query = createHQLQuery(sql, params, String.class);
 
-	@Override
-	public <T> T merge(final Object t) {
-		return save(t, true);
-	}
+		// 执行查询
+		Object obj = query.getSingleResult();
 
+		// 记录结束日志
+		logAfter(false, sqlId, startTime);
 
-	@Override
-	public <T> T persist(final Object t) {
-		return save(t, false);
-	}
-
-
-	@Override
-	public void remove(final Object t) {
-		final long startTime = System.currentTimeMillis();
-		String json = null;
-		final StringBuilder logInfo = new StringBuilder("remove");
-		if (t instanceof List<?>) {
-			json = LKJsonUtils.toJson(t);
-			logInfo.append(" list【");
-			logInfo.append(t.getClass().getName());
-			logInfo.append("<");
-			logInfo.append(((List<?>) t).get(0).getClass().getName());
-			logInfo.append(">");
-			final List<?> list = (List<?>) t;
-			for (final Object e : list) {
-				getEntityManager().remove(e);
-			}
-		} else if (t instanceof Object[]) {
-			json = LKJsonUtils.toJson(t);
-			logInfo.append(" array【");
-			logInfo.append(((Object[]) t)[0].getClass().getName());
-			logInfo.append("[]");
-			final Object[] list = (Object[]) t;
-			for (final Object e : list) {
-				getEntityManager().remove(e);
-			}
-		} else {
-			json = LKJsonUtils.toJson(t);
-			logInfo.append(" one【");
-			logInfo.append(t.getClass().getName());
-			getEntityManager().remove(t);
+		// 返回结果
+		if (obj == null) {
+			return null;
 		}
-		final long endTime = System.currentTimeMillis();
-		logInfo.append("】【");
-		logInfo.append(json);
-		logInfo.append("】, execution time is ");
-		logInfo.append(String.valueOf(endTime - startTime));
-		logInfo.append("ms, from ");
-		logInfo.append(formatTime(startTime));
-		logInfo.append(" to ");
-		logInfo.append(formatTime(endTime));
-		logger.info(logInfo.toString());
+		return obj.toString();
+	}
+
+
+	@Override
+	public Long queryLong(String sql, Object[] params) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBefore(true, sqlId, sql, params);
+
+		// 创建查询对象
+		Query query = createSQLQuery(sql, params, Long.class);
+
+		// 执行查询
+		Object obj = query.getSingleResult();
+
+		// 记录结束日志
+		logAfter(true, sqlId, startTime);
+
+		// 返回结果
+		if (obj == null) {
+			return null;
+		}
+		return Long.valueOf(obj.toString());
+	}
+
+
+	@Override
+	public Long findLong(String sql, Object[] params) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBefore(false, sqlId, sql, params);
+
+		// 创建查询对象
+		TypedQuery<Long> query = createHQLQuery(sql, params, Long.class);
+
+		// 执行查询
+		Object obj = query.getSingleResult();
+
+		// 记录结束日志
+		logAfter(false, sqlId, startTime);
+
+		// 返回结果
+		if (obj == null) {
+			return null;
+		}
+		return Long.valueOf(obj.toString());
 	}
 
 }

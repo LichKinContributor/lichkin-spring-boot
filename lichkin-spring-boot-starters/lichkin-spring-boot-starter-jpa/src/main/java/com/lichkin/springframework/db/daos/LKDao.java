@@ -5,10 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
-import com.lichkin.framework.db.vos.LKSqlUpdateVo;
-import com.lichkin.framework.db.vos.LKSqlVo;
 
 /**
  * 数据访问接口
@@ -24,176 +20,128 @@ public interface LKDao {
 
 
 	/**
-	 * 查询列表
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询语句对象
-	 * @param clazz 查询结果映射对象
-	 * @param allMappingAliases 是否全映射
-	 * @return 列表
+	 * 查询列表数据
+	 * @param <B> 返回值类型为clazz参数定义的类型
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @return 列表数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	public <T> List<T> queryListBySql(LKSqlVo sqlVo, Class<T> clazz, boolean allMappingAliases);
+	@Deprecated
+	public <B> List<B> queryList(String sql, Object[] params, Class<B> clazz);
 
 
 	/**
-	 * 查询列表
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询语句对象
-	 * @param clazz 查询结果映射对象
-	 * @return 列表
+	 * 查询列表数据
+	 * @param <E> 返回值类型为clazz参数定义的类型
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @return 列表数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	public <T> List<T> queryListBySql(LKSqlVo sqlVo, Class<T> clazz);
+	@Deprecated
+	public <E> List<E> findList(String hql, Object[] params, Class<E> clazz);
 
 
 	/**
-	 * 查询分页
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询语句对象
-	 * @param clazz 查询结果映射对象
-	 * @param pageable 分页信息
-	 * @param allMappingAliases 是否全映射
-	 * @return 分页
+	 * 查询分页数据
+	 * @param <B> 返回值类型为clazz参数定义的类型
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @param pageNumber 页码。正整数或0。从0开始。
+	 * @param pageSize 每页数据量。正整数。传入0时表示取框架约定的默认值。
+	 * @return 分页数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	public <T> Page<T> queryPageBySql(LKSqlVo sqlVo, Class<T> clazz, Pageable pageable, boolean allMappingAliases);
+	@Deprecated
+	public <B> Page<B> queryPage(String sql, Object[] params, Class<B> clazz, int pageNumber, int pageSize);
 
 
 	/**
-	 * 查询分页
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询语句对象
-	 * @param clazz 查询结果映射对象
-	 * @param pageable 分页信息
-	 * @return 分页
+	 * 查询分页数据
+	 * @param <E> 返回值类型为clazz参数定义的类型
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @param pageNumber 页码。正整数或0。从0开始。
+	 * @param pageSize 每页数据量。正整数。传入0时表示取框架约定的默认值。
+	 * @return 分页数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	public <T> Page<T> queryPageBySql(LKSqlVo sqlVo, Class<T> clazz, Pageable pageable);
+	@Deprecated
+	public <E> Page<E> findPage(String hql, Object[] params, Class<E> clazz, int pageNumber, int pageSize);
 
 
 	/**
-	 * 获取对象
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询语句对象
-	 * @param clazz 查询结果映射对象
-	 * @param allMappingAliases 是否全映射
-	 * @return 对象
+	 * 查询单个数据
+	 * @param <B> 返回值类型为clazz参数定义的类型
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @return 单个数据
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	public <T> T queryOneBySql(LKSqlVo sqlVo, Class<T> clazz, boolean allMappingAliases);
+	@Deprecated
+	public <B> B queryOne(String sql, Object[] params, Class<B> clazz);
 
 
 	/**
-	 * 获取对象
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询语句对象
-	 * @param clazz 查询结果映射对象
-	 * @return 对象
+	 * 查询单个数据
+	 * @param <E> 返回值类型为clazz参数定义的类型
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @return 单个数据
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	public <T> T queryOneBySql(LKSqlVo sqlVo, Class<T> clazz);
+	@Deprecated
+	public <E> E findOne(String hql, Object[] params, Class<E> clazz);
 
 
 	/**
-	 * 获取字符串（必须使用select count(1) as one from t的形式）
-	 * @param sqlVo 查询语句对象
-	 * @return 字符串
+	 * 查询单个字符串
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个字符串
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	public String queryStringBySql(LKSqlVo sqlVo);
+	@Deprecated
+	public String queryString(String sql, Object[] params);
 
 
 	/**
-	 * 获取数字（必须使用select count(1) as one from t的形式）
-	 * @param sqlVo 查询语句对象
-	 * @return 字符串
+	 * 查询单个字符串
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个字符串
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	public Long queryLongBySql(LKSqlVo sqlVo);
+	@Deprecated
+	public String findString(String hql, Object[] params);
 
 
 	/**
-	 * 执行更新
-	 * @param sqlVo 更新条件对象
-	 * @return 影响的条数
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	public int executeUpdate(LKSqlUpdateVo sqlVo);
+	@Deprecated
+	public Long queryLong(String sql, Object[] params);
 
 
 	/**
-	 * 查询列表
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询语句对象
-	 * @param clazz 查询结果映射对象
-	 * @return 列表
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	public <T> List<T> findListByHql(LKSqlVo sqlVo, Class<T> clazz);
-
-
-	/**
-	 * 查询分页
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询语句对象
-	 * @param clazz 查询结果映射对象
-	 * @param pageable 分页信息
-	 * @return 分页
-	 */
-	public <T> Page<T> findPageByHql(LKSqlVo sqlVo, Class<T> clazz, Pageable pageable);
-
-
-	/**
-	 * 获取对象
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param sqlVo 查询语句对象
-	 * @param clazz 查询结果映射对象
-	 * @return 对象
-	 */
-	public <T> T findOneByHql(LKSqlVo sqlVo, Class<T> clazz);
-
-
-	/**
-	 * 获取对象
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param clazz 查询结果映射对象
-	 * @param id 主键
-	 * @return 对象
-	 */
-	public <T> T findOneById(Class<T> clazz, String id);
-
-
-	/**
-	 * 保存对象
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param obj 对象
-	 * @param merge true：调用merge方法；false：调用persist方法。
-	 * @return 对象
-	 */
-	public <T> T save(Object obj, boolean merge);
-
-
-	/**
-	 * 保存对象（merge方法）
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param obj 对象
-	 * @return 对象
-	 */
-	public <T> T save(Object obj);
-
-
-	/**
-	 * 保存对象
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param obj 对象
-	 * @return 对象
-	 */
-	public <T> T merge(Object obj);
-
-
-	/**
-	 * 保存对象
-	 * @param <T> 返回值类型为clazz参数定义的类型
-	 * @param obj 对象
-	 * @return 对象
-	 */
-	public <T> T persist(Object obj);
-
-
-	/**
-	 * 删除对象
-	 * @param obj 对象
-	 */
-	public void remove(Object obj);
+	@Deprecated
+	public Long findLong(String hql, Object[] params);
 
 }
