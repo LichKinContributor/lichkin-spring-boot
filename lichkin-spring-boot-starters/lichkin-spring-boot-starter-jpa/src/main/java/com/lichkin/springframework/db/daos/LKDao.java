@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 
 import org.springframework.data.domain.Page;
 
+import com.lichkin.framework.db.beans.SQL;
 import com.lichkin.framework.defines.entities.suppers.LKIDInterface;
 
 /**
@@ -49,6 +50,18 @@ public interface LKDao {
 
 
 	/**
+	 * 查询列表数据
+	 * @param <T> 返回值类型为clazz参数定义的类型
+	 * @param sqlObj SQL语句对象
+	 * @param clazz 查询结果映射对象类型
+	 * @return 列表数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	public <T> List<T> getList(SQL sqlObj, Class<T> clazz);
+
+
+	/**
 	 * 查询分页数据
 	 * @param <B> 返回值类型为clazz参数定义的类型
 	 * @param sql 查询语句
@@ -79,6 +92,20 @@ public interface LKDao {
 
 
 	/**
+	 * 查询分页数据
+	 * @param <T> 返回值类型为clazz参数定义的类型
+	 * @param sqlObj SQL语句对象
+	 * @param clazz 查询结果映射对象类型
+	 * @param pageNumber 页码。正整数或0。从0开始。
+	 * @param pageSize 每页数据量。正整数。传入0时表示取框架约定的默认值。
+	 * @return 分页数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	public <T> Page<T> getPage(SQL sqlObj, Class<T> clazz, int pageNumber, int pageSize);
+
+
+	/**
 	 * 查询单个数据
 	 * @param <B> 返回值类型为clazz参数定义的类型
 	 * @param sql 查询语句
@@ -105,6 +132,18 @@ public interface LKDao {
 
 
 	/**
+	 * 查询单个数据
+	 * @param <T> 返回值类型为clazz参数定义的类型
+	 * @param sqlObj SQL语句对象
+	 * @param clazz 查询结果映射对象类型
+	 * @return 单个数据
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	public <T> T getOne(SQL sqlObj, Class<T> clazz);
+
+
+	/**
 	 * 查询单个字符串
 	 * @param sql 查询语句
 	 * @param params 参数
@@ -124,6 +163,15 @@ public interface LKDao {
 	 */
 	@Deprecated
 	public String findString(String hql, Object[] params);
+
+
+	/**
+	 * 查询单个字符串c
+	 * @return 单个字符串
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	public String getString(SQL sqlObj);
 
 
 	/**
@@ -149,6 +197,16 @@ public interface LKDao {
 
 
 	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	public Long getLong(SQL sqlObj);
+
+
+	/**
 	 * INSERT/DELETE/UPDATE
 	 * @param sql 更新语句
 	 * @param params 参数
@@ -156,6 +214,15 @@ public interface LKDao {
 	 * @important 谨慎使用
 	 */
 	public int change(String sql, Object[] params);
+
+
+	/**
+	 * INSERT/DELETE/UPDATE
+	 * @param sqlObj SQL语句对象
+	 * @return 更新数据数量
+	 * @important 谨慎使用
+	 */
+	public int change(SQL sqlObj);
 
 
 	/**
