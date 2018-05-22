@@ -1,8 +1,12 @@
 package com.lichkin.springframework.db.daos;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -15,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.lichkin.framework.defines.entities.suppers.LKIDInterface;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
@@ -38,8 +43,19 @@ public abstract class LKBaseDao implements LKDao {
 	 * @param sql SQL/HQL语句
 	 * @param params 参数
 	 */
-	private void logBefore(boolean useSQL, String sqlId, String sql, Object[] params) {
+	private void logBeforeQuery(boolean useSQL, String sqlId, String sql, Object[] params) {
 		logger.info("%s[%s] -> %s [params:%s]", useSQL ? "SQL" : "HQL", sqlId, sql, LKJsonUtils.toJson(params));
+	}
+
+
+	/**
+	 * 记录开始日志
+	 * @param sqlId 语句唯一标识
+	 * @param type 修改类型
+	 * @param entity 实体类对象
+	 */
+	private void logBeforeModify(String sqlId, String type, LKIDInterface entity) {
+		logger.warn("HQL[%s] -> %s [entity:%s]", sqlId, type, LKJsonUtils.toJson(entity));
 	}
 
 
@@ -49,9 +65,22 @@ public abstract class LKBaseDao implements LKDao {
 	 * @param sqlId 语句唯一标识
 	 * @param startTime 开始时间
 	 */
-	private DateTime logAfter(boolean useSQL, String sqlId, DateTime startTime) {
+	private DateTime logAfterQuery(boolean useSQL, String sqlId, DateTime startTime) {
 		DateTime endTime = DateTime.now();
 		logger.info("%s[%s] -> %s execution time is %sms, from %s to %s.", useSQL ? "SQL" : "HQL", sqlId, useSQL ? "query" : "find", String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
+		return endTime;
+	}
+
+
+	/**
+	 * 记录结束日志
+	 * @param sqlId 语句唯一标识
+	 * @param type 修改类型
+	 * @param startTime 开始时间
+	 */
+	private DateTime logAfterModify(String sqlId, String type, DateTime startTime) {
+		DateTime endTime = DateTime.now();
+		logger.info("HQL[%s] -> %s execution time is %sms, from %s to %s.", sqlId, type, String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
 		return endTime;
 	}
 
@@ -169,7 +198,7 @@ public abstract class LKBaseDao implements LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
-		logBefore(true, sqlId, sql, params);
+		logBeforeQuery(true, sqlId, sql, params);
 
 		// 创建查询对象
 		Query query = createSQLQuery(sql, params, Map.class);
@@ -178,7 +207,7 @@ public abstract class LKBaseDao implements LKDao {
 		List<Map<String, Object>> listMap = query.getResultList();
 
 		// 记录结束日志
-		DateTime enTime = logAfter(true, sqlId, startTime);
+		DateTime enTime = logAfterQuery(true, sqlId, startTime);
 
 		// 转换结果
 		List<B> listBean = LKDaoUtils.listMap2listBean(clazz, listMap);
@@ -196,7 +225,7 @@ public abstract class LKBaseDao implements LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String hqlId = LKRandomUtils.create(32);
-		logBefore(false, hqlId, hql, params);
+		logBeforeQuery(false, hqlId, hql, params);
 
 		// 创建查询对象
 		TypedQuery<E> query = createHQLQuery(hql, params, clazz);
@@ -205,7 +234,7 @@ public abstract class LKBaseDao implements LKDao {
 		List<E> listEntity = query.getResultList();
 
 		// 记录结束日志
-		logAfter(false, hqlId, startTime);
+		logAfterQuery(false, hqlId, startTime);
 
 		// 返回结果
 		return listEntity;
@@ -218,7 +247,7 @@ public abstract class LKBaseDao implements LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
-		logBefore(true, sqlId, sql, params);
+		logBeforeQuery(true, sqlId, sql, params);
 
 		// 查询数据总数
 		long total = queryLong(LKDaoUtils.createCountSQL(sql), params);
@@ -233,7 +262,7 @@ public abstract class LKBaseDao implements LKDao {
 		List<Map<String, Object>> listMap = query.getResultList();
 
 		// 记录结束日志
-		DateTime enTime = logAfter(true, sqlId, startTime);
+		DateTime enTime = logAfterQuery(true, sqlId, startTime);
 
 		// 转换结果
 		List<B> listBean = LKDaoUtils.listMap2listBean(clazz, listMap);
@@ -251,7 +280,7 @@ public abstract class LKBaseDao implements LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String hqlId = LKRandomUtils.create(32);
-		logBefore(false, hqlId, hql, params);
+		logBeforeQuery(false, hqlId, hql, params);
 
 		// 查询数据总数
 		long total = findLong(LKDaoUtils.createCountSQL(hql), params);
@@ -266,7 +295,7 @@ public abstract class LKBaseDao implements LKDao {
 		List<E> listEntity = query.getResultList();
 
 		// 记录结束日志
-		logAfter(false, hqlId, startTime);
+		logAfterQuery(false, hqlId, startTime);
 
 		// 返回结果
 		return new PageImpl<>(listEntity, pageable, total);
@@ -279,25 +308,33 @@ public abstract class LKBaseDao implements LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
-		logBefore(true, sqlId, sql, params);
+		logBeforeQuery(true, sqlId, sql, params);
 
 		// 创建查询对象
 		Query query = createSQLQuery(sql, params, Map.class);
 
-		// 执行查询
-		Object map = query.getSingleResult();
+		try {
+			// 执行查询
+			Object map = query.getSingleResult();
 
-		// 记录结束日志
-		DateTime enTime = logAfter(true, sqlId, startTime);
+			// 记录结束日志
+			DateTime endTime = logAfterQuery(true, sqlId, startTime);
 
-		// 转换结果
-		B bean = LKDaoUtils.map2bean(clazz, (Map<String, Object>) map);
+			// 转换结果
+			B bean = LKDaoUtils.map2bean(clazz, (Map<String, Object>) map);
 
-		// 记录转换结束日志
-		logAfterConvert(sqlId, enTime);
+			// 记录转换结束日志
+			logAfterConvert(sqlId, endTime);
 
-		// 返回结果
-		return bean;
+			// 返回结果
+			return bean;
+		} catch (NoResultException e) {
+			// 记录结束日志
+			logAfterQuery(true, sqlId, startTime);
+
+			// 返回结果
+			return null;
+		}
 	}
 
 
@@ -306,19 +343,25 @@ public abstract class LKBaseDao implements LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String hqlId = LKRandomUtils.create(32);
-		logBefore(false, hqlId, hql, params);
+		logBeforeQuery(false, hqlId, hql, params);
 
 		// 创建查询对象
 		TypedQuery<E> query = createHQLQuery(hql, params, clazz);
 
-		// 执行查询
-		E entity = query.getSingleResult();
+		try {
+			// 执行查询
+			E entity = query.getSingleResult();
 
-		// 记录结束日志
-		logAfter(false, hqlId, startTime);
+			// 返回结果
+			return entity;
+		} catch (NoResultException e) {
+			// 返回结果
+			return null;
+		} finally {
+			// 记录结束日志
+			logAfterQuery(false, hqlId, startTime);
+		}
 
-		// 返回结果
-		return entity;
 	}
 
 
@@ -327,22 +370,27 @@ public abstract class LKBaseDao implements LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
-		logBefore(true, sqlId, sql, params);
+		logBeforeQuery(true, sqlId, sql, params);
 
 		// 创建查询对象
 		Query query = createSQLQuery(sql, params, String.class);
 
-		// 执行查询
-		Object obj = query.getSingleResult();
+		try {
+			// 执行查询
+			Object obj = query.getSingleResult();
 
-		// 记录结束日志
-		logAfter(true, sqlId, startTime);
-
-		// 返回结果
-		if (obj == null) {
+			// 返回结果
+			if (obj == null) {
+				return null;
+			}
+			return obj.toString();
+		} catch (NoResultException e) {
+			// 返回结果
 			return null;
+		} finally {
+			// 记录结束日志
+			logAfterQuery(true, sqlId, startTime);
 		}
-		return obj.toString();
 	}
 
 
@@ -351,22 +399,27 @@ public abstract class LKBaseDao implements LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String hqlId = LKRandomUtils.create(32);
-		logBefore(false, hqlId, hql, params);
+		logBeforeQuery(false, hqlId, hql, params);
 
 		// 创建查询对象
 		TypedQuery<String> query = createHQLQuery(hql, params, String.class);
 
-		// 执行查询
-		Object obj = query.getSingleResult();
+		try {
+			// 执行查询
+			Object obj = query.getSingleResult();
 
-		// 记录结束日志
-		logAfter(false, hqlId, startTime);
-
-		// 返回结果
-		if (obj == null) {
+			// 返回结果
+			if (obj == null) {
+				return null;
+			}
+			return obj.toString();
+		} catch (NoResultException e) {
+			// 返回结果
 			return null;
+		} finally {
+			// 记录结束日志
+			logAfterQuery(false, hqlId, startTime);
 		}
-		return obj.toString();
 	}
 
 
@@ -375,22 +428,27 @@ public abstract class LKBaseDao implements LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
-		logBefore(true, sqlId, sql, params);
+		logBeforeQuery(true, sqlId, sql, params);
 
 		// 创建查询对象
 		Query query = createSQLQuery(sql, params, Long.class);
 
-		// 执行查询
-		Object obj = query.getSingleResult();
+		try {
+			// 执行查询
+			Object obj = query.getSingleResult();
 
-		// 记录结束日志
-		logAfter(true, sqlId, startTime);
-
-		// 返回结果
-		if (obj == null) {
+			// 返回结果
+			if (obj == null) {
+				return null;
+			}
+			return Long.valueOf(obj.toString());
+		} catch (NoResultException e) {
+			// 返回结果
 			return null;
+		} finally {
+			// 记录结束日志
+			logAfterQuery(true, sqlId, startTime);
 		}
-		return Long.valueOf(obj.toString());
 	}
 
 
@@ -399,22 +457,148 @@ public abstract class LKBaseDao implements LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String hqlId = LKRandomUtils.create(32);
-		logBefore(false, hqlId, hql, params);
+		logBeforeQuery(false, hqlId, hql, params);
 
 		// 创建查询对象
 		TypedQuery<Long> query = createHQLQuery(hql, params, Long.class);
 
+		try {
+			// 执行查询
+			Object obj = query.getSingleResult();
+
+			// 返回结果
+			if (obj == null) {
+				return null;
+			}
+			return Long.valueOf(obj.toString());
+		} catch (NoResultException e) {
+			// 返回结果
+			return null;
+		} finally {
+			// 记录结束日志
+			logAfterQuery(false, hqlId, startTime);
+		}
+	}
+
+
+	@Override
+	public int change(String sql, Object[] params) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logger.warn("SQL[%s] -> %s [params:%s]", sqlId, sql, LKJsonUtils.toJson(params));
+
+		// 创建查询对象
+		Query query = createSQLQuery(sql, params, Long.class);
+
 		// 执行查询
-		Object obj = query.getSingleResult();
+		int result = query.executeUpdate();
 
 		// 记录结束日志
-		logAfter(false, hqlId, startTime);
+		DateTime endTime = DateTime.now();
+		logger.warn("SQL[%s] -> change execution time is %sms, from %s to %s.", sqlId, String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
 
 		// 返回结果
-		if (obj == null) {
-			return null;
+		return result;
+	}
+
+
+	@Override
+	public <E> E mergeOne(LKIDInterface entity) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBeforeModify(sqlId, "merge", entity);
+
+		// 初始化对象
+		LKDaoUtils.initEntity(entity);
+
+		// 执行修改
+		@SuppressWarnings("unchecked")
+		E result = getEntityManager().merge((E) entity);
+
+		// 记录结束日志
+		logAfterModify(sqlId, "merge", startTime);
+
+		// 返回结果
+		return result;
+	}
+
+
+	@Override
+	public Collection<? extends LKIDInterface> mergeList(Collection<? extends LKIDInterface> listEntity) {
+		ArrayList<LKIDInterface> list = new ArrayList<>();
+		for (Object entity : listEntity) {
+			list.add(mergeOne((LKIDInterface) entity));
 		}
-		return Long.valueOf(obj.toString());
+		return list;
+	}
+
+
+	@Override
+	public Object[] mergeArr(LKIDInterface[] objArr) {
+		return mergeList(Arrays.asList(objArr)).toArray();
+	}
+
+
+	@Override
+	public void persistOne(LKIDInterface entity) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBeforeModify(sqlId, "persist", entity);
+
+		// 初始化对象
+		LKDaoUtils.initEntity(entity);
+
+		// 执行修改
+		getEntityManager().persist(entity);
+
+		// 记录结束日志
+		logAfterModify(sqlId, "persist", startTime);
+	}
+
+
+	@Override
+	public void persistList(Collection<? extends LKIDInterface> listEntity) {
+		for (Object entity : listEntity) {
+			persistOne((LKIDInterface) entity);
+		}
+	}
+
+
+	@Override
+	public void persistArr(LKIDInterface[] objArr) {
+		persistList(Arrays.asList(objArr));
+	}
+
+
+	@Override
+	public void removeOne(LKIDInterface entity) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBeforeModify(sqlId, "remove", entity);
+
+		// 执行修改
+		getEntityManager().remove(entity);
+
+		// 记录结束日志
+		logAfterModify(sqlId, "remove", startTime);
+	}
+
+
+	@Override
+	public void removeList(Collection<? extends LKIDInterface> listEntity) {
+		for (Object entity : listEntity) {
+			removeOne((LKIDInterface) entity);
+		}
+	}
+
+
+	@Override
+	public void removeArr(LKIDInterface[] objArr) {
+		removeList(Arrays.asList(objArr));
 	}
 
 }

@@ -1,10 +1,13 @@
 package com.lichkin.springframework.db.daos;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import org.springframework.data.domain.Page;
+
+import com.lichkin.framework.defines.entities.suppers.LKIDInterface;
 
 /**
  * 数据访问接口
@@ -143,5 +146,85 @@ public interface LKDao {
 	 */
 	@Deprecated
 	public Long findLong(String hql, Object[] params);
+
+
+	/**
+	 * INSERT/DELETE/UPDATE
+	 * @param sql 更新语句
+	 * @param params 参数
+	 * @return 更新数据数量
+	 * @important 谨慎使用
+	 */
+	public int change(String sql, Object[] params);
+
+
+	/**
+	 * 保存对象
+	 * @param <E> 返回值类型为entity参数的类型
+	 * @param entity 实体类对象
+	 * @return 对象
+	 */
+	public <E> E mergeOne(LKIDInterface entity);
+
+
+	/**
+	 * 保存对象集合
+	 * @param listEntity 实体类对象集合
+	 * @return 对象集合
+	 */
+	public Collection<? extends LKIDInterface> mergeList(Collection<? extends LKIDInterface> listEntity);
+
+
+	/**
+	 * 保存对象数组
+	 * @param objArr 实体类对象数组
+	 * @return 对象数组
+	 */
+	public Object[] mergeArr(LKIDInterface[] objArr);
+
+
+	/**
+	 * 保存对象
+	 * @param entity 实体类对象
+	 */
+	public void persistOne(LKIDInterface entity);
+
+
+	/**
+	 * 保存对象集合
+	 * @param listEntity 实体类对象集合
+	 */
+	public void persistList(Collection<? extends LKIDInterface> listEntity);
+
+
+	/**
+	 * 保存对象数组
+	 * @param objArr 实体类对象数组
+	 */
+	public void persistArr(LKIDInterface[] objArr);
+
+
+	/**
+	 * 删除对象
+	 * @param entity 实体类对象
+	 * @important 谨慎使用
+	 */
+	public void removeOne(LKIDInterface entity);
+
+
+	/**
+	 * 删除对象集合
+	 * @param listEntity 实体类对象集合
+	 * @important 谨慎使用
+	 */
+	public void removeList(Collection<? extends LKIDInterface> listEntity);
+
+
+	/**
+	 * 删除对象数组
+	 * @param objArr 实体类对象数组
+	 * @important 谨慎使用
+	 */
+	public void removeArr(LKIDInterface[] objArr);
 
 }
