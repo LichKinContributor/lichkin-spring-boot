@@ -19,7 +19,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SQL;
+import com.lichkin.framework.db.beans.UpdateSQL;
 import com.lichkin.framework.defines.entities.suppers.LKIDInterface;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
@@ -249,6 +251,13 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public <T> List<T> getList(QuerySQL sqlObj, Class<T> clazz) {
+		return sqlObj.isUseSQL() ? queryList(sqlObj.getSQL(), sqlObj.getParams(), clazz) : findList(sqlObj.getSQL(), sqlObj.getParams(), clazz);
+	}
+
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <B> Page<B> queryPage(String sql, Object[] params, Class<B> clazz, int pageNumber, int pageSize) {
@@ -313,6 +322,13 @@ public abstract class LKBaseDao implements LKDao {
 	@SuppressWarnings("deprecation")
 	@Override
 	public <T> Page<T> getPage(SQL sqlObj, Class<T> clazz, int pageNumber, int pageSize) {
+		return sqlObj.isUseSQL() ? queryPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize) : findPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize);
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public <T> Page<T> getPage(QuerySQL sqlObj, Class<T> clazz, int pageNumber, int pageSize) {
 		return sqlObj.isUseSQL() ? queryPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize) : findPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize);
 	}
 
@@ -387,6 +403,13 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public <T> T getOne(QuerySQL sqlObj, Class<T> clazz) {
+		return sqlObj.isUseSQL() ? queryOne(sqlObj.getSQL(), sqlObj.getParams(), clazz) : findOne(sqlObj.getSQL(), sqlObj.getParams(), clazz);
+	}
+
+
 	@Override
 	public String queryString(String sql, Object[] params) {
 		// 记录开始日志
@@ -448,6 +471,13 @@ public abstract class LKBaseDao implements LKDao {
 	@SuppressWarnings("deprecation")
 	@Override
 	public String getString(SQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryString(sqlObj.getSQL(), sqlObj.getParams()) : findString(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public String getString(QuerySQL sqlObj) {
 		return sqlObj.isUseSQL() ? queryString(sqlObj.getSQL(), sqlObj.getParams()) : findString(sqlObj.getSQL(), sqlObj.getParams());
 	}
 
@@ -517,6 +547,13 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public Long getLong(QuerySQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryLong(sqlObj.getSQL(), sqlObj.getParams()) : findLong(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
 	@Override
 	public int change(String sql, Object[] params) {
 		// 记录开始日志
@@ -542,6 +579,13 @@ public abstract class LKBaseDao implements LKDao {
 	@SuppressWarnings("deprecation")
 	@Override
 	public int change(SQL sqlObj) {
+		return change(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public int change(UpdateSQL sqlObj) {
 		return change(sqlObj.getSQL(), sqlObj.getParams());
 	}
 
