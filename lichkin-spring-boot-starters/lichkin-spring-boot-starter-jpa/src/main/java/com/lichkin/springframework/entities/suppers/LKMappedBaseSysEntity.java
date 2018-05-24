@@ -3,7 +3,6 @@ package com.lichkin.springframework.entities.suppers;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.entities.suppers.LKBaseSysInterface;
 import com.lichkin.framework.utils.security.md5.LKMD5Encrypter;
 
@@ -23,27 +22,36 @@ public abstract class LKMappedBaseSysEntity extends LKMappedBaseEntity implement
 	private static final long serialVersionUID = -8888886666660003L;
 
 	/** 系统编码 */
-	@Column(nullable = false, length = 64)
-	private String systemTag = LKFrameworkStatics.SYSTEM_TAG;
+	@Column(nullable = false, length = SYSTEM_TAG_LENGTH)
+	private String systemTag;
 
 	/** 业务ID */
-	@Column(nullable = false, length = 64)
-	private String busId = "";
+	@Column(nullable = false, length = ID_LENGTH)
+	private String busId;
 
 	/** 校验码（MD5） */
-	@Column(nullable = false, length = 32)
-	private String checkCode = "";
+	@Column(nullable = false, length = CODE_LENGTH)
+	private String checkCode;
 
 
+	/**
+	 * 更新校验码
+	 * @deprecated 框架内部使用
+	 */
+	@Deprecated
 	@Override
 	public void updateCheckCode() {
-		StringBuffer sb = new StringBuffer(getSystemTag()).append(getBusId()).append(getCompId())
+		StringBuffer sb = new StringBuffer()
+
+				.append(getSystemTag()).append(getBusId())
 
 				.append(getInsertSystemTag()).append(getInsertTime()).append(getInsertLoginId())
 
 				.append(getUpdateSystemTag()).append(getUpdateTime()).append(getUpdateLoginId())
 
-				.append(getUsingStatus());
+				.append(getUsingStatus())
+
+				.append(getCompId());
 
 		Object[] objs = getCheckCodeFieldValues();
 		for (Object obj : objs) {

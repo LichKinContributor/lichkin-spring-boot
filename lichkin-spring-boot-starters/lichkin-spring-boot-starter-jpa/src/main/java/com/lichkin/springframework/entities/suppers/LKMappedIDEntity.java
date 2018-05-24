@@ -25,17 +25,32 @@ import lombok.Setter;
 public class LKMappedIDEntity implements LKIDInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = 8888886666660000L;
+	private static final long serialVersionUID = -8888886666660000L;
+
+	/** ID字段长度 */
+	protected static final int ID_LENGTH = 64;
+
+	/** 编码字段长度 */
+	protected static final int CODE_LENGTH = 64;
+
+	/** 时间字段长度 */
+	protected static final int TIME_LENGTH = 17;
+
+	/** 系统编码字段长度 */
+	protected static final int SYSTEM_TAG_LENGTH = 64;
+
+	/** 枚举字段长度 */
+	protected static final int ENUM_LENGTH = 32;
 
 	/** 主键 */
 	@Id
 	@GenericGenerator(name = "uuid", strategy = "uuid.hex")
 	@GeneratedValue(generator = "uuid")
-	@Column(nullable = false, length = 64)
+	@Column(nullable = false, length = ID_LENGTH)
 	private String id;
 
 	/** 公司ID */
-	@Column(nullable = false, length = 32)
-	private String compId = "ROOT";
+	@Column(nullable = false, length = ID_LENGTH)
+	private String compId;
 
 }

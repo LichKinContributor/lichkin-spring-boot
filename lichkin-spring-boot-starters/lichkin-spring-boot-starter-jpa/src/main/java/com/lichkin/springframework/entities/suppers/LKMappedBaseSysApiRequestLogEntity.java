@@ -18,7 +18,7 @@ import lombok.Setter;
 public class LKMappedBaseSysApiRequestLogEntity extends LKMappedBaseSysEntity {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = 8888886666660004L;
+	private static final long serialVersionUID = -8888886666660004L;
 
 	/**
 	 * 国际化
@@ -33,7 +33,7 @@ public class LKMappedBaseSysApiRequestLogEntity extends LKMappedBaseSysEntity {
 
 	/** 客户端类型 */
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, length = 10)
+	@Column(nullable = false, length = ENUM_LENGTH)
 	private LKClientTypeEnum clientType;
 
 	/** 客户端版本号（大版本号） */
@@ -49,8 +49,8 @@ public class LKMappedBaseSysApiRequestLogEntity extends LKMappedBaseSysEntity {
 	private Short versionZ;
 
 	/** 登录后获取得 */
-	@Column(nullable = false, length = 64)
-	private String token = "";
+	@Column(nullable = false, length = CODE_LENGTH)
+	private String token;
 
 
 	@Override

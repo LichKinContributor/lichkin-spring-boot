@@ -25,7 +25,7 @@ public class LKMappedNormalEntity extends LKMappedIDEntity implements LKNormalIn
 
 	/** 在用状态（枚举） */
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, length = 10)
-	private LKUsingStatusEnum usingStatus = LKUsingStatusEnum.USING;
+	@Column(nullable = false, length = ENUM_LENGTH)
+	private LKUsingStatusEnum usingStatus;
 
 }

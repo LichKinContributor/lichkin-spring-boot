@@ -3,9 +3,7 @@ package com.lichkin.springframework.entities.suppers;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.entities.suppers.LKBaseInterface;
-import com.lichkin.framework.utils.LKDateTimeUtils;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,27 +21,99 @@ public class LKMappedBaseEntity extends LKMappedNormalEntity implements LKBaseIn
 	private static final long serialVersionUID = -8888886666660002L;
 
 	/** 新增操作系统编码 */
-	@Column(nullable = false, length = 64)
-	private String insertSystemTag = LKFrameworkStatics.SYSTEM_TAG;
+	@Column(nullable = false, length = SYSTEM_TAG_LENGTH)
+	private String insertSystemTag;
 
 	/** 新增操作时间（yyyyMMddHHmmssSSS） */
-	@Column(nullable = false, length = 17)
-	private String insertTime = LKDateTimeUtils.now();
+	@Column(nullable = false, length = TIME_LENGTH)
+	private String insertTime;
 
 	/** 新增操作人登录ID */
-	@Column(nullable = false, length = 64)
-	private String insertLoginId = "";
+	@Column(nullable = false, length = ID_LENGTH)
+	private String insertLoginId;
 
 	/** 更新操作系统编码 */
-	@Column(nullable = false, length = 64)
-	private String updateSystemTag = LKFrameworkStatics.SYSTEM_TAG;
+	@Column(nullable = false, length = SYSTEM_TAG_LENGTH)
+	private String updateSystemTag;
 
 	/** 更新操作时间（yyyyMMddHHmmssSSS） */
-	@Column(nullable = false, length = 17)
-	private String updateTime = LKDateTimeUtils.now();
+	@Column(nullable = false, length = TIME_LENGTH)
+	private String updateTime;
 
 	/** 更新操作人登录ID */
-	@Column(nullable = false, length = 64)
-	private String updateLoginId = "";
+	@Column(nullable = false, length = ID_LENGTH)
+	private String updateLoginId;
+
+
+	/**
+	 * 设置新增操作系统编码
+	 * @param insertSystemTag 新增操作系统编码
+	 * @deprecated 系统将自动注入值，手动注入将失效。
+	 */
+	@Deprecated
+	@Override
+	public void setInsertSystemTag(String insertSystemTag) {
+		this.insertSystemTag = insertSystemTag;
+	}
+
+
+	/**
+	 * 设置新增操作时间
+	 * @param insertTime 新增操作时间
+	 * @deprecated 系统将自动注入值，手动注入将失效。
+	 */
+	@Deprecated
+	@Override
+	public void setInsertTime(String insertTime) {
+		this.insertTime = insertTime;
+	}
+
+
+	/**
+	 * 设置新增操作人登录ID
+	 * @param insertLoginId 新增操作人登录ID
+	 * @deprecated 系统将自动注入值，手动注入将失效。
+	 */
+	@Deprecated
+	@Override
+	public void setInsertLoginId(String insertLoginId) {
+		this.insertLoginId = insertLoginId;
+	}
+
+
+	/**
+	 * 设置更新操作系统编码
+	 * @param updateSystemTag 更新操作系统编码
+	 * @deprecated 系统将自动注入值，手动注入将失效。
+	 */
+	@Deprecated
+	@Override
+	public void setUpdateSystemTag(String updateSystemTag) {
+		this.updateSystemTag = updateSystemTag;
+	}
+
+
+	/**
+	 * 设置更新操作时间
+	 * @param updateTime 更新操作时间
+	 * @deprecated 系统将自动注入值，手动注入将失效。
+	 */
+	@Deprecated
+	@Override
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+
+	/**
+	 * 设置更新操作人登录ID
+	 * @param updateLoginId 更新操作人登录ID
+	 * @deprecated 系统将自动注入值，手动注入将失效。
+	 */
+	@Deprecated
+	@Override
+	public void setUpdateLoginId(String updateLoginId) {
+		this.updateLoginId = updateLoginId;
+	}
 
 }
