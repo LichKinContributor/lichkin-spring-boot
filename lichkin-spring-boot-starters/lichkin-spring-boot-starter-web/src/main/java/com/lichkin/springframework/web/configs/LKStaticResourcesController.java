@@ -20,7 +20,6 @@ public class LKStaticResourcesController {
 
 	/**
 	 * 静态资源路径解析提供者
-	 * @param path 静态资源路径
 	 * @return 提供者
 	 */
 	@ModelAttribute("provider")

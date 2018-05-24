@@ -22,6 +22,7 @@ public abstract class LKApiController<I extends LKRequestBean, O> extends LKCont
 	 * 请求处理方法
 	 * @param in 入参
 	 * @return 出参
+	 * @throws LKException 业务处理失败但不希望已处理数据回滚时抛出异常
 	 */
 	@PostMapping
 	public Object invoke(@Valid @RequestBody I in) throws LKException {
@@ -40,6 +41,7 @@ public abstract class LKApiController<I extends LKRequestBean, O> extends LKCont
 	/**
 	 * 验证入参
 	 * @param in 入参
+	 * @return 验证后的入参
 	 */
 	public I validateIn(I in) {
 		return in;

@@ -32,6 +32,7 @@ class LKController extends LKFramework {
 
 	/**
 	 * 获取国际化错误信息
+	 * @param errorCode 错误编码枚举类型
 	 * @return 国际化错误信息
 	 */
 	protected String getI18NErrorMsg(LKCodeEnum errorCode) {

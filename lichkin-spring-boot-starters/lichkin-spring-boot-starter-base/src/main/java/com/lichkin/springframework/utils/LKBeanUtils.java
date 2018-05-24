@@ -12,11 +12,12 @@ public class LKBeanUtils {
 
 	/**
 	 * 复制属性
+	 * @param <B> 返回值类型泛型
 	 * @param source 源对象
 	 * @param target 目标对象
 	 * @return 目标对象
 	 */
-	public static <T> T copyProperties(Object source, T target) {
+	public static <B> B copyProperties(Object source, B target) {
 		BeanUtils.copyProperties(source, target);
 		return target;
 	}
@@ -24,12 +25,13 @@ public class LKBeanUtils {
 
 	/**
 	 * 复制属性
+	 * @param <B> 返回值类型泛型
 	 * @param source 源对象
 	 * @param target 目标对象
 	 * @param ignoreProperties 不复制的属性
 	 * @return 目标对象
 	 */
-	public static <T> T copyProperties(Object source, T target, String... ignoreProperties) {
+	public static <B> B copyProperties(Object source, B target, String... ignoreProperties) {
 		BeanUtils.copyProperties(source, target, ignoreProperties);
 		return target;
 	}
@@ -37,18 +39,17 @@ public class LKBeanUtils {
 
 	/**
 	 * 复制属性
+	 * @param <B> 返回值类型泛型
 	 * @param source 源对象
 	 * @param targetClass 目标对象类型
 	 * @return 目标对象
 	 */
-	public static <T> T copyProperties(Object source, Class<T> targetClass) {
+	public static <B> B copyProperties(Object source, Class<B> targetClass) {
 		try {
-			T target = targetClass.newInstance();
+			B target = targetClass.newInstance();
 			BeanUtils.copyProperties(source, target);
 			return target;
-		} catch (InstantiationException e) {
-			throw new LKFrameworkException(e);
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			throw new LKFrameworkException(e);
 		}
 	}
@@ -56,19 +57,18 @@ public class LKBeanUtils {
 
 	/**
 	 * 复制属性
+	 * @param <B> 返回值类型泛型
 	 * @param source 源对象
 	 * @param targetClass 目标对象类型
 	 * @param ignoreProperties 不复制的属性
 	 * @return 目标对象
 	 */
-	public static <T> T copyProperties(Object source, Class<T> targetClass, String... ignoreProperties) {
+	public static <B> B copyProperties(Object source, Class<B> targetClass, String... ignoreProperties) {
 		try {
-			T target = targetClass.newInstance();
+			B target = targetClass.newInstance();
 			BeanUtils.copyProperties(source, target, ignoreProperties);
 			return target;
-		} catch (InstantiationException e) {
-			throw new LKFrameworkException(e);
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			throw new LKFrameworkException(e);
 		}
 	}

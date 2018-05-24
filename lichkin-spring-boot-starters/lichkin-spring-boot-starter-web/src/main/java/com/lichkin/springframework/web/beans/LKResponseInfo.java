@@ -22,7 +22,8 @@ public class LKResponseInfo extends LKRequestInfo {
 
 	/**
 	 * 构造方法
-	 * @param requestInfo LKRequestInfo
+	 * @param requestInfo 请求信息对象
+	 * @param responseBean 响应信息对象
 	 */
 	public LKResponseInfo(LKRequestInfo requestInfo, LKResponseBean<Object> responseBean) {
 		requestId = requestInfo.requestId;

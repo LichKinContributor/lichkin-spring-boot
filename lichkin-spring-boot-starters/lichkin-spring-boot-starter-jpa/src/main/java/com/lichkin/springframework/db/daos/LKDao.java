@@ -171,9 +171,7 @@ public interface LKDao {
 	 * @param sqlObj SQL语句对象
 	 * @param clazz 查询结果映射对象类型
 	 * @return 单个数据
-	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	@Deprecated
 	public <T> T getOne(QuerySQL sqlObj, Class<T> clazz);
 
 
@@ -201,6 +199,7 @@ public interface LKDao {
 
 	/**
 	 * 查询单个字符串
+	 * @param sqlObj SQL语句对象
 	 * @return 单个字符串
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
@@ -210,10 +209,9 @@ public interface LKDao {
 
 	/**
 	 * 查询单个字符串
+	 * @param sqlObj SQL语句对象
 	 * @return 单个字符串
-	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	@Deprecated
 	public String getString(QuerySQL sqlObj);
 
 
@@ -253,36 +251,50 @@ public interface LKDao {
 	 * 查询单个数值
 	 * @param sqlObj SQL语句对象
 	 * @return 单个数值
-	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
-	@Deprecated
 	public Long getLong(QuerySQL sqlObj);
 
 
 	/**
 	 * INSERT/DELETE/UPDATE
+	 * 
+	 * <pre>
+	 * important 谨慎使用
+	 * </pre>
+	 * 
 	 * @param sql 更新语句
 	 * @param params 参数
 	 * @return 更新数据数量
-	 * @important 谨慎使用
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
+	@Deprecated
 	public int change(String sql, Object[] params);
 
 
 	/**
 	 * INSERT/DELETE/UPDATE
+	 *
+	 * <pre>
+	 * important 谨慎使用
+	 * </pre>
+	 *
 	 * @param sqlObj SQL语句对象
 	 * @return 更新数据数量
-	 * @important 谨慎使用
+	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
+	@Deprecated
 	public int change(SQL sqlObj);
 
 
 	/**
 	 * INSERT/DELETE/UPDATE
+	 *
+	 * <pre>
+	 * important 谨慎使用
+	 * </pre>
+	 *
 	 * @param sqlObj SQL语句对象
 	 * @return 更新数据数量
-	 * @important 谨慎使用
 	 */
 	public int change(UpdateSQL sqlObj);
 
@@ -335,24 +347,36 @@ public interface LKDao {
 
 	/**
 	 * 删除对象
+	 *
+	 * <pre>
+	 * important 谨慎使用
+	 * </pre>
+	 *
 	 * @param entity 实体类对象
-	 * @important 谨慎使用
 	 */
 	public void removeOne(LKIDInterface entity);
 
 
 	/**
 	 * 删除对象集合
+	 *
+	 * <pre>
+	 * important 谨慎使用
+	 * </pre>
+	 *
 	 * @param listEntity 实体类对象集合
-	 * @important 谨慎使用
 	 */
 	public void removeList(Collection<? extends LKIDInterface> listEntity);
 
 
 	/**
 	 * 删除对象数组
+	 *
+	 * <pre>
+	 * important 谨慎使用
+	 * </pre>
+	 *
 	 * @param objArr 实体类对象数组
-	 * @important 谨慎使用
 	 */
 	public void removeArr(LKIDInterface[] objArr);
 

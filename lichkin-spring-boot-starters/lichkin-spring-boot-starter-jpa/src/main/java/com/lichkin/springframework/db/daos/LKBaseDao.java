@@ -195,6 +195,16 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	/**
+	 * 查询列表数据
+	 * @param <B> 返回值类型为clazz参数定义的类型
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @return 列表数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	@Override
 	public <B> List<B> queryList(String sql, Object[] params, Class<B> clazz) {
@@ -223,6 +233,16 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	/**
+	 * 查询列表数据
+	 * @param <E> 返回值类型为clazz参数定义的类型
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @return 列表数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public <E> List<E> findList(String hql, Object[] params, Class<E> clazz) {
 		// 记录开始日志
@@ -244,7 +264,15 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
-	@SuppressWarnings("deprecation")
+	/**
+	 * 查询列表数据
+	 * @param <T> 返回值类型为clazz参数定义的类型
+	 * @param sqlObj SQL语句对象
+	 * @param clazz 查询结果映射对象类型
+	 * @return 列表数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public <T> List<T> getList(SQL sqlObj, Class<T> clazz) {
 		return sqlObj.isUseSQL() ? queryList(sqlObj.getSQL(), sqlObj.getParams(), clazz) : findList(sqlObj.getSQL(), sqlObj.getParams(), clazz);
@@ -258,6 +286,18 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	/**
+	 * 查询分页数据
+	 * @param <B> 返回值类型为clazz参数定义的类型
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @param pageNumber 页码。正整数或0。从0开始。
+	 * @param pageSize 每页数据量。正整数。传入0时表示取框架约定的默认值。
+	 * @return 分页数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	@Override
 	public <B> Page<B> queryPage(String sql, Object[] params, Class<B> clazz, int pageNumber, int pageSize) {
@@ -292,6 +332,18 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	/**
+	 * 查询分页数据
+	 * @param <E> 返回值类型为clazz参数定义的类型
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @param pageNumber 页码。正整数或0。从0开始。
+	 * @param pageSize 每页数据量。正整数。传入0时表示取框架约定的默认值。
+	 * @return 分页数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public <E> Page<E> findPage(String hql, Object[] params, Class<E> clazz, int pageNumber, int pageSize) {
 		// 记录开始日志
@@ -319,7 +371,17 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
-	@SuppressWarnings("deprecation")
+	/**
+	 * 查询分页数据
+	 * @param <T> 返回值类型为clazz参数定义的类型
+	 * @param sqlObj SQL语句对象
+	 * @param clazz 查询结果映射对象类型
+	 * @param pageNumber 页码。正整数或0。从0开始。
+	 * @param pageSize 每页数据量。正整数。传入0时表示取框架约定的默认值。
+	 * @return 分页数据。无结果时将返回空对象。
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public <T> Page<T> getPage(SQL sqlObj, Class<T> clazz, int pageNumber, int pageSize) {
 		return sqlObj.isUseSQL() ? queryPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize) : findPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize);
@@ -333,6 +395,16 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	/**
+	 * 查询单个数据
+	 * @param <B> 返回值类型为clazz参数定义的类型
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @return 单个数据
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	@Override
 	public <B> B queryOne(String sql, Object[] params, Class<B> clazz) {
@@ -369,6 +441,16 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	/**
+	 * 查询单个数据
+	 * @param <E> 返回值类型为clazz参数定义的类型
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @param clazz 查询结果映射对象类型
+	 * @return 单个数据
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public <E> E findOne(String hql, Object[] params, Class<E> clazz) {
 		// 记录开始日志
@@ -396,7 +478,15 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
-	@SuppressWarnings("deprecation")
+	/**
+	 * 查询单个数据
+	 * @param <T> 返回值类型为clazz参数定义的类型
+	 * @param sqlObj SQL语句对象
+	 * @param clazz 查询结果映射对象类型
+	 * @return 单个数据
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public <T> T getOne(SQL sqlObj, Class<T> clazz) {
 		return sqlObj.isUseSQL() ? queryOne(sqlObj.getSQL(), sqlObj.getParams(), clazz) : findOne(sqlObj.getSQL(), sqlObj.getParams(), clazz);
@@ -410,6 +500,14 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	/**
+	 * 查询单个字符串
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个字符串
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public String queryString(String sql, Object[] params) {
 		// 记录开始日志
@@ -439,6 +537,14 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	/**
+	 * 查询单个字符串
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个字符串
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public String findString(String hql, Object[] params) {
 		// 记录开始日志
@@ -468,7 +574,13 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
-	@SuppressWarnings("deprecation")
+	/**
+	 * 查询单个字符串
+	 * @param sqlObj SQL语句对象
+	 * @return 单个字符串
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public String getString(SQL sqlObj) {
 		return sqlObj.isUseSQL() ? queryString(sqlObj.getSQL(), sqlObj.getParams()) : findString(sqlObj.getSQL(), sqlObj.getParams());
@@ -482,6 +594,14 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public Long queryLong(String sql, Object[] params) {
 		// 记录开始日志
@@ -511,6 +631,14 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public Long findLong(String hql, Object[] params) {
 		// 记录开始日志
@@ -540,7 +668,13 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
-	@SuppressWarnings("deprecation")
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public Long getLong(SQL sqlObj) {
 		return sqlObj.isUseSQL() ? queryLong(sqlObj.getSQL(), sqlObj.getParams()) : findLong(sqlObj.getSQL(), sqlObj.getParams());
@@ -554,6 +688,19 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	/**
+	 * INSERT/DELETE/UPDATE
+	 *
+	 * <pre>
+	 * important 谨慎使用
+	 * </pre>
+	 *
+	 * @param sql 更新语句
+	 * @param params 参数
+	 * @return 更新数据数量
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public int change(String sql, Object[] params) {
 		// 记录开始日志
@@ -576,7 +723,18 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
-	@SuppressWarnings("deprecation")
+	/**
+	 * INSERT/DELETE/UPDATE
+	 *
+	 * <pre>
+	 * important 谨慎使用
+	 * </pre>
+	 * 
+	 * @param sqlObj SQL语句对象
+	 * @return 更新数据数量
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	@Override
 	public int change(SQL sqlObj) {
 		return change(sqlObj.getSQL(), sqlObj.getParams());
