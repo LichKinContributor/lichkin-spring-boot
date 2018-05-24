@@ -122,11 +122,9 @@ public interface LKDao {
 	 * @param <T> 返回值类型为clazz参数定义的类型
 	 * @param sqlObj SQL语句对象
 	 * @param clazz 查询结果映射对象类型
-	 * @param pageNumber 页码。正整数或0。从0开始。
-	 * @param pageSize 每页数据量。正整数。传入0时表示取框架约定的默认值。
 	 * @return 分页数据。无结果时将返回空对象。
 	 */
-	public <T> Page<T> getPage(QuerySQL sqlObj, Class<T> clazz, int pageNumber, int pageSize);
+	public <T> Page<T> getPage(QuerySQL sqlObj, Class<T> clazz);
 
 
 	/**

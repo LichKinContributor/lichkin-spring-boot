@@ -328,8 +328,8 @@ public abstract class LKBaseDao implements LKDao {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public <T> Page<T> getPage(QuerySQL sqlObj, Class<T> clazz, int pageNumber, int pageSize) {
-		return sqlObj.isUseSQL() ? queryPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize) : findPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize);
+	public <T> Page<T> getPage(QuerySQL sqlObj, Class<T> clazz) {
+		return sqlObj.isUseSQL() ? queryPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, sqlObj.getPageNumber(), sqlObj.getPageSize()) : findPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, sqlObj.getPageNumber(), sqlObj.getPageSize());
 	}
 
 
