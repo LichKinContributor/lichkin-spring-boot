@@ -5,7 +5,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 
-import com.lichkin.framework.defines.entities.suppers.LKNormalInterface;
+import com.lichkin.framework.db.entities.suppers.LKNormalInterface;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
 
 import lombok.Getter;

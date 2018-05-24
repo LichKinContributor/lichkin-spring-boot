@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.lichkin.LKMain;
 import com.lichkin.framework.defines.LKFrameworkStatics;
-import com.lichkin.framework.defines.annotations.LKController4Datas;
-import com.lichkin.framework.defines.annotations.LKController4Pages;
 import com.lichkin.framework.defines.exceptions.LKFrameworkException;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
 import com.lichkin.framework.utils.LKStringUtils;
+import com.lichkin.framework.web.annotations.LKController4Datas;
+import com.lichkin.framework.web.annotations.LKController4Pages;
 import com.lichkin.springframework.configs.LKApplicationContext;
 import com.lichkin.springframework.web.beans.LKPage;
 

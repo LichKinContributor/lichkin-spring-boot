@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.lichkin.framework.defines.LKFrameworkStatics;
-import com.lichkin.framework.defines.annotations.LKController4Pages;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.exceptions.LKRuntimeException;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
+import com.lichkin.framework.web.annotations.LKController4Pages;
 import com.lichkin.springframework.web.beans.LKRequestInfo;
 
 /**

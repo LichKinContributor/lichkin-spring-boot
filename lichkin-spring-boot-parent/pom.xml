@@ -6,7 +6,7 @@
 
   <groupId>com.lichkin.springframework.boot</groupId>
   <artifactId>lichkin-spring-boot-parent</artifactId>
-  <version>1.0.0.RELEASE</version>
+
 
   <name>lichkin-spring-boot-parent</name>
   <description>基于springframework.boot封装一些自有框架约定以及基础业务功能实现</description>
@@ -26,11 +26,11 @@
     <groupId>com.lichkin.framework</groupId>
     <artifactId>lichkin-framework-parent</artifactId>
     <version>1.0.0.RELEASE</version>
-    <relativePath>../../lichkin-framework/lichkin-framework-parent</relativePath>
   </parent>
 
   <properties>
     <com.lichkin.springframework.boot.version>1.0.0.RELEASE</com.lichkin.springframework.boot.version>
+    <com.lichkin.springframework.boot.entity.version>1.0.0.RELEASE</com.lichkin.springframework.boot.entity.version>
     <springframework.boot.version>2.0.0.RELEASE</springframework.boot.version>
   </properties>
 

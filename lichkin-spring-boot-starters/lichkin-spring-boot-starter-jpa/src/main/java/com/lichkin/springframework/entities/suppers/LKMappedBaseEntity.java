@@ -3,7 +3,7 @@ package com.lichkin.springframework.entities.suppers;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import com.lichkin.framework.defines.entities.suppers.LKBaseInterface;
+import com.lichkin.framework.db.entities.suppers.LKBaseInterface;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SQL;
 import com.lichkin.framework.db.beans.UpdateSQL;
-import com.lichkin.framework.defines.entities.suppers.LKIDInterface;
+import com.lichkin.framework.db.entities.suppers.LKIDInterface;
 
 /**
  * 数据访问接口
@@ -257,11 +257,11 @@ public interface LKDao {
 
 	/**
 	 * INSERT/DELETE/UPDATE
-	 * 
+	 *
 	 * <pre>
 	 * important 谨慎使用
 	 * </pre>
-	 * 
+	 *
 	 * @param sql 更新语句
 	 * @param params 参数
 	 * @return 更新数据数量

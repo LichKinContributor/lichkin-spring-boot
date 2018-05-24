@@ -10,11 +10,11 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import com.lichkin.framework.defines.annotations.LKController4Api;
-import com.lichkin.framework.defines.beans.LKResponseBean;
+import com.lichkin.framework.beans.LKResponseBean;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
+import com.lichkin.framework.web.annotations.LKController4Api;
 import com.lichkin.springframework.web.beans.LKRequestInfo;
 import com.lichkin.springframework.web.beans.LKResponseInfo;
 import com.lichkin.springframework.web.utils.LKRequestUtils;

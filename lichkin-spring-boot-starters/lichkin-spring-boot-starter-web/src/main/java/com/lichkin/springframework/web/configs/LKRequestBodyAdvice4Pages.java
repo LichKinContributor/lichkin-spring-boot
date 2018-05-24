@@ -10,7 +10,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice;
 
-import com.lichkin.framework.defines.annotations.LKController4Pages;
+import com.lichkin.framework.web.annotations.LKController4Pages;
 
 /**
  * 页面请求请求处理

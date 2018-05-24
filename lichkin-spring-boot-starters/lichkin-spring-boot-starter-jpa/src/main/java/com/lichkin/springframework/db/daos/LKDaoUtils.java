@@ -16,11 +16,11 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
+import com.lichkin.framework.db.entities.suppers.LKBaseInterface;
+import com.lichkin.framework.db.entities.suppers.LKBaseSysInterface;
+import com.lichkin.framework.db.entities.suppers.LKIDInterface;
+import com.lichkin.framework.db.entities.suppers.LKNormalInterface;
 import com.lichkin.framework.defines.LKFrameworkStatics;
-import com.lichkin.framework.defines.entities.suppers.LKBaseInterface;
-import com.lichkin.framework.defines.entities.suppers.LKBaseSysInterface;
-import com.lichkin.framework.defines.entities.suppers.LKIDInterface;
-import com.lichkin.framework.defines.entities.suppers.LKNormalInterface;
 import com.lichkin.framework.defines.enums.impl.LKRangeTypeEnum;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
 import com.lichkin.framework.utils.LKDateTimeUtils;
@@ -183,7 +183,6 @@ class LKDaoUtils {
 	 * 初始化对象
 	 * @param obj 实体类对象
 	 */
-	@SuppressWarnings("deprecation")
 	static void initEntity(final LKIDInterface obj) {
 		final String currentTime = LKDateTimeUtils.now();
 		final String systemTag = LKFrameworkStatics.SYSTEM_TAG;

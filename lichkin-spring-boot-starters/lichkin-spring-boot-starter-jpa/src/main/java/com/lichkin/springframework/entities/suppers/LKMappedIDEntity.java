@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.lichkin.framework.defines.entities.suppers.LKIDInterface;
+import com.lichkin.framework.db.entities.suppers.LKIDInterface;
 
 import lombok.Getter;
 import lombok.Setter;

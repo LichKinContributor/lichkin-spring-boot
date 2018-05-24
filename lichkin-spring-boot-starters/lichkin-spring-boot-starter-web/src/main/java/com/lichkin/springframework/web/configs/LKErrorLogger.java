@@ -1,5 +1,7 @@
 package com.lichkin.springframework.web.configs;
 
+import static com.lichkin.framework.defines.LKFrameworkStatics.SPLITOR_FIELDS;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import com.lichkin.framework.beans.LKResponseBean;
 import com.lichkin.framework.defines.LKFrameworkStatics;
-import com.lichkin.framework.defines.beans.LKResponseBean;
 import com.lichkin.framework.defines.enums.LKCodeEnum;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
@@ -86,7 +88,7 @@ class LKErrorLogger {
 				List<ObjectError> errors = ((MethodArgumentNotValidException) ex).getBindingResult().getAllErrors();
 				StringBuffer sb = new StringBuffer();
 				for (ObjectError error : errors) {
-					sb.append(LKI18NReader4ErrorCodes.read(LKRequestUtils.getLocale(request), "validation@" + error.getCodes()[0])).append("@#@");
+					sb.append(LKI18NReader4ErrorCodes.read(LKRequestUtils.getLocale(request), "validation@" + error.getCodes()[0])).append(SPLITOR_FIELDS);
 				}
 				errorMessage = sb.toString();
 			}

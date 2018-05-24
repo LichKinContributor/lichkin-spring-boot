@@ -5,10 +5,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.lichkin.framework.defines.annotations.LKController4Datas;
-import com.lichkin.framework.defines.beans.LKResponseBean;
+import com.lichkin.framework.beans.LKResponseBean;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
+import com.lichkin.framework.web.annotations.LKController4Datas;
 
 /**
  * 数据请求控制器类执行错误处理

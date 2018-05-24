@@ -22,7 +22,7 @@ import org.springframework.data.domain.Pageable;
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SQL;
 import com.lichkin.framework.db.beans.UpdateSQL;
-import com.lichkin.framework.defines.entities.suppers.LKIDInterface;
+import com.lichkin.framework.db.entities.suppers.LKIDInterface;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
@@ -729,7 +729,7 @@ public abstract class LKBaseDao implements LKDao {
 	 * <pre>
 	 * important 谨慎使用
 	 * </pre>
-	 * 
+	 *
 	 * @param sqlObj SQL语句对象
 	 * @return 更新数据数量
 	 * @deprecated 框架提供的方法暂不能实现时使用

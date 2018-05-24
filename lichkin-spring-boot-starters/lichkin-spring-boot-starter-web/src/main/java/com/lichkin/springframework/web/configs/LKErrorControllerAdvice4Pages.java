@@ -11,10 +11,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 import com.lichkin.framework.defines.LKFrameworkStatics;
-import com.lichkin.framework.defines.annotations.LKController4Pages;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
+import com.lichkin.framework.web.annotations.LKController4Pages;
 import com.lichkin.springframework.web.beans.LKRequestInfo;
 
 /**

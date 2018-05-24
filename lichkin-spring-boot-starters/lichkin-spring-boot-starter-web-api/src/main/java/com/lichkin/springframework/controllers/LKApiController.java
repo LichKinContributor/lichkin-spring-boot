@@ -5,9 +5,9 @@ import javax.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.lichkin.framework.defines.annotations.LKController4Api;
-import com.lichkin.framework.defines.beans.LKRequestBean;
+import com.lichkin.framework.beans.LKRequestBean;
 import com.lichkin.framework.defines.exceptions.LKException;
+import com.lichkin.framework.web.annotations.LKController4Api;
 import com.lichkin.springframework.services.LKApiService;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
 

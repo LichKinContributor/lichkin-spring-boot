@@ -46,9 +46,6 @@ public class LKMain {
 	/** Profiles启用配置 */
 	private static final String SPRING_PROFILES_ACTIVE = "--spring.profiles.active=";
 
-	/** 是否启用重启文件 */
-	private static final String RESTART_TRIGGER = "--restart.trigger=true";
-
 	/** context环境 */
 	public static ConfigurableEnvironment env = null;
 
@@ -135,9 +132,6 @@ public class LKMain {
 					}
 
 					args = ArrayUtils.remove(args, i);
-				} else if (arg.startsWith(RESTART_TRIGGER)) {
-					args = ArrayUtils.remove(args, i);
-					args = ArrayUtils.add(args, "--spring.devtools.restart.trigger-file=restart.trigger-file");
 				}
 			}
 		}

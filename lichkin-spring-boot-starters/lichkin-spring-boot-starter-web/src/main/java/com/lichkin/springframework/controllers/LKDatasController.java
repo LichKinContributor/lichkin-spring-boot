@@ -1,7 +1,7 @@
 package com.lichkin.springframework.controllers;
 
 import com.lichkin.framework.defines.LKFrameworkStatics;
-import com.lichkin.framework.defines.annotations.LKController4Datas;
+import com.lichkin.framework.web.annotations.LKController4Datas;
 
 /**
  * 数据请求控制器类定义
