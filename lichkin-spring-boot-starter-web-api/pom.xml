@@ -24,9 +24,9 @@
 
   <parent>
     <groupId>com.lichkin.springframework.boot</groupId>
-    <artifactId>lichkin-spring-boot-parent</artifactId>
+    <artifactId>lichkin-spring-boot</artifactId>
     <version>1.0.0.RELEASE</version>
-    <relativePath>../../lichkin-spring-boot-parent</relativePath>
+    <relativePath>../</relativePath>
   </parent>
 
   <dependencies>

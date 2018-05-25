@@ -5,12 +5,12 @@
   <packaging>pom</packaging>
 
   <groupId>com.lichkin.springframework.boot</groupId>
-  <artifactId>lichkin-spring-boot-parent</artifactId>
+  <artifactId>lichkin-spring-boot</artifactId>
 
 
-  <name>lichkin-spring-boot-parent</name>
+  <name>lichkin-spring-boot</name>
   <description>基于springframework.boot封装一些自有框架约定以及基础业务功能实现</description>
-  <url>http://codes.lichkin.com/spring-boot-parent</url>
+  <url>http://codes.lichkin.com/spring-boot</url>
   <organization>
     <name>SuZhou LichKin Information Technology Co., Ltd.</name>
     <url>http://www.lichkin.com</url>
@@ -24,7 +24,7 @@
 
   <parent>
     <groupId>com.lichkin.framework</groupId>
-    <artifactId>lichkin-framework-parent</artifactId>
+    <artifactId>lichkin-framework</artifactId>
     <version>1.0.0.RELEASE</version>
   </parent>
 
