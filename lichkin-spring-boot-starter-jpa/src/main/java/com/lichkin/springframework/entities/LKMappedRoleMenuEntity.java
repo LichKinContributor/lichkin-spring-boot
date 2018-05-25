@@ -22,11 +22,11 @@ public class LKMappedRoleMenuEntity extends LKMappedBaseSysEntity implements LKR
 	private static final long serialVersionUID = -8888886666661004L;
 
 	/** 角色ID */
-	@Column(nullable = false, length = 64)
+	@Column(nullable = false, length = ID_LENGTH)
 	private String roleId;
 
 	/** 菜单ID */
-	@Column(nullable = false, length = 64)
+	@Column(nullable = false, length = ID_LENGTH)
 	private String menuId;
 
 
