@@ -33,6 +33,15 @@ public class LKMappedIDEntity implements LKIDInterface {
 	/** 编码字段长度 */
 	protected static final int CODE_LENGTH = 64;
 
+	/** 值字段长度 */
+	protected static final int VALUE_LENGTH = 200;
+
+	/** 值字段长度 */
+	protected static final int VALUE_SHORT_LENGTH = 100;
+
+	/** 名称字段长度 */
+	protected static final int NAME_LENGTH = 64;
+
 	/** 时间字段长度 */
 	protected static final int TIME_LENGTH = 17;
 
