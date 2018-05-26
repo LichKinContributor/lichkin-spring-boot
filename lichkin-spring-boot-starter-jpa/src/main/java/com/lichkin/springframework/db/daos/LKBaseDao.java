@@ -19,10 +19,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.lichkin.framework.db.beans.DeleteSQL;
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SQL;
 import com.lichkin.framework.db.beans.UpdateSQL;
 import com.lichkin.framework.db.entities.suppers.LKIDInterface;
+import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
@@ -758,6 +760,17 @@ public abstract class LKBaseDao implements LKDao {
 	@Override
 	public int change(UpdateSQL sqlObj) {
 		return change(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public <E> int delete(Class<E> clazz, String id) {
+		if (id.contains(LKFrameworkStatics.SPLITOR)) {
+			return change(new SQL(true).appendSQL(new DeleteSQL(clazz).getSQL() + " WHERE").in(null, "ID", id));
+		} else {
+			return change(new SQL(true).appendSQL(new DeleteSQL(clazz).getSQL() + " WHERE").eq(null, "ID", id));
+		}
 	}
 
 

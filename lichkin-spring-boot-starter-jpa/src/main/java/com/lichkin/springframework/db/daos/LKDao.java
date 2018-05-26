@@ -165,7 +165,7 @@ public interface LKDao {
 
 	/**
 	 * 查询单个数据
-	 * @param <B> 返回值类型为clazz参数定义的类型
+	 * @param <E> 返回值类型为clazz参数定义的类型
 	 * @param clazz 查询结果映射对象类型
 	 * @param id 主键
 	 * @return 单个数据
@@ -317,6 +317,16 @@ public interface LKDao {
 	 * @return 更新数据数量
 	 */
 	public int change(UpdateSQL sqlObj);
+
+
+	/**
+	 * 删除数据
+	 * @param <E> clazz参数定义的类型
+	 * @param clazz 删除数据对象类型。符合约定的Entity或Bean。
+	 * @param id 主键。使用LKFrameworkStatics.SPLITOR分割的形式可删除多条数据。
+	 * @return 删除数据数量
+	 */
+	public <E> int delete(Class<E> clazz, String id);
 
 
 	/**
