@@ -441,6 +441,13 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public <B> B queryOne(Class<B> clazz, String id) {
+		return queryOne(new QuerySQL(clazz).getSQL() + " WHERE ID = ?", new Object[] { id }, clazz);
+	}
+
+
 	/**
 	 * 查询单个数据
 	 * @param <E> 返回值类型为clazz参数定义的类型
@@ -475,6 +482,12 @@ public abstract class LKBaseDao implements LKDao {
 			logAfterQuery(false, hqlId, startTime);
 		}
 
+	}
+
+
+	@Override
+	public <E> E findOne(Class<E> clazz, String id) {
+		return queryOne("FROM " + clazz.getName() + " WHERE ID = ?", new Object[] { id }, clazz);
 	}
 
 

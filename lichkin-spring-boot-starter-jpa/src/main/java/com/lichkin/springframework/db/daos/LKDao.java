@@ -142,6 +142,16 @@ public interface LKDao {
 
 	/**
 	 * 查询单个数据
+	 * @param <B> 返回值类型为clazz参数定义的类型
+	 * @param clazz 查询结果映射对象类型
+	 * @param id 主键
+	 * @return 单个数据
+	 */
+	public <B> B queryOne(Class<B> clazz, String id);
+
+
+	/**
+	 * 查询单个数据
 	 * @param <E> 返回值类型为clazz参数定义的类型
 	 * @param hql 查询语句
 	 * @param params 参数
@@ -151,6 +161,16 @@ public interface LKDao {
 	 */
 	@Deprecated
 	public <E> E findOne(String hql, Object[] params, Class<E> clazz);
+
+
+	/**
+	 * 查询单个数据
+	 * @param <B> 返回值类型为clazz参数定义的类型
+	 * @param clazz 查询结果映射对象类型
+	 * @param id 主键
+	 * @return 单个数据
+	 */
+	public <E> E findOne(Class<E> clazz, String id);
 
 
 	/**
