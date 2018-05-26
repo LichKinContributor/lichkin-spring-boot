@@ -21,14 +21,14 @@ import lombok.Setter;
 public class LKMappedUserEntity extends LKMappedBaseUserEntity implements LKUserInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -8888886666661006L;
+	private static final long serialVersionUID = -14L;
 
 	/** 身份证号 */
 	@Column(nullable = false, length = CODE_LENGTH)
 	private String userCard;
 
 	/** 生日（yyyy-MM-dd） */
-	@Column(nullable = false, length = 10)
+	@Column(nullable = false, length = DATE_LENGTH)
 	private String birthday;
 
 	/** 出生地（字典） */
@@ -53,7 +53,7 @@ public class LKMappedUserEntity extends LKMappedBaseUserEntity implements LKUser
 
 	/** 实名认证等级（枚举） */
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, length = ENUM_LENGTH)
+	@Column(nullable = false, length = 18)
 	private LKAuthenticationEnum authentication;
 
 

@@ -22,7 +22,7 @@ import lombok.Setter;
 public class LKMappedMenuEntity extends LKMappedBaseSysEntity implements LKMenuInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -8888886666661002L;
+	private static final long serialVersionUID = -11L;
 
 	/** 父菜单编号 */
 	@Column(nullable = false, length = CODE_LENGTH)
@@ -37,7 +37,7 @@ public class LKMappedMenuEntity extends LKMappedBaseSysEntity implements LKMenuI
 	private String menuName;
 
 	/** 链接地址 */
-	@Column(nullable = false, length = VALUE_LENGTH)
+	@Column(nullable = false, length = VALUE_128_LENGTH)
 	private String url;
 
 	/** 排序号 */

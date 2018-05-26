@@ -19,7 +19,7 @@ import lombok.Setter;
 public abstract class LKMappedBaseSysEntity extends LKMappedBaseEntity implements LKBaseSysInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -8888886666660003L;
+	private static final long serialVersionUID = -4L;
 
 	/** 系统编码 */
 	@Column(nullable = false, length = SYSTEM_TAG_LENGTH)

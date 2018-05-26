@@ -19,7 +19,7 @@ import lombok.Setter;
 public class LKMappedUserLoginEntity extends LKMappedBaseSysEntity implements LKUserLoginInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = 8888886666661007L;
+	private static final long serialVersionUID = -15L;
 
 	/** 用户ID */
 	@Column(nullable = false, length = ID_LENGTH)
@@ -34,11 +34,11 @@ public class LKMappedUserLoginEntity extends LKMappedBaseSysEntity implements LK
 	private String userCard;
 
 	/** 手机号码 */
-	@Column(nullable = false, length = 11)
+	@Column(nullable = false, length = CELLPHONE_LENGTH)
 	private String cellphone;
 
 	/** 邮箱 */
-	@Column(nullable = false, length = VALUE_SHORT_LENGTH)
+	@Column(nullable = false, length = EMAIL_LENGTH)
 	private String email;
 
 	/** 密码 */
@@ -62,15 +62,15 @@ public class LKMappedUserLoginEntity extends LKMappedBaseSysEntity implements LK
 	private String wechatId;
 
 	/** 备用字段1 */
-	@Column(nullable = false, length = VALUE_SHORT_LENGTH)
+	@Column(nullable = false, length = VALUE_128_LENGTH)
 	private String field1;
 
 	/** 备用字段2 */
-	@Column(nullable = false, length = VALUE_SHORT_LENGTH)
+	@Column(nullable = false, length = VALUE_128_LENGTH)
 	private String field2;
 
 	/** 备用字段3 */
-	@Column(nullable = false, length = VALUE_SHORT_LENGTH)
+	@Column(nullable = false, length = VALUE_128_LENGTH)
 	private String field3;
 
 

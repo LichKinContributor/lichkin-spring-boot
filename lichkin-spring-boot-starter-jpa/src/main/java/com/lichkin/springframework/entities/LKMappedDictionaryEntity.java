@@ -19,7 +19,7 @@ import lombok.Setter;
 public class LKMappedDictionaryEntity extends LKMappedBaseSysEntity implements LKDictionaryInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -8888886666661001L;
+	private static final long serialVersionUID = -9L;
 
 	/** 类目编号 */
 	@Column(nullable = false, length = CODE_LENGTH)
@@ -30,7 +30,7 @@ public class LKMappedDictionaryEntity extends LKMappedBaseSysEntity implements L
 	private String dictCode;
 
 	/** 字典值 */
-	@Column(nullable = false, length = VALUE_LENGTH)
+	@Column(nullable = false, length = VALUE_128_LENGTH)
 	private String dictValue;
 
 	/** 字典名称 */
@@ -38,7 +38,7 @@ public class LKMappedDictionaryEntity extends LKMappedBaseSysEntity implements L
 	private String dictName;
 
 	/** 字典备注 */
-	@Column(nullable = false, length = VALUE_LENGTH)
+	@Column(nullable = false, length = VALUE_128_LENGTH)
 	private String dictRemarks;
 
 	/** 排序号 */

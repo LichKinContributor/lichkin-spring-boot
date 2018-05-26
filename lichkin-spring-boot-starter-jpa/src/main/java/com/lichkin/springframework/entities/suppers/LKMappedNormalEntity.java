@@ -21,11 +21,11 @@ import lombok.Setter;
 public class LKMappedNormalEntity extends LKMappedIDEntity implements LKNormalInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -8888886666660001L;
+	private static final long serialVersionUID = -2L;
 
 	/** 在用状态（枚举） */
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, length = ENUM_LENGTH)
+	@Column(nullable = false, length = 10)
 	private LKUsingStatusEnum usingStatus;
 
 }

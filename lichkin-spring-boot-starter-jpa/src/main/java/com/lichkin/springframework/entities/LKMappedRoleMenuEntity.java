@@ -19,7 +19,7 @@ import lombok.Setter;
 public class LKMappedRoleMenuEntity extends LKMappedBaseSysEntity implements LKRoleMenuInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -8888886666661004L;
+	private static final long serialVersionUID = -13L;
 
 	/** 角色ID */
 	@Column(nullable = false, length = ID_LENGTH)
