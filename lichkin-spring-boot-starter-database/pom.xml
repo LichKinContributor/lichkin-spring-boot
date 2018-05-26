@@ -44,6 +44,35 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
     </dependency>
+    <!-- lichkin entity -->
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysOperLog</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysErrorLog</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysCategory</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysDictionary</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysMenu</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysRole</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysRoleMenu</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysAdmin</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysAdminLogin</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysAdminLoginRole</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysUser</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysUserLogin</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysUserLoginRole</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysEmployee</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysEmployeeLogin</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysEmployeeLoginRole</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysUserLoginEmployeeLogin</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysComp</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysDept</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysEmployeeLoginDept</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysEmployeeLoginComp</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysAppApiRequestLog</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysAppVersion</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysAppBanner</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysAppFeedback</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysAppScore</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysAppSignInLog</artifactId><version>1.0.0.RELEASE</version></dependency>
+    <dependency><groupId>com.lichkin.springframework.boot.entity</groupId><artifactId>lichkin-spring-boot-entity-SysAppNews</artifactId><version>1.0.0.RELEASE</version></dependency>
   </dependencies>
 
 </project>
