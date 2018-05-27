@@ -16,13 +16,13 @@ import com.lichkin.framework.db.entities.suppers.LKIDInterface;
  * 数据访问接口
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public interface LKDao {
+public abstract class LKDao {
 
 	/**
 	 * 获取EntityManager
 	 * @return EntityManager
 	 */
-	public EntityManager getEntityManager();
+	protected abstract EntityManager getEntityManager();
 
 
 	/**
@@ -35,7 +35,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public <B> List<B> queryList(String sql, Object[] params, Class<B> clazz);
+	protected abstract <B> List<B> queryList(String sql, Object[] params, Class<B> clazz);
 
 
 	/**
@@ -48,7 +48,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public <E> List<E> findList(String hql, Object[] params, Class<E> clazz);
+	protected abstract <E> List<E> findList(String hql, Object[] params, Class<E> clazz);
 
 
 	/**
@@ -60,7 +60,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public <T> List<T> getList(SQL sqlObj, Class<T> clazz);
+	protected abstract <T> List<T> getList(SQL sqlObj, Class<T> clazz);
 
 
 	/**
@@ -70,7 +70,7 @@ public interface LKDao {
 	 * @param clazz 查询结果映射对象类型
 	 * @return 列表数据。无结果时将返回空对象。
 	 */
-	public <T> List<T> getList(QuerySQL sqlObj, Class<T> clazz);
+	public abstract <T> List<T> getList(QuerySQL sqlObj, Class<T> clazz);
 
 
 	/**
@@ -85,7 +85,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public <B> Page<B> queryPage(String sql, Object[] params, Class<B> clazz, int pageNumber, int pageSize);
+	protected abstract <B> Page<B> queryPage(String sql, Object[] params, Class<B> clazz, int pageNumber, int pageSize);
 
 
 	/**
@@ -100,7 +100,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public <E> Page<E> findPage(String hql, Object[] params, Class<E> clazz, int pageNumber, int pageSize);
+	protected abstract <E> Page<E> findPage(String hql, Object[] params, Class<E> clazz, int pageNumber, int pageSize);
 
 
 	/**
@@ -114,7 +114,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public <T> Page<T> getPage(SQL sqlObj, Class<T> clazz, int pageNumber, int pageSize);
+	protected abstract <T> Page<T> getPage(SQL sqlObj, Class<T> clazz, int pageNumber, int pageSize);
 
 
 	/**
@@ -124,7 +124,7 @@ public interface LKDao {
 	 * @param clazz 查询结果映射对象类型
 	 * @return 分页数据。无结果时将返回空对象。
 	 */
-	public <T> Page<T> getPage(QuerySQL sqlObj, Class<T> clazz);
+	public abstract <T> Page<T> getPage(QuerySQL sqlObj, Class<T> clazz);
 
 
 	/**
@@ -137,7 +137,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public <B> B queryOne(String sql, Object[] params, Class<B> clazz);
+	protected abstract <B> B queryOne(String sql, Object[] params, Class<B> clazz);
 
 
 	/**
@@ -147,7 +147,7 @@ public interface LKDao {
 	 * @param id 主键
 	 * @return 单个数据
 	 */
-	public <B> B queryOne(Class<B> clazz, String id);
+	public abstract <B> B queryOneById(Class<B> clazz, String id);
 
 
 	/**
@@ -160,7 +160,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public <E> E findOne(String hql, Object[] params, Class<E> clazz);
+	protected abstract <E> E findOne(String hql, Object[] params, Class<E> clazz);
 
 
 	/**
@@ -170,7 +170,7 @@ public interface LKDao {
 	 * @param id 主键
 	 * @return 单个数据
 	 */
-	public <E> E findOne(Class<E> clazz, String id);
+	public abstract <E> E findOneById(Class<E> clazz, String id);
 
 
 	/**
@@ -182,7 +182,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public <T> T getOne(SQL sqlObj, Class<T> clazz);
+	protected abstract <T> T getOne(SQL sqlObj, Class<T> clazz);
 
 
 	/**
@@ -192,7 +192,7 @@ public interface LKDao {
 	 * @param clazz 查询结果映射对象类型
 	 * @return 单个数据
 	 */
-	public <T> T getOne(QuerySQL sqlObj, Class<T> clazz);
+	public abstract <T> T getOne(QuerySQL sqlObj, Class<T> clazz);
 
 
 	/**
@@ -203,7 +203,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public String queryString(String sql, Object[] params);
+	protected abstract String queryString(String sql, Object[] params);
 
 
 	/**
@@ -214,7 +214,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public String findString(String hql, Object[] params);
+	protected abstract String findString(String hql, Object[] params);
 
 
 	/**
@@ -224,7 +224,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public String getString(SQL sqlObj);
+	protected abstract String getString(SQL sqlObj);
 
 
 	/**
@@ -232,7 +232,7 @@ public interface LKDao {
 	 * @param sqlObj SQL语句对象
 	 * @return 单个字符串
 	 */
-	public String getString(QuerySQL sqlObj);
+	public abstract String getString(QuerySQL sqlObj);
 
 
 	/**
@@ -243,7 +243,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public Long queryLong(String sql, Object[] params);
+	protected abstract Long queryLong(String sql, Object[] params);
 
 
 	/**
@@ -254,7 +254,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public Long findLong(String hql, Object[] params);
+	protected abstract Long findLong(String hql, Object[] params);
 
 
 	/**
@@ -264,7 +264,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public Long getLong(SQL sqlObj);
+	protected abstract Long getLong(SQL sqlObj);
 
 
 	/**
@@ -272,7 +272,7 @@ public interface LKDao {
 	 * @param sqlObj SQL语句对象
 	 * @return 单个数值
 	 */
-	public Long getLong(QuerySQL sqlObj);
+	public abstract Long getLong(QuerySQL sqlObj);
 
 
 	/**
@@ -288,7 +288,7 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public int change(String sql, Object[] params);
+	protected abstract int change(String sql, Object[] params);
 
 
 	/**
@@ -303,11 +303,11 @@ public interface LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
-	public int change(SQL sqlObj);
+	protected abstract int change(SQL sqlObj);
 
 
 	/**
-	 * INSERT/DELETE/UPDATE
+	 * UPDATE
 	 *
 	 * <pre>
 	 * important 谨慎使用
@@ -316,17 +316,17 @@ public interface LKDao {
 	 * @param sqlObj SQL语句对象
 	 * @return 更新数据数量
 	 */
-	public int change(UpdateSQL sqlObj);
+	public abstract int update(UpdateSQL sqlObj);
 
 
 	/**
-	 * 删除数据
-	 * @param <E> clazz参数定义的类型
+	 * 删除单条或多条数据
+	 * @param <T> clazz参数定义的类型
 	 * @param clazz 删除数据对象类型。符合约定的Entity或Bean。
 	 * @param id 主键。使用LKFrameworkStatics.SPLITOR分割的形式可删除多条数据。
 	 * @return 删除数据数量
 	 */
-	public <E> int delete(Class<E> clazz, String id);
+	public abstract <T> int deleteOneOrMoreById(Class<T> clazz, String id);
 
 
 	/**
@@ -335,7 +335,7 @@ public interface LKDao {
 	 * @param entity 实体类对象
 	 * @return 对象
 	 */
-	public <E> E mergeOne(LKIDInterface entity);
+	public abstract <E> E mergeOne(LKIDInterface entity);
 
 
 	/**
@@ -343,7 +343,7 @@ public interface LKDao {
 	 * @param listEntity 实体类对象集合
 	 * @return 对象集合
 	 */
-	public Collection<? extends LKIDInterface> mergeList(Collection<? extends LKIDInterface> listEntity);
+	public abstract Collection<? extends LKIDInterface> mergeList(Collection<? extends LKIDInterface> listEntity);
 
 
 	/**
@@ -351,28 +351,28 @@ public interface LKDao {
 	 * @param objArr 实体类对象数组
 	 * @return 对象数组
 	 */
-	public Object[] mergeArr(LKIDInterface[] objArr);
+	public abstract Object[] mergeArr(LKIDInterface[] objArr);
 
 
 	/**
 	 * 保存对象
 	 * @param entity 实体类对象
 	 */
-	public void persistOne(LKIDInterface entity);
+	public abstract void persistOne(LKIDInterface entity);
 
 
 	/**
 	 * 保存对象集合
 	 * @param listEntity 实体类对象集合
 	 */
-	public void persistList(Collection<? extends LKIDInterface> listEntity);
+	public abstract void persistList(Collection<? extends LKIDInterface> listEntity);
 
 
 	/**
 	 * 保存对象数组
 	 * @param objArr 实体类对象数组
 	 */
-	public void persistArr(LKIDInterface[] objArr);
+	public abstract void persistArr(LKIDInterface[] objArr);
 
 
 	/**
@@ -384,7 +384,7 @@ public interface LKDao {
 	 *
 	 * @param entity 实体类对象
 	 */
-	public void removeOne(LKIDInterface entity);
+	public abstract void removeOne(LKIDInterface entity);
 
 
 	/**
@@ -396,7 +396,7 @@ public interface LKDao {
 	 *
 	 * @param listEntity 实体类对象集合
 	 */
-	public void removeList(Collection<? extends LKIDInterface> listEntity);
+	public abstract void removeList(Collection<? extends LKIDInterface> listEntity);
 
 
 	/**
@@ -408,6 +408,6 @@ public interface LKDao {
 	 *
 	 * @param objArr 实体类对象数组
 	 */
-	public void removeArr(LKIDInterface[] objArr);
+	public abstract void removeArr(LKIDInterface[] objArr);
 
 }

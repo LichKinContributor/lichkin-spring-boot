@@ -1,5 +1,7 @@
 package com.lichkin.springframework.db.daos;
 
+import static com.lichkin.framework.defines.LKFrameworkStatics.SPLITOR;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,12 +21,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.lichkin.framework.db.beans.DeleteSQL;
+import com.lichkin.framework.db.beans.LKDBResource;
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SQL;
 import com.lichkin.framework.db.beans.UpdateSQL;
 import com.lichkin.framework.db.entities.suppers.LKIDInterface;
-import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
@@ -35,7 +36,7 @@ import com.lichkin.framework.utils.LKRandomUtils;
  * 数据库访问对象
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKBaseDao implements LKDao {
+public abstract class LKBaseDao extends LKDao {
 
 	/** 日志对象 */
 	private final LKLog logger = LKLogFactory.getLog(getClass());
@@ -209,7 +210,7 @@ public abstract class LKBaseDao implements LKDao {
 	@Deprecated
 	@SuppressWarnings("unchecked")
 	@Override
-	public <B> List<B> queryList(String sql, Object[] params, Class<B> clazz) {
+	protected <B> List<B> queryList(String sql, Object[] params, Class<B> clazz) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
@@ -246,7 +247,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public <E> List<E> findList(String hql, Object[] params, Class<E> clazz) {
+	protected <E> List<E> findList(String hql, Object[] params, Class<E> clazz) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String hqlId = LKRandomUtils.create(32);
@@ -276,7 +277,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public <T> List<T> getList(SQL sqlObj, Class<T> clazz) {
+	protected <T> List<T> getList(SQL sqlObj, Class<T> clazz) {
 		return sqlObj.isUseSQL() ? queryList(sqlObj.getSQL(), sqlObj.getParams(), clazz) : findList(sqlObj.getSQL(), sqlObj.getParams(), clazz);
 	}
 
@@ -302,7 +303,7 @@ public abstract class LKBaseDao implements LKDao {
 	@Deprecated
 	@SuppressWarnings("unchecked")
 	@Override
-	public <B> Page<B> queryPage(String sql, Object[] params, Class<B> clazz, int pageNumber, int pageSize) {
+	protected <B> Page<B> queryPage(String sql, Object[] params, Class<B> clazz, int pageNumber, int pageSize) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
@@ -347,7 +348,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public <E> Page<E> findPage(String hql, Object[] params, Class<E> clazz, int pageNumber, int pageSize) {
+	protected <E> Page<E> findPage(String hql, Object[] params, Class<E> clazz, int pageNumber, int pageSize) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String hqlId = LKRandomUtils.create(32);
@@ -385,7 +386,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public <T> Page<T> getPage(SQL sqlObj, Class<T> clazz, int pageNumber, int pageSize) {
+	protected <T> Page<T> getPage(SQL sqlObj, Class<T> clazz, int pageNumber, int pageSize) {
 		return sqlObj.isUseSQL() ? queryPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize) : findPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize);
 	}
 
@@ -409,7 +410,7 @@ public abstract class LKBaseDao implements LKDao {
 	@Deprecated
 	@SuppressWarnings("unchecked")
 	@Override
-	public <B> B queryOne(String sql, Object[] params, Class<B> clazz) {
+	protected <B> B queryOne(String sql, Object[] params, Class<B> clazz) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
@@ -443,10 +444,9 @@ public abstract class LKBaseDao implements LKDao {
 	}
 
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public <B> B queryOne(Class<B> clazz, String id) {
-		return queryOne(new QuerySQL(clazz).getSQL() + " WHERE ID = ?", new Object[] { id }, clazz);
+	public <B> B queryOneById(Class<B> clazz, String id) {
+		return queryOne("SELECT * FROM " + LKDBResource.getTableResource(clazz).getTableName() + " WHERE ID = ?", new Object[] { id }, clazz);
 	}
 
 
@@ -461,7 +461,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public <E> E findOne(String hql, Object[] params, Class<E> clazz) {
+	protected <E> E findOne(String hql, Object[] params, Class<E> clazz) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String hqlId = LKRandomUtils.create(32);
@@ -488,8 +488,8 @@ public abstract class LKBaseDao implements LKDao {
 
 
 	@Override
-	public <E> E findOne(Class<E> clazz, String id) {
-		return queryOne("FROM " + clazz.getName() + " WHERE ID = ?", new Object[] { id }, clazz);
+	public <E> E findOneById(Class<E> clazz, String id) {
+		return findOne("FROM " + clazz.getName() + " WHERE ID = ?", new Object[] { id }, clazz);
 	}
 
 
@@ -503,7 +503,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public <T> T getOne(SQL sqlObj, Class<T> clazz) {
+	protected <T> T getOne(SQL sqlObj, Class<T> clazz) {
 		return sqlObj.isUseSQL() ? queryOne(sqlObj.getSQL(), sqlObj.getParams(), clazz) : findOne(sqlObj.getSQL(), sqlObj.getParams(), clazz);
 	}
 
@@ -524,7 +524,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public String queryString(String sql, Object[] params) {
+	protected String queryString(String sql, Object[] params) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
@@ -561,7 +561,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public String findString(String hql, Object[] params) {
+	protected String findString(String hql, Object[] params) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String hqlId = LKRandomUtils.create(32);
@@ -597,7 +597,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public String getString(SQL sqlObj) {
+	protected String getString(SQL sqlObj) {
 		return sqlObj.isUseSQL() ? queryString(sqlObj.getSQL(), sqlObj.getParams()) : findString(sqlObj.getSQL(), sqlObj.getParams());
 	}
 
@@ -618,7 +618,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public Long queryLong(String sql, Object[] params) {
+	protected Long queryLong(String sql, Object[] params) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
@@ -655,7 +655,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public Long findLong(String hql, Object[] params) {
+	protected Long findLong(String hql, Object[] params) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String hqlId = LKRandomUtils.create(32);
@@ -691,7 +691,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public Long getLong(SQL sqlObj) {
+	protected Long getLong(SQL sqlObj) {
 		return sqlObj.isUseSQL() ? queryLong(sqlObj.getSQL(), sqlObj.getParams()) : findLong(sqlObj.getSQL(), sqlObj.getParams());
 	}
 
@@ -717,7 +717,7 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public int change(String sql, Object[] params) {
+	protected int change(String sql, Object[] params) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
@@ -751,25 +751,25 @@ public abstract class LKBaseDao implements LKDao {
 	 */
 	@Deprecated
 	@Override
-	public int change(SQL sqlObj) {
+	protected int change(SQL sqlObj) {
 		return change(sqlObj.getSQL(), sqlObj.getParams());
 	}
 
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public int change(UpdateSQL sqlObj) {
+	public int update(UpdateSQL sqlObj) {
 		return change(sqlObj.getSQL(), sqlObj.getParams());
 	}
 
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public <E> int delete(Class<E> clazz, String id) {
-		if (id.contains(LKFrameworkStatics.SPLITOR)) {
-			return change(new SQL(true).appendSQL(new DeleteSQL(clazz).getSQL() + " WHERE").in(null, "ID", id));
+	public <T> int deleteOneOrMoreById(Class<T> clazz, String id) {
+		SQL sql = new SQL(true).appendSQL("DELETE FROM " + LKDBResource.getTableResource(clazz).getTableName() + " WHERE");
+		if (id.contains(SPLITOR)) {
+			return change(sql.in(null, "ID", id));
 		} else {
-			return change(new SQL(true).appendSQL(new DeleteSQL(clazz).getSQL() + " WHERE").eq(null, "ID", id));
+			return change(sql.eq(null, "ID", id));
 		}
 	}
 

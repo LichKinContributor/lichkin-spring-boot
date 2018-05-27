@@ -23,7 +23,7 @@ public class LKSecondaryDao extends LKBaseDao {
 
 
 	@Override
-	public EntityManager getEntityManager() {
+	protected EntityManager getEntityManager() {
 		return entityManager;
 	}
 

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.lichkin.springframework.db.daos.LKBaseDao;
 
 /**
- * 主数据库访问类
+ * 数据库访问类
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 @Component(DAO_NAME)
@@ -23,7 +23,7 @@ public class LKPrimaryDao extends LKBaseDao {
 
 
 	@Override
-	public EntityManager getEntityManager() {
+	protected EntityManager getEntityManager() {
 		return entityManager;
 	}
 
