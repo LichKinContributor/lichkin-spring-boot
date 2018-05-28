@@ -23,6 +23,7 @@ import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.exceptions.LKFrameworkException;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
+import com.lichkin.framework.utils.LKClassUtils;
 import com.lichkin.framework.utils.LKStringUtils;
 import com.lichkin.framework.web.annotations.LKController4Datas;
 import com.lichkin.framework.web.annotations.LKController4Pages;
@@ -103,9 +104,9 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 					}
 
 					// 页面请求控制器
-					LKController4Pages pagesAnnotation = beanClass.getAnnotation(LKController4Pages.class);
+					Annotation pagesAnnotation = LKClassUtils.deepGetAnnotation(beanClass, LKController4Pages.class.getName());
 					// 数据请求控制器
-					LKController4Datas datasAnnotation = beanClass.getAnnotation(LKController4Datas.class);
+					Annotation datasAnnotation = LKClassUtils.deepGetAnnotation(beanClass, LKController4Datas.class.getName());
 
 					// 验证方法注解
 					Method[] methods = beanClass.getDeclaredMethods();
@@ -179,7 +180,7 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 	/**
 	 * 约定校验
 	 */
-	private void checkMapping(Boolean isPost, Class<?> beanClass, Method method, String controllerMapping, String beanName, String methodName, String mapping, LKController4Pages pagesAnnotation, LKController4Datas datasAnnotation) {
+	private void checkMapping(Boolean isPost, Class<?> beanClass, Method method, String controllerMapping, String beanName, String methodName, String mapping, Annotation pagesAnnotation, Annotation datasAnnotation) {
 		String fullMapping = LKStringUtils.joinPath(controllerMapping, mapping);
 		if (fullMapping.equals("/index" + LKFrameworkStatics.WEB_MAPPING_PAGES) && !isPost) {
 			indexPageImplemented = true;
