@@ -21,6 +21,10 @@ public abstract class LKMappedUserLoginEntity extends LKMappedBaseSysEntity impl
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1L;
 
+	/** 照片（base64） */
+	@Column(nullable = false, length = VALUE_BASE64_LENGTH)
+	private String photo;
+
 	/** 用户ID */
 	@Column(nullable = false, length = ID_LENGTH)
 	private String userId;
