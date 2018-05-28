@@ -19,10 +19,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class LKMappedMenuEntity extends LKMappedBaseSysEntity implements LKMenuInterface {
+public abstract class LKMappedMenuEntity extends LKMappedBaseSysEntity implements LKMenuInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -11L;
+	private static final long serialVersionUID = 1L;
 
 	/** 父菜单编号 */
 	@Column(nullable = false, length = CODE_LENGTH)

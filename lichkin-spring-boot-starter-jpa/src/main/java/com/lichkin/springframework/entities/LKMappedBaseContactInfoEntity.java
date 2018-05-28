@@ -16,10 +16,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class LKMappedBaseContactInfoEntity extends LKMappedBaseSysEntity implements LKBaseContactInfoInterface {
+public abstract class LKMappedBaseContactInfoEntity extends LKMappedBaseSysEntity implements LKBaseContactInfoInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -5L;
+	private static final long serialVersionUID = 1L;
 
 	/** 照片（base64） */
 	@Column(nullable = false, length = VALUE_BASE64_LENGTH)

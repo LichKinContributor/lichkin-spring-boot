@@ -16,10 +16,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class LKMappedRoleEntity extends LKMappedBaseSysEntity implements LKRoleInterface {
+public abstract class LKMappedRoleEntity extends LKMappedBaseSysEntity implements LKRoleInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -12L;
+	private static final long serialVersionUID = 1L;
 
 	/** 角色名称 */
 	@Column(nullable = false, length = NAME_LENGTH)

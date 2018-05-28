@@ -22,10 +22,10 @@ import lombok.Setter;
 @Setter
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @MappedSuperclass
-public class _LKMappedIDEntity implements _LKIDInterface {
+public abstract class _LKMappedIDEntity implements _LKIDInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = 1L;
 
 	/** ID字段长度 */
 	protected static final int ID_LENGTH = 64;

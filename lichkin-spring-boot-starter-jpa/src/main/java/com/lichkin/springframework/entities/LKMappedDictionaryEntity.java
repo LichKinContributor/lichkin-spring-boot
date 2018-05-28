@@ -16,10 +16,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class LKMappedDictionaryEntity extends LKMappedBaseSysEntity implements LKDictionaryInterface {
+public abstract class LKMappedDictionaryEntity extends LKMappedBaseSysEntity implements LKDictionaryInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -9L;
+	private static final long serialVersionUID = 1L;
 
 	/** 类目编号 */
 	@Column(nullable = false, length = CODE_LENGTH)

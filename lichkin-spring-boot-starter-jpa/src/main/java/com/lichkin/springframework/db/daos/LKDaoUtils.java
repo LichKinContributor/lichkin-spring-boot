@@ -16,10 +16,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-import com.lichkin.framework.db.entities.suppers.LKBaseInterface;
-import com.lichkin.framework.db.entities.suppers.LKBaseSysInterface;
-import com.lichkin.framework.db.entities.suppers.LKIDInterface;
-import com.lichkin.framework.db.entities.suppers.LKNormalInterface;
+import com.lichkin.framework.db.entities.suppers._LKBaseInterface;
+import com.lichkin.framework.db.entities.suppers._LKBaseSysInterface;
+import com.lichkin.framework.db.entities.suppers._LKIDInterface;
+import com.lichkin.framework.db.entities.suppers._LKNormalInterface;
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.enums.impl.LKRangeTypeEnum;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
@@ -183,7 +183,7 @@ class LKDaoUtils {
 	 * 初始化对象
 	 * @param obj 实体类对象
 	 */
-	static void initEntity(final LKIDInterface obj) {
+	static void initEntity(final _LKIDInterface obj) {
 		final String currentTime = LKDateTimeUtils.now();
 		final String systemTag = LKFrameworkStatics.SYSTEM_TAG;
 		final String loginId = getLoginId();
@@ -192,47 +192,47 @@ class LKDaoUtils {
 			// TODO ID init
 
 			// Normal check
-			if ((obj instanceof LKNormalInterface)) {
+			if ((obj instanceof _LKNormalInterface)) {
 				// Normal init
-				if (((LKNormalInterface) obj).getUsingStatus() == null) {
-					((LKNormalInterface) obj).setUsingStatus(LKUsingStatusEnum.USING);
+				if (((_LKNormalInterface) obj).getUsingStatus() == null) {
+					((_LKNormalInterface) obj).setUsingStatus(LKUsingStatusEnum.USING);
 				}
 
 				// Base check
-				if ((obj instanceof LKBaseInterface)) {
+				if ((obj instanceof _LKBaseInterface)) {
 					// Base init
-					((LKBaseInterface) obj).setInsertTime(currentTime);
-					((LKBaseInterface) obj).setUpdateTime(currentTime);
-					((LKBaseInterface) obj).setInsertSystemTag(systemTag);
-					((LKBaseInterface) obj).setUpdateSystemTag(systemTag);
-					((LKBaseInterface) obj).setInsertLoginId(loginId);
-					((LKBaseInterface) obj).setUpdateLoginId(loginId);
+					((_LKBaseInterface) obj).setInsertTime(currentTime);
+					((_LKBaseInterface) obj).setUpdateTime(currentTime);
+					((_LKBaseInterface) obj).setInsertSystemTag(systemTag);
+					((_LKBaseInterface) obj).setUpdateSystemTag(systemTag);
+					((_LKBaseInterface) obj).setInsertLoginId(loginId);
+					((_LKBaseInterface) obj).setUpdateLoginId(loginId);
 
 					// Sys check
-					if ((obj instanceof LKBaseSysInterface)) {
+					if ((obj instanceof _LKBaseSysInterface)) {
 						// Sys init
-						if (((LKBaseSysInterface) obj).getSystemTag() == null) {
-							((LKBaseSysInterface) obj).setSystemTag(systemTag);
+						if (((_LKBaseSysInterface) obj).getSystemTag() == null) {
+							((_LKBaseSysInterface) obj).setSystemTag(systemTag);
 						}
-						if (((LKBaseSysInterface) obj).getBusId() == null) {
-							((LKBaseSysInterface) obj).setBusId(LKRandomUtils.create(64, LKRangeTypeEnum.NUMBER_AND_LETTER_FULL));
+						if (((_LKBaseSysInterface) obj).getBusId() == null) {
+							((_LKBaseSysInterface) obj).setBusId(LKRandomUtils.create(64, LKRangeTypeEnum.NUMBER_AND_LETTER_FULL));
 						}
-						((LKBaseSysInterface) obj).updateCheckCode();
+						((_LKBaseSysInterface) obj).updateCheckCode();
 					}
 				}
 			}
 		} else {// 更新数据
 			// Base check
-			if ((obj instanceof LKBaseInterface)) {
+			if ((obj instanceof _LKBaseInterface)) {
 				// Base init
-				((LKBaseInterface) obj).setUpdateTime(currentTime);
-				((LKBaseInterface) obj).setUpdateSystemTag(systemTag);
-				((LKBaseInterface) obj).setUpdateLoginId(loginId);
+				((_LKBaseInterface) obj).setUpdateTime(currentTime);
+				((_LKBaseInterface) obj).setUpdateSystemTag(systemTag);
+				((_LKBaseInterface) obj).setUpdateLoginId(loginId);
 
 				// Sys check
-				if ((obj instanceof LKBaseSysInterface)) {
+				if ((obj instanceof _LKBaseSysInterface)) {
 					// Sys init
-					((LKBaseSysInterface) obj).updateCheckCode();
+					((_LKBaseSysInterface) obj).updateCheckCode();
 				}
 			}
 		}

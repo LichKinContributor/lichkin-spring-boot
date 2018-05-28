@@ -25,7 +25,7 @@ import com.lichkin.framework.db.beans.LKDBResource;
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SQL;
 import com.lichkin.framework.db.beans.UpdateSQL;
-import com.lichkin.framework.db.entities.suppers.LKIDInterface;
+import com.lichkin.framework.db.entities.suppers._LKIDInterface;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
@@ -60,7 +60,7 @@ public abstract class LKBaseDao extends LKDao {
 	 * @param type 修改类型
 	 * @param entity 实体类对象
 	 */
-	private void logBeforeModify(String sqlId, String type, LKIDInterface entity) {
+	private void logBeforeModify(String sqlId, String type, _LKIDInterface entity) {
 		logger.warn("HQL[%s] -> %s [entity:%s]", sqlId, type, LKJsonUtils.toJson(entity));
 	}
 
@@ -1073,7 +1073,7 @@ public abstract class LKBaseDao extends LKDao {
 
 
 	@Override
-	public <E> E mergeOne(LKIDInterface entity) {
+	public <E> E mergeOne(_LKIDInterface entity) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
@@ -1095,23 +1095,23 @@ public abstract class LKBaseDao extends LKDao {
 
 
 	@Override
-	public Collection<? extends LKIDInterface> mergeList(Collection<? extends LKIDInterface> listEntity) {
-		ArrayList<LKIDInterface> list = new ArrayList<>();
+	public Collection<? extends _LKIDInterface> mergeList(Collection<? extends _LKIDInterface> listEntity) {
+		ArrayList<_LKIDInterface> list = new ArrayList<>();
 		for (Object entity : listEntity) {
-			list.add(mergeOne((LKIDInterface) entity));
+			list.add(mergeOne((_LKIDInterface) entity));
 		}
 		return list;
 	}
 
 
 	@Override
-	public Object[] mergeArr(LKIDInterface[] objArr) {
+	public Object[] mergeArr(_LKIDInterface[] objArr) {
 		return mergeList(Arrays.asList(objArr)).toArray();
 	}
 
 
 	@Override
-	public void persistOne(LKIDInterface entity) {
+	public void persistOne(_LKIDInterface entity) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
@@ -1129,21 +1129,21 @@ public abstract class LKBaseDao extends LKDao {
 
 
 	@Override
-	public void persistList(Collection<? extends LKIDInterface> listEntity) {
+	public void persistList(Collection<? extends _LKIDInterface> listEntity) {
 		for (Object entity : listEntity) {
-			persistOne((LKIDInterface) entity);
+			persistOne((_LKIDInterface) entity);
 		}
 	}
 
 
 	@Override
-	public void persistArr(LKIDInterface[] objArr) {
+	public void persistArr(_LKIDInterface[] objArr) {
 		persistList(Arrays.asList(objArr));
 	}
 
 
 	@Override
-	public void removeOne(LKIDInterface entity) {
+	public void removeOne(_LKIDInterface entity) {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
@@ -1158,15 +1158,15 @@ public abstract class LKBaseDao extends LKDao {
 
 
 	@Override
-	public void removeList(Collection<? extends LKIDInterface> listEntity) {
+	public void removeList(Collection<? extends _LKIDInterface> listEntity) {
 		for (Object entity : listEntity) {
-			removeOne((LKIDInterface) entity);
+			removeOne((_LKIDInterface) entity);
 		}
 	}
 
 
 	@Override
-	public void removeArr(LKIDInterface[] objArr) {
+	public void removeArr(_LKIDInterface[] objArr) {
 		removeList(Arrays.asList(objArr));
 	}
 

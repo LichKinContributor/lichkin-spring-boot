@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SQL;
 import com.lichkin.framework.db.beans.UpdateSQL;
-import com.lichkin.framework.db.entities.suppers.LKIDInterface;
+import com.lichkin.framework.db.entities.suppers._LKIDInterface;
 
 /**
  * 数据访问接口
@@ -599,7 +599,7 @@ public abstract class LKDao {
 	 * @param entity 实体类对象
 	 * @return 对象
 	 */
-	public abstract <E> E mergeOne(LKIDInterface entity);
+	public abstract <E> E mergeOne(_LKIDInterface entity);
 
 
 	/**
@@ -607,7 +607,7 @@ public abstract class LKDao {
 	 * @param listEntity 实体类对象集合
 	 * @return 对象集合
 	 */
-	public abstract Collection<? extends LKIDInterface> mergeList(Collection<? extends LKIDInterface> listEntity);
+	public abstract Collection<? extends _LKIDInterface> mergeList(Collection<? extends _LKIDInterface> listEntity);
 
 
 	/**
@@ -615,28 +615,28 @@ public abstract class LKDao {
 	 * @param objArr 实体类对象数组
 	 * @return 对象数组
 	 */
-	public abstract Object[] mergeArr(LKIDInterface[] objArr);
+	public abstract Object[] mergeArr(_LKIDInterface[] objArr);
 
 
 	/**
 	 * 保存对象
 	 * @param entity 实体类对象
 	 */
-	public abstract void persistOne(LKIDInterface entity);
+	public abstract void persistOne(_LKIDInterface entity);
 
 
 	/**
 	 * 保存对象集合
 	 * @param listEntity 实体类对象集合
 	 */
-	public abstract void persistList(Collection<? extends LKIDInterface> listEntity);
+	public abstract void persistList(Collection<? extends _LKIDInterface> listEntity);
 
 
 	/**
 	 * 保存对象数组
 	 * @param objArr 实体类对象数组
 	 */
-	public abstract void persistArr(LKIDInterface[] objArr);
+	public abstract void persistArr(_LKIDInterface[] objArr);
 
 
 	/**
@@ -648,7 +648,7 @@ public abstract class LKDao {
 	 *
 	 * @param entity 实体类对象
 	 */
-	public abstract void removeOne(LKIDInterface entity);
+	public abstract void removeOne(_LKIDInterface entity);
 
 
 	/**
@@ -660,7 +660,7 @@ public abstract class LKDao {
 	 *
 	 * @param listEntity 实体类对象集合
 	 */
-	public abstract void removeList(Collection<? extends LKIDInterface> listEntity);
+	public abstract void removeList(Collection<? extends _LKIDInterface> listEntity);
 
 
 	/**
@@ -672,6 +672,6 @@ public abstract class LKDao {
 	 *
 	 * @param objArr 实体类对象数组
 	 */
-	public abstract void removeArr(LKIDInterface[] objArr);
+	public abstract void removeArr(_LKIDInterface[] objArr);
 
 }

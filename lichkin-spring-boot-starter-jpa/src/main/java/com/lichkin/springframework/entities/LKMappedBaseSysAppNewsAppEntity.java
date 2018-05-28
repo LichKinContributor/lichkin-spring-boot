@@ -13,10 +13,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class LKMappedBaseSysAppNewsAppEntity extends LKMappedBaseSysAppEntity {
+public abstract class LKMappedBaseSysAppNewsAppEntity extends LKMappedBaseSysAppEntity {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -601L;
+	private static final long serialVersionUID = 1L;
 
 	/** 分类编码（字典） */
 	@Column(nullable = false, length = CODE_LENGTH)

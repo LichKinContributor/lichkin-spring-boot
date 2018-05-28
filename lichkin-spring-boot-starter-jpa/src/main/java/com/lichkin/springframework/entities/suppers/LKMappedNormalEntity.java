@@ -1,12 +1,9 @@
 package com.lichkin.springframework.entities.suppers;
 
 import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 
 import com.lichkin.framework.db.entities.suppers.LKNormalInterface;
-import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,14 +15,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class LKMappedNormalEntity extends LKMappedIDEntity implements LKNormalInterface {
+public abstract class LKMappedNormalEntity extends _LKMappedNormalEntity implements LKNormalInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -2L;
+	private static final long serialVersionUID = 1L;
 
-	/** 在用状态（枚举） */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, length = 10)
-	private LKUsingStatusEnum usingStatus;
+	/** 公司ID */
+	@Column(nullable = false, length = ID_LENGTH)
+	private String compId;
 
 }

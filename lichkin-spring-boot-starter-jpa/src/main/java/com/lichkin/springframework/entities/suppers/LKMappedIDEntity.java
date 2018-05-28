@@ -15,10 +15,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class LKMappedIDEntity extends _LKMappedIDEntity implements LKIDInterface {
+public abstract class LKMappedIDEntity extends _LKMappedIDEntity implements LKIDInterface {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = 1L;
 
 	/** 公司ID */
 	@Column(nullable = false, length = ID_LENGTH)

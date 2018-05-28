@@ -1,7 +1,5 @@
 package com.lichkin.springframework.entities;
 
-import java.util.Locale;
-
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
@@ -11,26 +9,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class LKMappedBaseSysApiRequestLogEntity extends LKMappedBaseSysAppEntity {
+public abstract class LKMappedBaseSysApiRequestLogEntity extends _LKMappedBaseSysApiRequestLogEntity {
 
 	/** serialVersionUID */
-	private static final long serialVersionUID = -6L;
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 国际化
-	 * @see Locale
-	 */
-	@Column(nullable = false, length = 5)
-	private String locale;
-
-	/** 登录后获取得 */
-	@Column(nullable = false, length = CODE_LENGTH)
-	private String token;
+	/** 公司ID */
+	@Column(nullable = false, length = ID_LENGTH)
+	private String compId;
 
 
 	@Override
 	protected Object[] getCheckCodeFieldValues() {
-		return new Object[] { super.getCheckCodeFieldValues(), locale, token };
+		return new Object[] { super.getCheckCodeFieldValues(), compId };
 	}
 
 }
