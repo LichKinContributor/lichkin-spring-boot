@@ -5,7 +5,7 @@ import javax.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.lichkin.framework.beans.LKRequestBean;
+import com.lichkin.framework.beans.LKRequestInterface;
 import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.framework.web.annotations.LKController4Api;
 import com.lichkin.springframework.services.LKApiService;
@@ -16,7 +16,7 @@ import com.lichkin.springframework.web.utils.LKRequestUtils;
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 @LKController4Api
-public abstract class LKApiController<I extends LKRequestBean, O> extends LKController {
+public abstract class LKApiController<I extends LKRequestInterface, O> extends LKController {
 
 	/**
 	 * 请求处理方法
