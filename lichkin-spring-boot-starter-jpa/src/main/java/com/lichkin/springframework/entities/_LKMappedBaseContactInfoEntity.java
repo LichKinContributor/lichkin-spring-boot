@@ -21,8 +21,8 @@ public abstract class _LKMappedBaseContactInfoEntity extends _LKMappedBaseSysEnt
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1L;
 
-	/** 照片（base64） */
-	@Column(nullable = false, length = VALUE_BASE64_LENGTH)
+	/** 照片（URL） */
+	@Column(nullable = false, length = VALUE_128_LENGTH)
 	private String photo;
 
 	/** 姓名 */

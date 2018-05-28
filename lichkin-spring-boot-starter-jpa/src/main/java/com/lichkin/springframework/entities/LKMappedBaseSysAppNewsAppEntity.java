@@ -1,6 +1,7 @@
 package com.lichkin.springframework.entities;
 
 import javax.persistence.Column;
+import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
 import lombok.Getter;
@@ -39,7 +40,8 @@ public abstract class LKMappedBaseSysAppNewsAppEntity extends LKMappedBaseSysApp
 	private String author;
 
 	/** 内容（body内直接可以用于展现的内容） */
-	@Column(nullable = false, length = VALUE_CONTENT)
+	@Lob
+	@Column(nullable = false)
 	private String content;
 
 	/** 外链地址 */

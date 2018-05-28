@@ -34,27 +34,6 @@ public abstract class _LKMappedIDEntity implements _LKIDInterface {
 	protected static final int CODE_LENGTH = 64;
 
 	/** 值字段长度 */
-	protected static final int VALUE_BASE64_LENGTH = 20480;
-
-	/** 值字段长度 */
-	protected static final int VALUE_CONTENT = 10240000;
-
-	/** 值字段长度 */
-	protected static final int VALUE_10240_LENGTH = 10240;
-
-	/** 值字段长度 */
-	protected static final int VALUE_2048_LENGTH = 2048;
-
-	/** 值字段长度 */
-	protected static final int VALUE_1024_LENGTH = 1024;
-
-	/** 值字段长度 */
-	protected static final int VALUE_512_LENGTH = 512;
-
-	/** 值字段长度 */
-	protected static final int VALUE_256_LENGTH = 256;
-
-	/** 值字段长度 */
 	protected static final int VALUE_128_LENGTH = 128;
 
 	/** 值字段长度 */
@@ -86,6 +65,21 @@ public abstract class _LKMappedIDEntity implements _LKIDInterface {
 
 	/** 邮箱字段长度 */
 	protected static final int EMAIL_LENGTH = 64;
+
+	/** 文本类型 */
+	protected static final String TEXT = "TEXT";
+
+	/** 值字段长度 */
+	protected static final String VALUE_256 = "varchar(256)";
+
+	/** 值字段长度 */
+	protected static final String VALUE_512 = "varchar(512)";
+
+	/** 值字段长度 */
+	protected static final String VALUE_1024 = "varchar(1024)";
+
+	/** 值字段长度 */
+	protected static final String VALUE_2048 = "varchar(2048)";
 
 	/** 主键 */
 	@Id
