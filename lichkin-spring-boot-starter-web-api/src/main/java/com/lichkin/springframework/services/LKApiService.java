@@ -6,7 +6,7 @@ import com.lichkin.framework.defines.exceptions.LKException;
  * 接口服务类定义
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiService<I, O> extends LKService {
+public abstract class LKApiService<I, O> extends LKDBService {
 
 	/**
 	 * 调用
