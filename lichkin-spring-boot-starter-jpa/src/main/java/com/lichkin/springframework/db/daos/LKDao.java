@@ -196,6 +196,30 @@ public abstract class LKDao {
 
 
 	/**
+	 * 查询单个值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @param clazz 值类型
+	 * @return 单个值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Object queryObject(String sql, Object[] params, Class<?> clazz);
+
+
+	/**
+	 * 查询单个值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @param clazz 值类型
+	 * @return 单个值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Object findObject(String hql, Object[] params, Class<?> clazz);
+
+
+	/**
 	 * 查询单个字符串
 	 * @param sql 查询语句
 	 * @param params 参数
@@ -243,6 +267,126 @@ public abstract class LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Deprecated
+	protected abstract Byte queryByte(String sql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Byte findByte(String hql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Byte getByte(SQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 */
+	public abstract Byte getByte(QuerySQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Short queryShort(String sql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Short findShort(String hql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Short getShort(SQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 */
+	public abstract Short getShort(QuerySQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Integer queryInteger(String sql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Integer findInteger(String hql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Integer getInteger(SQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 */
+	public abstract Integer getInteger(QuerySQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
 	protected abstract Long queryLong(String sql, Object[] params);
 
 
@@ -273,6 +417,126 @@ public abstract class LKDao {
 	 * @return 单个数值
 	 */
 	public abstract Long getLong(QuerySQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Float queryFloat(String sql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Float findFloat(String hql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Float getFloat(SQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 */
+	public abstract Float getFloat(QuerySQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Double queryDouble(String sql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Double findDouble(String hql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Double getDouble(SQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 */
+	public abstract Double getDouble(QuerySQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Boolean queryBoolean(String sql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Boolean findBoolean(String hql, Object[] params);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	protected abstract Boolean getBoolean(SQL sqlObj);
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 */
+	public abstract Boolean getBoolean(QuerySQL sqlObj);
 
 
 	/**

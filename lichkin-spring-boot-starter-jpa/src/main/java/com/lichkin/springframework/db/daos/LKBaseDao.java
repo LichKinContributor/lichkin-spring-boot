@@ -516,6 +516,108 @@ public abstract class LKBaseDao extends LKDao {
 
 
 	/**
+	 * 查询单个值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @param clazz 值类型
+	 * @return 单个值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Override
+	@Deprecated
+	protected Object queryObject(String sql, Object[] params, Class<?> clazz) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String sqlId = LKRandomUtils.create(32);
+		logBeforeQuery(true, sqlId, sql, params);
+
+		// 创建查询对象
+		Query query = createSQLQuery(sql, params, clazz);
+
+		try {
+			// 执行查询返回结果
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			// 返回结果
+			return null;
+		} finally {
+			// 记录结束日志
+			logAfterQuery(true, sqlId, startTime);
+		}
+	}
+
+
+	/**
+	 * 查询单个值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @param clazz 值类型
+	 * @return 单个值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	@Deprecated
+	protected Object findObject(String hql, Object[] params, Class<?> clazz) {
+		// 记录开始日志
+		DateTime startTime = DateTime.now();
+		String hqlId = LKRandomUtils.create(32);
+		logBeforeQuery(false, hqlId, hql, params);
+
+		// 创建查询对象
+		TypedQuery<?> query = createHQLQuery(hql, params, clazz);
+
+		try {
+			// 执行查询返回结果
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			// 返回结果
+			return null;
+		} finally {
+			// 记录结束日志
+			logAfterQuery(false, hqlId, startTime);
+		}
+	}
+
+
+	/**
+	 * 转换成对应类型
+	 * @param obj 值对象
+	 * @param clazz 值类型
+	 * @return 值
+	 */
+	@SuppressWarnings("unchecked")
+	private <T> T convert(Object obj, Class<T> clazz) {
+		if (obj == null) {
+			return null;
+		}
+		String str = obj.toString();
+		String className = clazz.getName();
+		switch (className) {
+			case "java.lang.String":
+				return (T) str;
+			case "java.lang.Byte":
+				return (T) Byte.valueOf(str);
+			case "java.lang.Short":
+				return (T) Short.valueOf(str);
+			case "java.lang.Integer":
+				return (T) Integer.valueOf(str);
+			case "java.lang.Long":
+				return (T) Long.valueOf(str);
+			case "java.lang.Float":
+				return (T) Float.valueOf(str);
+			case "java.lang.Double":
+				return (T) Double.valueOf(str);
+			case "java.lang.Boolean":
+				return (T) Boolean.valueOf(str);
+			default:
+			break;
+		}
+		return null;
+	}
+
+
+	/**
 	 * 查询单个字符串
 	 * @param sql 查询语句
 	 * @param params 参数
@@ -525,30 +627,7 @@ public abstract class LKBaseDao extends LKDao {
 	@Deprecated
 	@Override
 	protected String queryString(String sql, Object[] params) {
-		// 记录开始日志
-		DateTime startTime = DateTime.now();
-		String sqlId = LKRandomUtils.create(32);
-		logBeforeQuery(true, sqlId, sql, params);
-
-		// 创建查询对象
-		Query query = createSQLQuery(sql, params, String.class);
-
-		try {
-			// 执行查询
-			Object obj = query.getSingleResult();
-
-			// 返回结果
-			if (obj == null) {
-				return null;
-			}
-			return obj.toString();
-		} catch (NoResultException e) {
-			// 返回结果
-			return null;
-		} finally {
-			// 记录结束日志
-			logAfterQuery(true, sqlId, startTime);
-		}
+		return convert(queryObject(sql, params, String.class), String.class);
 	}
 
 
@@ -562,30 +641,7 @@ public abstract class LKBaseDao extends LKDao {
 	@Deprecated
 	@Override
 	protected String findString(String hql, Object[] params) {
-		// 记录开始日志
-		DateTime startTime = DateTime.now();
-		String hqlId = LKRandomUtils.create(32);
-		logBeforeQuery(false, hqlId, hql, params);
-
-		// 创建查询对象
-		TypedQuery<String> query = createHQLQuery(hql, params, String.class);
-
-		try {
-			// 执行查询
-			Object obj = query.getSingleResult();
-
-			// 返回结果
-			if (obj == null) {
-				return null;
-			}
-			return obj.toString();
-		} catch (NoResultException e) {
-			// 返回结果
-			return null;
-		} finally {
-			// 记录结束日志
-			logAfterQuery(false, hqlId, startTime);
-		}
+		return convert(findObject(hql, params, String.class), String.class);
 	}
 
 
@@ -618,31 +674,152 @@ public abstract class LKBaseDao extends LKDao {
 	 */
 	@Deprecated
 	@Override
+	protected Byte queryByte(String sql, Object[] params) {
+		return convert(queryObject(sql, params, Byte.class), Byte.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Byte findByte(String hql, Object[] params) {
+		return convert(findObject(hql, params, Byte.class), Byte.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Byte getByte(SQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryByte(sqlObj.getSQL(), sqlObj.getParams()) : findByte(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Byte getByte(QuerySQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryByte(sqlObj.getSQL(), sqlObj.getParams()) : findByte(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Short queryShort(String sql, Object[] params) {
+		return convert(queryObject(sql, params, Short.class), Short.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Short findShort(String hql, Object[] params) {
+		return convert(findObject(hql, params, Short.class), Short.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Short getShort(SQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryShort(sqlObj.getSQL(), sqlObj.getParams()) : findShort(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Short getShort(QuerySQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryShort(sqlObj.getSQL(), sqlObj.getParams()) : findShort(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Integer queryInteger(String sql, Object[] params) {
+		return convert(queryObject(sql, params, Integer.class), Integer.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Integer findInteger(String hql, Object[] params) {
+		return convert(findObject(hql, params, Integer.class), Integer.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Integer getInteger(SQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryInteger(sqlObj.getSQL(), sqlObj.getParams()) : findInteger(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Integer getInteger(QuerySQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryInteger(sqlObj.getSQL(), sqlObj.getParams()) : findInteger(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
 	protected Long queryLong(String sql, Object[] params) {
-		// 记录开始日志
-		DateTime startTime = DateTime.now();
-		String sqlId = LKRandomUtils.create(32);
-		logBeforeQuery(true, sqlId, sql, params);
-
-		// 创建查询对象
-		Query query = createSQLQuery(sql, params, Long.class);
-
-		try {
-			// 执行查询
-			Object obj = query.getSingleResult();
-
-			// 返回结果
-			if (obj == null) {
-				return null;
-			}
-			return Long.valueOf(obj.toString());
-		} catch (NoResultException e) {
-			// 返回结果
-			return null;
-		} finally {
-			// 记录结束日志
-			logAfterQuery(true, sqlId, startTime);
-		}
+		return convert(queryObject(sql, params, Long.class), Long.class);
 	}
 
 
@@ -656,30 +833,7 @@ public abstract class LKBaseDao extends LKDao {
 	@Deprecated
 	@Override
 	protected Long findLong(String hql, Object[] params) {
-		// 记录开始日志
-		DateTime startTime = DateTime.now();
-		String hqlId = LKRandomUtils.create(32);
-		logBeforeQuery(false, hqlId, hql, params);
-
-		// 创建查询对象
-		TypedQuery<Long> query = createHQLQuery(hql, params, Long.class);
-
-		try {
-			// 执行查询
-			Object obj = query.getSingleResult();
-
-			// 返回结果
-			if (obj == null) {
-				return null;
-			}
-			return Long.valueOf(obj.toString());
-		} catch (NoResultException e) {
-			// 返回结果
-			return null;
-		} finally {
-			// 记录结束日志
-			logAfterQuery(false, hqlId, startTime);
-		}
+		return convert(findObject(hql, params, Long.class), Long.class);
 	}
 
 
@@ -700,6 +854,150 @@ public abstract class LKBaseDao extends LKDao {
 	@Override
 	public Long getLong(QuerySQL sqlObj) {
 		return sqlObj.isUseSQL() ? queryLong(sqlObj.getSQL(), sqlObj.getParams()) : findLong(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Float queryFloat(String sql, Object[] params) {
+		return convert(queryObject(sql, params, Float.class), Float.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Float findFloat(String hql, Object[] params) {
+		return convert(findObject(hql, params, Float.class), Float.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Float getFloat(SQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryFloat(sqlObj.getSQL(), sqlObj.getParams()) : findFloat(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Float getFloat(QuerySQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryFloat(sqlObj.getSQL(), sqlObj.getParams()) : findFloat(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Double queryDouble(String sql, Object[] params) {
+		return convert(queryObject(sql, params, Double.class), Double.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Double findDouble(String hql, Object[] params) {
+		return convert(findObject(hql, params, Double.class), Double.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Double getDouble(SQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryDouble(sqlObj.getSQL(), sqlObj.getParams()) : findDouble(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Double getDouble(QuerySQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryDouble(sqlObj.getSQL(), sqlObj.getParams()) : findDouble(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Boolean queryBoolean(String sql, Object[] params) {
+		return convert(queryObject(sql, params, Boolean.class), Boolean.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param hql 查询语句
+	 * @param params 参数
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Boolean findBoolean(String hql, Object[] params) {
+		return convert(findObject(hql, params, Boolean.class), Boolean.class);
+	}
+
+
+	/**
+	 * 查询单个数值
+	 * @param sqlObj SQL语句对象
+	 * @return 单个数值
+	 * @deprecated 框架提供的方法暂不能实现时使用
+	 */
+	@Deprecated
+	@Override
+	protected Boolean getBoolean(SQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryBoolean(sqlObj.getSQL(), sqlObj.getParams()) : findBoolean(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Boolean getBoolean(QuerySQL sqlObj) {
+		return sqlObj.isUseSQL() ? queryBoolean(sqlObj.getSQL(), sqlObj.getParams()) : findBoolean(sqlObj.getSQL(), sqlObj.getParams());
 	}
 
 
