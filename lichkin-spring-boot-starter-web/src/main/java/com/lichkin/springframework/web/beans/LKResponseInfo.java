@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.lichkin.framework.beans.LKResponseBean;
+import com.lichkin.framework.beans.impl.LKResponseBean;
 import com.lichkin.framework.json.deserializer.LKJsonDeserializer4DateTime;
 import com.lichkin.framework.json.serializer.LKJsonSerializer4DateTime;
 
