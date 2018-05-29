@@ -446,7 +446,7 @@ public abstract class LKBaseDao extends LKDao {
 
 	@Override
 	public <B> B queryOneById(Class<B> clazz, String id) {
-		return queryOne("SELECT * FROM " + LKDBResource.getTableResource(clazz).getTableName() + " WHERE ID = ?", new Object[] { id }, clazz);
+		return queryOne("SELECT * FROM " + LKDBResource.getTableName(clazz) + " WHERE ID = ?", new Object[] { id }, clazz);
 	}
 
 
@@ -1063,7 +1063,7 @@ public abstract class LKBaseDao extends LKDao {
 
 	@Override
 	public <T> int deleteOneOrMoreById(Class<T> clazz, String id) {
-		SQL sql = new SQL(true).appendSQL("DELETE FROM " + LKDBResource.getTableResource(clazz).getTableName() + " WHERE");
+		SQL sql = new SQL(true).appendSQL("DELETE FROM " + LKDBResource.getTableName(clazz) + " WHERE");
 		if (id.contains(SPLITOR)) {
 			return change(sql.in(null, "ID", id));
 		} else {
