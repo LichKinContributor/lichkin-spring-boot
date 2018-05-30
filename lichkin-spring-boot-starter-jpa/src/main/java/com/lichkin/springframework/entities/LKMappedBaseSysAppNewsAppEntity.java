@@ -45,7 +45,7 @@ public abstract class LKMappedBaseSysAppNewsAppEntity extends LKMappedBaseSysApp
 	private String content;
 
 	/** 外链地址 */
-	@Column(nullable = false, length = VALUE_128_LENGTH)
+	@Column(nullable = false, columnDefinition = VALUE_512)
 	private String linkUrl;
 
 	/** 排序号 */
