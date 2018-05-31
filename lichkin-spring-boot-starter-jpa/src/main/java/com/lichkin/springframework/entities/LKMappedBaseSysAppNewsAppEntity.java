@@ -52,10 +52,14 @@ public abstract class LKMappedBaseSysAppNewsAppEntity extends LKMappedBaseSysApp
 	@Column(nullable = false)
 	private Byte orderId;
 
+	/** 版本号（逗号拼接x.y.z） */
+	@Column(nullable = false, columnDefinition = VALUE_1024)
+	private String versions;
+
 
 	@Override
 	protected Object[] getCheckCodeFieldValues() {
-		return new Object[] { super.getCheckCodeFieldValues(), categoryCode, title, brief, keywords, author, content, linkUrl, orderId };
+		return new Object[] { super.getCheckCodeFieldValues(), categoryCode, title, brief, keywords, author, content, linkUrl, orderId, versions };
 	}
 
 }
