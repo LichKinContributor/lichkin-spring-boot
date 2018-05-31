@@ -556,7 +556,6 @@ public abstract class LKBaseDao extends LKDao {
 	 * @deprecated 框架提供的方法暂不能实现时使用
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
 	@Deprecated
 	protected Object findObject(String hql, Object[] params, Class<?> clazz) {
 		// 记录开始日志
