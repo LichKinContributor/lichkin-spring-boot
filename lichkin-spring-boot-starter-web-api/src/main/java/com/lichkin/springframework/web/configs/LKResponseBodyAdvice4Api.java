@@ -1,8 +1,12 @@
 package com.lichkin.springframework.web.configs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -46,7 +50,23 @@ public class LKResponseBodyAdvice4Api implements ResponseBodyAdvice<Object> {
 		}
 
 		// 统一响应格式
-		LKResponseBean<Object> responseBean = new LKResponseBean<>(body);
+		LKResponseBean<Object> responseBean = null;
+
+		// 分页数据特殊处理
+		if (body instanceof Page) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("content", ((Page<?>) body).getContent());
+			map.put("number", ((Page<?>) body).getNumber());
+			map.put("numberOfElements", ((Page<?>) body).getNumberOfElements());
+			map.put("size", ((Page<?>) body).getSize());
+			map.put("totalElements", ((Page<?>) body).getTotalElements());
+			map.put("totalPages", ((Page<?>) body).getTotalPages());
+			map.put("first", ((Page<?>) body).isFirst());
+			map.put("last", ((Page<?>) body).isLast());
+			responseBean = new LKResponseBean<>(map);
+		} else {
+			responseBean = new LKResponseBean<>(body);
+		}
 
 		// 记录日志
 		logger.info(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo((LKRequestInfo) req.getAttribute("requestInfo"), responseBean), "exceptionClassName", "exceptionMessage"));
