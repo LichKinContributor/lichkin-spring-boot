@@ -32,7 +32,7 @@ public abstract class LKMappedLoginRoleEntity extends LKMappedBaseSysEntity impl
 
 	@Override
 	protected Object[] getCheckCodeFieldValues() {
-		return new Object[] { loginId, roleId };
+		return new Object[] { super.getCheckCodeFieldValues(), loginId, roleId };
 	}
 
 }

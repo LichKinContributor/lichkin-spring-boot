@@ -80,7 +80,7 @@ public abstract class LKMappedUserLoginEntity extends LKMappedBaseSysEntity impl
 
 	@Override
 	protected Object[] getCheckCodeFieldValues() {
-		return new Object[] { userId, loginName, userCard, cellphone, email, pwd, securityCode, errorTimes, token, wechatId, field1, field2, field3 };
+		return new Object[] { super.getCheckCodeFieldValues(), userId, loginName, userCard, cellphone, email, pwd, securityCode, errorTimes, token, wechatId, field1, field2, field3 };
 	}
 
 }

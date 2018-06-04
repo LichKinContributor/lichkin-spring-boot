@@ -61,7 +61,7 @@ public abstract class LKMappedMenuEntity extends LKMappedBaseSysEntity implement
 
 	@Override
 	protected Object[] getCheckCodeFieldValues() {
-		return new Object[] { parentCode, menuCode, menuName, url, orderId, icon, assignable, auth };
+		return new Object[] { super.getCheckCodeFieldValues(), parentCode, menuCode, menuName, url, orderId, icon, assignable, auth };
 	}
 
 }

@@ -32,7 +32,7 @@ public abstract class LKMappedRoleMenuEntity extends LKMappedBaseSysEntity imple
 
 	@Override
 	protected Object[] getCheckCodeFieldValues() {
-		return new Object[] { roleId, menuId };
+		return new Object[] { super.getCheckCodeFieldValues(), roleId, menuId };
 	}
 
 }

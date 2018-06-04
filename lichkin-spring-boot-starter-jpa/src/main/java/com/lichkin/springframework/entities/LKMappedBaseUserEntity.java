@@ -24,7 +24,7 @@ public abstract class LKMappedBaseUserEntity extends LKMappedBaseContactInfoEnti
 	private static final long serialVersionUID = 1L;
 
 	/** 性别 */
-	@Column(nullable = false, length = 6)
+	@Column(nullable = false, length = 7)
 	@Enumerated(EnumType.STRING)
 	private LKGenderEnum gender;
 
