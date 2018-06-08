@@ -36,6 +36,7 @@ public class LKResponseBodyAdvice4Datas implements ResponseBodyAdvice<Object> {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
 		HttpServletRequest req = LKRequestUtils.getRequest(request);
@@ -46,7 +47,12 @@ public class LKResponseBodyAdvice4Datas implements ResponseBodyAdvice<Object> {
 		}
 
 		// 统一响应格式
-		LKResponseBean<Object> responseBean = new LKResponseBean<>(body);
+		LKResponseBean<Object> responseBean = null;
+		if (body instanceof LKResponseBean) {
+			responseBean = (LKResponseBean<Object>) body;
+		} else {
+			responseBean = new LKResponseBean<>(body);
+		}
 
 		// 记录日志
 		logger.info(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo((LKRequestInfo) req.getAttribute("requestInfo"), responseBean), "exceptionClassName", "exceptionMessage"));
