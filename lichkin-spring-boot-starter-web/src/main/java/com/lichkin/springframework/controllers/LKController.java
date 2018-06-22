@@ -36,7 +36,7 @@ class LKController extends LKFramework {
 	 * @return 国际化错误信息
 	 */
 	protected String getI18NErrorMsg(LKCodeEnum errorCode) {
-		return LKI18NReader4ErrorCodes.read(getLocale(), errorCode);
+		return LKI18NReader4ErrorCodes.read(getLocale(), errorCode, null);
 	}
 
 }

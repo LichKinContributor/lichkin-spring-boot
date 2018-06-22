@@ -3,6 +3,7 @@ package com.lichkin.springframework.web.configs;
 import static com.lichkin.framework.defines.LKFrameworkStatics.SPLITOR_FIELDS;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,6 +43,7 @@ class LKErrorLogger {
 		// 根据异常类型确定错误编码
 		LKCodeEnum errorCode = null;
 		String errorMessage = null;
+		Map<String, Object> params = null;
 		String exClassName = ex.getClass().getName();
 
 		// 取请求对象并设置值
@@ -55,11 +57,13 @@ class LKErrorLogger {
 			case "com.lichkin.framework.defines.exceptions.LKRuntimeException": {
 				excludeLogExceptions = true;
 				errorCode = ((LKRuntimeException) ex).getErrorCode();
+				params = ((LKRuntimeException) ex).getParams();
 			}
 			break;
 			case "com.lichkin.framework.defines.exceptions.LKException": {
 				excludeLogExceptions = true;
 				errorCode = ((LKException) ex).getErrorCode();
+				params = ((LKException) ex).getParams();
 			}
 			break;
 			case "com.lichkin.framework.defines.exceptions.LKFrameworkException": {
@@ -125,7 +129,7 @@ class LKErrorLogger {
 		} else {
 			// 数据请求需处理响应对象
 			// 解析响应对象
-			responseBean = new LKResponseBean<>(code, (errorMessage == null) ? LKI18NReader4ErrorCodes.read(LKRequestUtils.getLocale(request), errorCode) : errorMessage);
+			responseBean = new LKResponseBean<>(code, (errorMessage == null) ? LKI18NReader4ErrorCodes.read(LKRequestUtils.getLocale(request), errorCode, params) : errorMessage);
 
 			// 记录日志
 			if (excludeLogExceptions) {

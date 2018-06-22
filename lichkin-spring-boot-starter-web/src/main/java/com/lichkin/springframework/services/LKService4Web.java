@@ -1,6 +1,7 @@
 package com.lichkin.springframework.services;
 
 import java.util.Locale;
+import java.util.Map;
 
 import com.lichkin.framework.defines.enums.LKCodeEnum;
 import com.lichkin.framework.utils.i18n.LKI18NReader4ErrorCodes;
@@ -27,7 +28,18 @@ public abstract class LKService4Web extends LKService {
 	 * @return 国际化错误信息
 	 */
 	protected String getI18NErrorMsg(LKCodeEnum errorCode) {
-		return LKI18NReader4ErrorCodes.read(getLocale(), errorCode);
+		return LKI18NReader4ErrorCodes.read(getLocale(), errorCode, null);
+	}
+
+
+	/**
+	 * 获取国际化错误信息
+	 * @param errorCode 错误编码枚举类型
+	 * @return 国际化错误信息
+	 * @param params 替换参数
+	 */
+	protected String getI18NErrorMsg(LKCodeEnum errorCode, Map<String, Object> params) {
+		return LKI18NReader4ErrorCodes.read(getLocale(), errorCode, params);
 	}
 
 }
