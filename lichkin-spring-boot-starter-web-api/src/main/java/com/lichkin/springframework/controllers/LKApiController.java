@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lichkin.framework.beans.LKRequestInterface;
+import com.lichkin.framework.beans.impl.LKResponseBean;
 import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.framework.web.annotations.LKController4Api;
 import com.lichkin.springframework.services.LKApiService;
@@ -25,9 +26,9 @@ public abstract class LKApiController<I extends LKRequestInterface, O> extends L
 	 * @throws LKException 业务处理失败但不希望已处理数据回滚时抛出异常
 	 */
 	@PostMapping
-	public Object invoke(@Valid @RequestBody I in) throws LKException {
+	public LKResponseBean<O> invoke(@Valid @RequestBody I in) throws LKException {
 		in.setLocale(LKRequestUtils.getLocale(request).toString());
-		return getService().handle(validateIn(in));
+		return new LKResponseBean<>(getService().handle(validateIn(in)));
 	}
 
 

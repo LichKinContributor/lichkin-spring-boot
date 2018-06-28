@@ -50,22 +50,22 @@ public class LKResponseBodyAdvice4Api implements ResponseBodyAdvice<Object> {
 		}
 
 		// 统一响应格式
-		LKResponseBean<Object> responseBean = null;
+		@SuppressWarnings("unchecked")
+		LKResponseBean<Object> responseBean = (LKResponseBean<Object>) body;
 
 		// 分页数据特殊处理
-		if (body instanceof Page) {
+		Object datas = responseBean.getDatas();
+		if (datas instanceof Page) {
 			Map<String, Object> map = new HashMap<>();
-			map.put("content", ((Page<?>) body).getContent());
-			map.put("number", ((Page<?>) body).getNumber());
-			map.put("numberOfElements", ((Page<?>) body).getNumberOfElements());
-			map.put("size", ((Page<?>) body).getSize());
-			map.put("totalElements", ((Page<?>) body).getTotalElements());
-			map.put("totalPages", ((Page<?>) body).getTotalPages());
-			map.put("first", ((Page<?>) body).isFirst());
-			map.put("last", ((Page<?>) body).isLast());
+			map.put("content", ((Page<?>) datas).getContent());
+			map.put("number", ((Page<?>) datas).getNumber());
+			map.put("numberOfElements", ((Page<?>) datas).getNumberOfElements());
+			map.put("size", ((Page<?>) datas).getSize());
+			map.put("totalElements", ((Page<?>) datas).getTotalElements());
+			map.put("totalPages", ((Page<?>) datas).getTotalPages());
+			map.put("first", ((Page<?>) datas).isFirst());
+			map.put("last", ((Page<?>) datas).isLast());
 			responseBean = new LKResponseBean<>(map);
-		} else {
-			responseBean = new LKResponseBean<>(body);
 		}
 
 		// 记录日志
