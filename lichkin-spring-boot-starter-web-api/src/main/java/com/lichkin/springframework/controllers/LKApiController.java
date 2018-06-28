@@ -2,12 +2,17 @@ package com.lichkin.springframework.controllers;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lichkin.framework.beans.LKRequestInterface;
+import com.lichkin.framework.beans.LKRequestWithCompIdInterface;
 import com.lichkin.framework.beans.impl.LKResponseBean;
+import com.lichkin.framework.defines.LKFrameworkStatics;
+import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
+import com.lichkin.framework.defines.exceptions.LKRuntimeException;
 import com.lichkin.framework.web.annotations.LKController4Api;
 import com.lichkin.springframework.services.LKApiService;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
@@ -28,6 +33,17 @@ public abstract class LKApiController<I extends LKRequestInterface, O> extends L
 	@PostMapping
 	public LKResponseBean<O> invoke(@Valid @RequestBody I in) throws LKException {
 		in.setLocale(LKRequestUtils.getLocale(request).toString());
+
+		if (in instanceof LKRequestWithCompIdInterface) {
+			if (StringUtils.isBlank(((LKRequestWithCompIdInterface) in).getCompId())) {
+				if (in.getAppKey().startsWith("com.lichkin.app.javascript.")) {
+					// TODO 从Session中取
+					((LKRequestWithCompIdInterface) in).setCompId(LKFrameworkStatics.ROOT);
+				} else {
+					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
+				}
+			}
+		}
 		return new LKResponseBean<>(getService().handle(validateIn(in)));
 	}
 
