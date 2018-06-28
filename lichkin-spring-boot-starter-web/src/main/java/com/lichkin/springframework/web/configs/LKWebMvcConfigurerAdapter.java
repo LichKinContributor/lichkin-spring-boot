@@ -18,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 
 import com.lichkin.framework.defines.LKFrameworkStatics;
+import com.lichkin.framework.json.LKJsonUtils;
 
 /**
  * WebMvc配置适配器
@@ -56,7 +57,7 @@ public class LKWebMvcConfigurerAdapter implements WebMvcConfigurer {
 	@Override
 	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
 		// 增加自定义消息转换器
-		converters.add(0, new MappingJackson2HttpMessageConverter() {
+		converters.add(0, new MappingJackson2HttpMessageConverter(LKJsonUtils.newObjectMapper()) {
 
 			@Override
 			public boolean canRead(Type type, Class<?> contextClass, MediaType mediaType) {
