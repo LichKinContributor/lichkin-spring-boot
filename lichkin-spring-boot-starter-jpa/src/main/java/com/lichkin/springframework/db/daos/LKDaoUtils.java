@@ -16,6 +16,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
+import com.lichkin.framework.db.entities.suppers._LKBaseInsertInterface;
 import com.lichkin.framework.db.entities.suppers._LKBaseInterface;
 import com.lichkin.framework.db.entities.suppers._LKBaseSysInterface;
 import com.lichkin.framework.db.entities.suppers._LKIDInterface;
@@ -199,25 +200,29 @@ class LKDaoUtils {
 				}
 
 				// Base check
-				if ((obj instanceof _LKBaseInterface)) {
+				if ((obj instanceof _LKBaseInsertInterface)) {
 					// Base init
-					((_LKBaseInterface) obj).setInsertTime(currentTime);
-					((_LKBaseInterface) obj).setUpdateTime(currentTime);
-					((_LKBaseInterface) obj).setInsertSystemTag(systemTag);
-					((_LKBaseInterface) obj).setUpdateSystemTag(systemTag);
-					((_LKBaseInterface) obj).setInsertLoginId(loginId);
-					((_LKBaseInterface) obj).setUpdateLoginId(loginId);
+					((_LKBaseInsertInterface) obj).setInsertTime(currentTime);
+					((_LKBaseInsertInterface) obj).setInsertSystemTag(systemTag);
+					((_LKBaseInsertInterface) obj).setInsertLoginId(loginId);
 
-					// Sys check
-					if ((obj instanceof _LKBaseSysInterface)) {
-						// Sys init
-						if (((_LKBaseSysInterface) obj).getSystemTag() == null) {
-							((_LKBaseSysInterface) obj).setSystemTag(systemTag);
+					// Base check
+					if ((obj instanceof _LKBaseInterface)) {
+						((_LKBaseInterface) obj).setUpdateTime(currentTime);
+						((_LKBaseInterface) obj).setUpdateSystemTag(systemTag);
+						((_LKBaseInterface) obj).setUpdateLoginId(loginId);
+
+						// Sys check
+						if ((obj instanceof _LKBaseSysInterface)) {
+							// Sys init
+							if (((_LKBaseSysInterface) obj).getSystemTag() == null) {
+								((_LKBaseSysInterface) obj).setSystemTag(systemTag);
+							}
+							if (((_LKBaseSysInterface) obj).getBusId() == null) {
+								((_LKBaseSysInterface) obj).setBusId(LKRandomUtils.create(64, LKRangeTypeEnum.NUMBER_AND_LETTER_FULL));
+							}
+							((_LKBaseSysInterface) obj).updateCheckCode();
 						}
-						if (((_LKBaseSysInterface) obj).getBusId() == null) {
-							((_LKBaseSysInterface) obj).setBusId(LKRandomUtils.create(64, LKRangeTypeEnum.NUMBER_AND_LETTER_FULL));
-						}
-						((_LKBaseSysInterface) obj).updateCheckCode();
 					}
 				}
 			}
