@@ -26,6 +26,7 @@ import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SQL;
 import com.lichkin.framework.db.beans.UpdateSQL;
 import com.lichkin.framework.db.entities.suppers._LKIDInterface;
+import com.lichkin.framework.defines.beans.LKPageable;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
@@ -152,6 +153,9 @@ public abstract class LKBaseDao extends LKDao {
 	}
 
 
+	/** 默认页码 */
+	public static int DEFAULT_PAGE_NUMBER = 0;
+
 	/** 默认分页大小 */
 	public static int DEFAULT_PAGE_SIZE = 25;
 
@@ -161,11 +165,8 @@ public abstract class LKBaseDao extends LKDao {
 	 * @param pageNumber 页码
 	 * @return 页码
 	 */
-	private int checkPageNumber(int pageNumber) {
-		if (pageNumber < 0) {
-			pageNumber = 0;
-		}
-		return pageNumber;
+	private int checkPageNumber(Integer pageNumber) {
+		return ((pageNumber == null) || (pageNumber <= 0)) ? DEFAULT_PAGE_NUMBER : pageNumber;
 	}
 
 
@@ -174,11 +175,8 @@ public abstract class LKBaseDao extends LKDao {
 	 * @param pageSize 每页数据量
 	 * @return 每页数据量
 	 */
-	private int checkPageSize(int pageSize) {
-		if (pageSize <= 0) {
-			pageSize = DEFAULT_PAGE_SIZE;
-		}
-		return pageSize;
+	private int checkPageSize(Integer pageSize) {
+		return ((pageSize == null) || (pageSize <= 0)) ? DEFAULT_PAGE_SIZE : pageSize;
 	}
 
 
@@ -189,7 +187,7 @@ public abstract class LKBaseDao extends LKDao {
 	 * @param pageSize 每页数据量。正整数。传入0时表示取框架约定的默认值。
 	 * @return 分页信息
 	 */
-	private Pageable initPageable(Query query, int pageNumber, int pageSize) {
+	private Pageable initPageable(Query query, Integer pageNumber, Integer pageSize) {
 		pageNumber = checkPageNumber(pageNumber);
 		pageSize = checkPageSize(pageSize);
 		query.setFirstResult(pageNumber * pageSize);
@@ -394,7 +392,10 @@ public abstract class LKBaseDao extends LKDao {
 	@SuppressWarnings("deprecation")
 	@Override
 	public <T> Page<T> getPage(QuerySQL sqlObj, Class<T> clazz) {
-		return sqlObj.isUseSQL() ? queryPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, sqlObj.getPageNumber(), sqlObj.getPageSize()) : findPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, sqlObj.getPageNumber(), sqlObj.getPageSize());
+		LKPageable pageable = sqlObj.getPageable();
+		int pageNumber = pageable == null ? DEFAULT_PAGE_NUMBER : checkPageNumber(pageable.getPageNumber());
+		int pageSize = pageable == null ? DEFAULT_PAGE_SIZE : checkPageSize(pageable.getPageSize());
+		return sqlObj.isUseSQL() ? queryPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize) : findPage(sqlObj.getSQL(), sqlObj.getParams(), clazz, pageNumber, pageSize);
 	}
 
 
