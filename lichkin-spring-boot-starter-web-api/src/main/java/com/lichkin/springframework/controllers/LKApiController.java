@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lichkin.framework.beans.LKRequestInterface;
-import com.lichkin.framework.beans.LKRequestWithCompIdInterface;
 import com.lichkin.framework.beans.impl.LKResponseBean;
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
@@ -34,16 +33,26 @@ public abstract class LKApiController<I extends LKRequestInterface, O> extends L
 	public LKResponseBean<O> invoke(@Valid @RequestBody I in) throws LKException {
 		in.setLocale(LKRequestUtils.getLocale(request).toString());
 
-		if (in instanceof LKRequestWithCompIdInterface) {
-			if (StringUtils.isBlank(((LKRequestWithCompIdInterface) in).getCompId())) {
-				if (in.getAppKey().startsWith("com.lichkin.app.javascript.")) {
-					// TODO 从Session中取
-					((LKRequestWithCompIdInterface) in).setCompId(LKFrameworkStatics.ROOT);
-				} else {
+		if (needCheckToken() && StringUtils.isBlank(in.getToken())) {
+			throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
+		}
+
+		// 脚本调用时compId在session中处理
+		if (in.getAppKey().startsWith("com.lichkin.app.javascript.")) {
+			// TODO 从Session中取
+			in.setCompId(LKFrameworkStatics.ROOT);
+		} else {
+			// 客户端调用时，如果传入了compId使用传入的值。
+			if (StringUtils.isBlank(in.getCompId())) {
+				// 没有传入值，则判断是否需要校验，需要校验则抛异常。不需要校验则取默认值。
+				if (needCheckCompId()) {
 					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
+				} else {
+					in.setCompId(LKFrameworkStatics.ROOT);
 				}
 			}
 		}
+
 		return new LKResponseBean<>(getService().handle(validateIn(in)));
 	}
 
@@ -53,6 +62,20 @@ public abstract class LKApiController<I extends LKRequestInterface, O> extends L
 	 * @return 服务类
 	 */
 	protected abstract LKApiService<I, O> getService();
+
+
+	/**
+	 * 需要验证令牌
+	 * @return true:需要验证;false:不需要验证.
+	 */
+	protected abstract boolean needCheckToken();
+
+
+	/**
+	 * 需要公司ID
+	 * @return true:需要验证;false:不需要验证.
+	 */
+	protected abstract boolean needCheckCompId();
 
 
 	/**
