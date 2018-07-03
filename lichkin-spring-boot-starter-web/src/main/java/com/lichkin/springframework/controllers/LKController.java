@@ -3,6 +3,7 @@ package com.lichkin.springframework.controllers;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +20,9 @@ class LKController extends LKFramework {
 
 	@Autowired
 	protected HttpServletRequest request;
+
+	@Autowired
+	protected HttpSession session;
 
 
 	/**
