@@ -1,7 +1,6 @@
 package com.lichkin.springframework.db.daos;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,16 +15,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-import com.lichkin.framework.db.entities.suppers._LKBaseInsertInterface;
-import com.lichkin.framework.db.entities.suppers._LKBaseInterface;
-import com.lichkin.framework.db.entities.suppers._LKBaseSysInterface;
-import com.lichkin.framework.db.entities.suppers._LKIDInterface;
-import com.lichkin.framework.db.entities.suppers._LKNormalInterface;
+import com.lichkin.framework.db.entities.suppers.I_Base;
+import com.lichkin.framework.db.entities.suppers.I_Base_Sys;
+import com.lichkin.framework.db.entities.suppers.I_ID;
 import com.lichkin.framework.defines.LKFrameworkStatics;
-import com.lichkin.framework.defines.enums.impl.LKRangeTypeEnum;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
 import com.lichkin.framework.utils.LKDateTimeUtils;
-import com.lichkin.framework.utils.LKRandomUtils;
 import com.lichkin.framework.utils.LKStringUtils;
 
 /**
@@ -184,80 +179,29 @@ class LKDaoUtils {
 	 * 初始化对象
 	 * @param obj 实体类对象
 	 */
-	static void initEntity(final _LKIDInterface obj) {
+	static void initEntity(final I_ID obj) {
 		final String currentTime = LKDateTimeUtils.now();
 		final String systemTag = LKFrameworkStatics.SYSTEM_TAG;
-		final String loginId = getLoginId();
 
-		if (StringUtils.isBlank(obj.getId())) {// 新增数据
-			// TODO ID init
-
-			// Normal check
-			if ((obj instanceof _LKNormalInterface)) {
-				// Normal init
-				if (((_LKNormalInterface) obj).getUsingStatus() == null) {
-					((_LKNormalInterface) obj).setUsingStatus(LKUsingStatusEnum.USING);
-				}
-
-				// Base check
-				if ((obj instanceof _LKBaseInsertInterface)) {
-					// Base init
-					((_LKBaseInsertInterface) obj).setInsertTime(currentTime);
-					((_LKBaseInsertInterface) obj).setInsertSystemTag(systemTag);
-					((_LKBaseInsertInterface) obj).setInsertLoginId(loginId);
-
-					// Base check
-					if ((obj instanceof _LKBaseInterface)) {
-						((_LKBaseInterface) obj).setUpdateTime(currentTime);
-						((_LKBaseInterface) obj).setUpdateSystemTag(systemTag);
-						((_LKBaseInterface) obj).setUpdateLoginId(loginId);
-
-						// Sys check
-						if ((obj instanceof _LKBaseSysInterface)) {
-							// Sys init
-							if (((_LKBaseSysInterface) obj).getSystemTag() == null) {
-								((_LKBaseSysInterface) obj).setSystemTag(systemTag);
-							}
-							if (((_LKBaseSysInterface) obj).getBusId() == null) {
-								((_LKBaseSysInterface) obj).setBusId(LKRandomUtils.create(64, LKRangeTypeEnum.NUMBER_AND_LETTER_FULL));
-							}
-							((_LKBaseSysInterface) obj).updateCheckCode();
-						}
-					}
-				}
+		if (obj instanceof I_Base) {
+			if (((I_Base) obj).getUsingStatus() == null) {
+				((I_Base) obj).setUsingStatus(LKUsingStatusEnum.USING);
 			}
-		} else {// 更新数据
-			// Base check
-			if ((obj instanceof _LKBaseInterface)) {
-				// Base init
-				((_LKBaseInterface) obj).setUpdateTime(currentTime);
-				((_LKBaseInterface) obj).setUpdateSystemTag(systemTag);
-				((_LKBaseInterface) obj).setUpdateLoginId(loginId);
-
-				// Sys check
-				if ((obj instanceof _LKBaseSysInterface)) {
-					// Sys init
-					((_LKBaseSysInterface) obj).updateCheckCode();
-				}
+			if (StringUtils.isBlank(obj.getId())) {// 新增数据
+				((I_Base) obj).setInsertTime(currentTime);
 			}
+			((I_Base) obj).setUpdateTime(currentTime);
 		}
-	}
 
-
-	/**
-	 * 获取登录人登录ID
-	 * @return 登录人登录ID
-	 */
-	static String getLoginId() {
-		String loginId = null;
-		try {// web项目从session中取当前登录人ID
-			final Class<?> clazz = Class.forName("com.lichkin.framework.springboot.web.utils.LKSessionUserUtilsOnSpring");
-			final Method method = clazz.getMethod("getLoginId");
-			loginId = (String) method.invoke(clazz);
-		} catch (final Exception exception) {// TODO 非web项目取当前任务ID
-			loginId = "GUEST";
+		if ((obj instanceof I_Base_Sys)) {
+			if (((I_Base_Sys) obj).getSystemTag() == null) {
+				((I_Base_Sys) obj).setSystemTag(systemTag);
+			}
+			if (StringUtils.isBlank(obj.getId())) {// 新增数据
+				((I_Base_Sys) obj).setInsertSystemTag(systemTag);
+			}
+			((I_Base_Sys) obj).setUpdateSystemTag(systemTag);
 		}
-		return loginId;
 	}
 
 }

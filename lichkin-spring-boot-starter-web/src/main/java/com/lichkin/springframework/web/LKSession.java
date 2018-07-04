@@ -2,6 +2,8 @@ package com.lichkin.springframework.web;
 
 import javax.servlet.http.HttpSession;
 
+import com.lichkin.springframework.web.utils.LKRequestUtils;
+
 /**
  * 会话信息
  * @author SuZhou LichKin Information Technology Co., Ltd.
@@ -15,6 +17,9 @@ public class LKSession {
 	 * @return 字符串
 	 */
 	public static String getString(HttpSession session, String key) {
+		if (session == null) {
+			session = LKRequestUtils.getRequest().getSession();
+		}
 		Object obj = session.getAttribute(key);
 		return obj == null ? null : obj.toString();
 	}
@@ -22,6 +27,15 @@ public class LKSession {
 
 	/** 键：令牌 */
 	private static final String KEY_TOKEN = "LK_TOKEN";
+
+
+	/**
+	 * 获取令牌
+	 * @return 令牌
+	 */
+	public static String getToken() {
+		return getToken(null);
+	}
 
 
 	/**
@@ -50,6 +64,15 @@ public class LKSession {
 
 	/**
 	 * 获取公司ID
+	 * @return 公司ID
+	 */
+	public static String getCompId() {
+		return getCompId(null);
+	}
+
+
+	/**
+	 * 获取公司ID
 	 * @param session HttpSession
 	 * @return 公司ID
 	 */
@@ -73,6 +96,15 @@ public class LKSession {
 
 	/** 默认值：登录ID */
 	private static final String DEFAULT_VALUE_LOGIN_ID = "GUEST";
+
+
+	/**
+	 * 获取登录ID
+	 * @return 登录ID
+	 */
+	public static String getLoginId() {
+		return getLoginId(null);
+	}
 
 
 	/**

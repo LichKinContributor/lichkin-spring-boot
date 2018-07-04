@@ -3,7 +3,7 @@ package com.lichkin.springframework.web.configs;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -54,8 +54,7 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 		// 验证服务类
 		// 0、在规定的包中。
 		Map<String, Object> services = context.getBeansWithAnnotation(Service.class);
-		for (Iterator<Entry<String, Object>> iterator = services.entrySet().iterator(); iterator.hasNext();) {
-			Entry<String, Object> entry = iterator.next();
+		for (Entry<String, Object> entry : services.entrySet()) {
 			String key = entry.getKey();
 			Object value = entry.getValue();
 			Class<?> beanClass = value.getClass();
@@ -72,8 +71,7 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 		// 2、所有标注有约定注解的类中的所有方法必须为约定的映射。
 		if (LKMain.ENV_WEB) {
 			Map<String, Object> controllers = context.getBeansWithAnnotation(Controller.class);
-			for (Iterator<Entry<String, Object>> iterator = controllers.entrySet().iterator(); iterator.hasNext();) {
-				Entry<String, Object> entry = iterator.next();
+			for (Entry<String, Object> entry : controllers.entrySet()) {
 				String key = entry.getKey();
 				Object value = entry.getValue();
 				Class<?> beanClass = value.getClass();
@@ -158,21 +156,16 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 	 * 校验API请求
 	 */
 	private void checkApi(Class<?> beanClass, String beanName, String controllerMapping) {
-		if (!beanClass.getSuperclass().getName().equals("com.lichkin.springframework.controllers.LKApiController")) {
-			throw new LKFrameworkException(String.format("controller[%s] annotation[%s] mapping[%s] starts with [%s] must extends [%s].", beanName, RequestMapping.class.getName(), controllerMapping, LKFrameworkStatics.WEB_MAPPING_API, "com.lichkin.springframework.controllers.LKApiController"));
-		}
-
-		Method[] superMethods = beanClass.getSuperclass().getDeclaredMethods();
-		int abstractSuperMethodLength = superMethods.length;
-		for (Method superMethod : superMethods) {
-			if (!superMethod.toGenericString().contains(" abstract ")) {
-				abstractSuperMethodLength--;
+		boolean allow = false;
+		List<Class<?>> supperClasses = LKClassUtils.getAllExtendsClasses(beanClass);
+		for (Class<?> cls : supperClasses) {
+			if (cls.getName().equals("com.lichkin.springframework.controllers.LKApiController")) {
+				allow = true;
+				break;
 			}
 		}
-
-		Method[] methods = beanClass.getDeclaredMethods();
-		if (methods.length != abstractSuperMethodLength) {
-			throw new LKFrameworkException(String.format("controller[%s] can only implements methods from super class.", beanName, RequestMapping.class.getName(), LKFrameworkStatics.WEB_MAPPING_API));
+		if (!allow) {
+			throw new LKFrameworkException(String.format("controller[%s] annotation[%s] mapping[%s] starts with [%s] must extends [%s].", beanName, RequestMapping.class.getName(), controllerMapping, LKFrameworkStatics.WEB_MAPPING_API, "com.lichkin.springframework.controllers.LKApiController"));
 		}
 	}
 
