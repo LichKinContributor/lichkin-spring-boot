@@ -5,7 +5,7 @@
   <packaging>jar</packaging>
 
 
-  <artifactId>lichkin-spring-boot-starter-web-api</artifactId>
+  <artifactId>lichkin-spring-boot-starter-service-api</artifactId>
 
 
   <name>lichkin-spring-boot-starter-web-api</name>
@@ -38,14 +38,6 @@
     <dependency>
       <groupId>com.lichkin.springframework.boot</groupId>
       <artifactId>lichkin-spring-boot-starter-database</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.lichkin.springframework.boot</groupId>
-      <artifactId>lichkin-spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.lichkin.springframework.boot</groupId>
-      <artifactId>lichkin-spring-boot-starter-service-api</artifactId>
     </dependency>
   </dependencies>
 

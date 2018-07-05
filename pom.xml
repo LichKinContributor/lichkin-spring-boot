@@ -30,7 +30,6 @@
 
   <properties>
     <com.lichkin.springframework.boot.version>1.0.0.RELEASE</com.lichkin.springframework.boot.version>
-    <com.lichkin.springframework.boot.entity.version>1.0.0.RELEASE</com.lichkin.springframework.boot.entity.version>
     <springframework.boot.version>2.0.0.RELEASE</springframework.boot.version>
   </properties>
 
@@ -39,6 +38,7 @@
     <module>lichkin-spring-boot-starter-base</module>
     <module>lichkin-spring-boot-starter-jpa</module>
     <module>lichkin-spring-boot-starter-database</module>
+	<module>lichkin-spring-boot-starter-service-api</module>
     <module>lichkin-spring-boot-starter-database-secondary</module>
     <module>lichkin-spring-boot-starter-quartz</module>
     <module>lichkin-spring-boot-starter-web</module>
@@ -64,6 +64,11 @@
       <dependency>
         <groupId>com.lichkin.springframework.boot</groupId>
         <artifactId>lichkin-spring-boot-starter-database</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-service-api</artifactId>
         <version>${com.lichkin.springframework.boot.version}</version>
       </dependency>
       <dependency>

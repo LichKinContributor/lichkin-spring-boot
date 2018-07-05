@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lichkin.framework.beans.LKRequestInterface;
 import com.lichkin.framework.beans.impl.LKResponseBean;
+import com.lichkin.framework.defines.enums.impl.LKClientTypeEnum;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
+import com.lichkin.framework.defines.exceptions.LKFrameworkException;
 import com.lichkin.framework.defines.exceptions.LKRuntimeException;
 import com.lichkin.framework.web.annotations.LKController4Api;
 import com.lichkin.framework.web.annotations.NotNeedCheckCompId;
@@ -35,25 +37,46 @@ public abstract class LKApiController<I extends LKRequestInterface, O> extends L
 	public LKResponseBean<O> invoke(@Valid @RequestBody I in) throws LKException {
 		in.setLocale(LKRequestUtils.getLocale(request).toString());
 
-		boolean jsEnv = in.getAppKey().startsWith("com.lichkin.app.javascript");
+		boolean jsEnv = LKClientTypeEnum.JAVASCRIPT.equals(in.getClientType());
 		Class<? extends LKRequestInterface> cls = in.getClass();
+		if (jsEnv) {
+			String token = LKSession.getToken(session);
+			if (StringUtils.isBlank(token) && (cls.getAnnotation(NotNeedCheckToken.class) == null)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("@NotNeedCheckToken not annotated on in bean and no token in session."));
+			}
+			in.setToken(StringUtils.trimToEmpty(token));
 
-		String token = jsEnv ? LKSession.getToken(session) : in.getToken();
-		if (StringUtils.isBlank(token) && (cls.getAnnotation(NotNeedCheckToken.class) == null)) {
-			throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
-		}
-		in.setToken(StringUtils.trimToEmpty(token));
+			String compId = LKSession.getCompId(session);
+			NotNeedCheckCompId annotationNotNeedCheckCompId = cls.getAnnotation(NotNeedCheckCompId.class);
+			if (StringUtils.isBlank(compId)) {
+				if (annotationNotNeedCheckCompId == null) {
+					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("@NotNeedCheckCompId not annotated on in bean and no compId in session."));
+				} else {
+					compId = annotationNotNeedCheckCompId.defaultValue();
+				}
+			}
+			in.setCompId(StringUtils.trimToEmpty(compId));
+		} else {
+			if (StringUtils.isBlank(in.getAppKey())) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("appKey must not blank unless JAVASCRIPT enviroment."));
+			}
 
-		String compId = jsEnv ? LKSession.getCompId(session) : in.getCompId();
-		NotNeedCheckCompId annotationNotNeedCheckCompId = cls.getAnnotation(NotNeedCheckCompId.class);
-		if (StringUtils.isBlank(compId)) {
-			if (annotationNotNeedCheckCompId == null) {
-				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
-			} else {
-				compId = annotationNotNeedCheckCompId.defaultValue();
+			String token = in.getToken();
+			if (StringUtils.isBlank(token) && (cls.getAnnotation(NotNeedCheckToken.class) == null)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("@NotNeedCheckToken not annotated on in bean and not invoke with token."));
+			}
+
+			String compId = LKSession.getCompId(session);
+			NotNeedCheckCompId annotationNotNeedCheckCompId = cls.getAnnotation(NotNeedCheckCompId.class);
+			if (StringUtils.isBlank(compId)) {
+				if (annotationNotNeedCheckCompId == null) {
+					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("@NotNeedCheckCompId not annotated on in bean and not invoke with compId."));
+				} else {
+					compId = annotationNotNeedCheckCompId.defaultValue();
+					in.setCompId(StringUtils.trimToEmpty(compId));
+				}
 			}
 		}
-		in.setCompId(StringUtils.trimToEmpty(compId));
 
 		return new LKResponseBean<>(handle(validateIn(in)));
 	}
