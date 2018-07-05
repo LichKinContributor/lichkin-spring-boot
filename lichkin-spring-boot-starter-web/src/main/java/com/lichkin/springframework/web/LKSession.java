@@ -2,6 +2,7 @@ package com.lichkin.springframework.web;
 
 import javax.servlet.http.HttpSession;
 
+import com.lichkin.framework.defines.entities.I_Login;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 /**
@@ -125,6 +126,43 @@ public class LKSession {
 	 */
 	public static void setLoginId(HttpSession session, String loginId) {
 		session.setAttribute(KEY_LOGIN_ID, loginId);
+	}
+
+
+	/** 键：登录信息 */
+	private static final String KEY_LOGIN = "KEY_LOGIN";
+
+
+	/**
+	 * 获取登录信息
+	 * @return 登录信息
+	 */
+	public static I_Login getLogin() {
+		return getLogin(null);
+	}
+
+
+	/**
+	 * 获取登录信息
+	 * @param session HttpSession
+	 * @return 登录信息
+	 */
+	public static I_Login getLogin(HttpSession session) {
+		if (session == null) {
+			session = LKRequestUtils.getRequest().getSession();
+		}
+		Object login = session.getAttribute(KEY_LOGIN);
+		return login == null ? null : (I_Login) login;
+	}
+
+
+	/**
+	 * 设置登录信息
+	 * @param session HttpSession
+	 * @param login 登录信息
+	 */
+	public static void setLogin(HttpSession session, I_Login login) {
+		session.setAttribute(KEY_LOGIN, login);
 	}
 
 }

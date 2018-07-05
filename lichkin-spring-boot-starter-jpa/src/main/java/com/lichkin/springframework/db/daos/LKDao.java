@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SQL;
 import com.lichkin.framework.db.beans.UpdateSQL;
-import com.lichkin.framework.db.entities.suppers.I_ID;
+import com.lichkin.framework.defines.entities.I_ID;
 
 /**
  * 数据访问接口
