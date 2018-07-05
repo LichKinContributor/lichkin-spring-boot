@@ -88,8 +88,19 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 						throw new LKFrameworkException(String.format("controller[%s]. must be annotated with [%s].", beanName, RequestMapping.class.getName()));
 					}
 					String[] controllerMappings = requestMapping.value();
+					Boolean api = null;
 					if (controllerMappings.length != 1) {
-						throw new LKFrameworkException(String.format("controller[%s] annotation[%s][values] must be only one.", beanName, RequestMapping.class.getName()));
+						for (String controllerMapping : controllerMappings) {
+							if (controllerMapping.startsWith(LKFrameworkStatics.WEB_MAPPING_API)) {
+								api = true;
+							} else {
+								api = false;
+								break;
+							}
+						}
+						if (!api) {
+							throw new LKFrameworkException(String.format("controller[%s] annotation[%s][values] must be only one.", beanName, RequestMapping.class.getName()));
+						}
 					}
 
 					// 取得类上的映射值
