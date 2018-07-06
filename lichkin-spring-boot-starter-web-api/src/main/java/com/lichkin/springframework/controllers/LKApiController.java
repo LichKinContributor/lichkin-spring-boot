@@ -66,7 +66,7 @@ public abstract class LKApiController<I extends LKRequestInterface, O> extends L
 				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("@NotNeedCheckToken not annotated on in bean and not invoke with token."));
 			}
 
-			String compId = LKSession.getCompId(session);
+			String compId = in.getCompId();
 			NotNeedCheckCompId annotationNotNeedCheckCompId = cls.getAnnotation(NotNeedCheckCompId.class);
 			if (StringUtils.isBlank(compId)) {
 				if (annotationNotNeedCheckCompId == null) {

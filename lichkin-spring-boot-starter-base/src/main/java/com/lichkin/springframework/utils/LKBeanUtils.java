@@ -20,7 +20,9 @@ public class LKBeanUtils {
 	 * @return 目标对象
 	 */
 	public static <B> B copyProperties(Object source, B target, String... ignoreProperties) {
-		BeanUtils.copyProperties(source, target, ignoreProperties);
+		if (source != null) {
+			BeanUtils.copyProperties(source, target, ignoreProperties);
+		}
 		return target;
 	}
 
