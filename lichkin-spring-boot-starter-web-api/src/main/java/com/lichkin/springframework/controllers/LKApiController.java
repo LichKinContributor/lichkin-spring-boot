@@ -14,8 +14,8 @@ import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.framework.defines.exceptions.LKFrameworkException;
 import com.lichkin.framework.defines.exceptions.LKRuntimeException;
 import com.lichkin.framework.web.annotations.LKController4Api;
-import com.lichkin.framework.web.annotations.NotNeedCheckCompId;
-import com.lichkin.framework.web.annotations.NotNeedCheckToken;
+import com.lichkin.framework.web.annotations.WithoutCompId;
+import com.lichkin.framework.web.annotations.WithoutLogin;
 import com.lichkin.springframework.services.LKApiService;
 import com.lichkin.springframework.web.LKSession;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
@@ -38,47 +38,94 @@ public abstract class LKApiController<I extends LKRequestInterface, O> extends L
 		in.setLocale(LKRequestUtils.getLocale(request).toString());
 
 		boolean jsEnv = LKClientTypeEnum.JAVASCRIPT.equals(in.getClientType());
-		Class<? extends LKRequestInterface> cls = in.getClass();
-		if (jsEnv) {
-			String token = LKSession.getToken(session);
-			if (StringUtils.isBlank(token) && (cls.getAnnotation(NotNeedCheckToken.class) == null)) {
-				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("@NotNeedCheckToken not annotated on in bean and no token in session."));
-			}
-			in.setToken(StringUtils.trimToEmpty(token));
 
-			String compId = LKSession.getCompId(session);
-			NotNeedCheckCompId annotationNotNeedCheckCompId = cls.getAnnotation(NotNeedCheckCompId.class);
-			if (StringUtils.isBlank(compId)) {
-				if (annotationNotNeedCheckCompId == null) {
-					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("@NotNeedCheckCompId not annotated on in bean and no compId in session."));
+		in.setAppKey(checkAppKey(jsEnv, in, in.getAppKey()));
+		in.setToken(checkToken(jsEnv, in, in.getToken()));
+		in.setCompId(checkCompId(jsEnv, in, in.getCompId()));
+
+		return new LKResponseBean<>(handle(validateIn(in)));
+	}
+
+
+	/**
+	 * 校验客户端唯一标识
+	 * @param jsEnv 是否为脚本环境
+	 * @param in 入参
+	 * @param appKey 客户端唯一标识
+	 * @return 客户端唯一标识
+	 */
+	private String checkAppKey(boolean jsEnv, I in, String appKey) {
+		if (jsEnv) {
+			if (StringUtils.isNotBlank(appKey)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("appKey must blank in JAVASCRIPT enviroment."));
+			}
+		} else {
+			if (StringUtils.isBlank(appKey)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("appKey must not blank unless in JAVASCRIPT enviroment."));
+			}
+		}
+		return StringUtils.trimToEmpty(appKey);
+	}
+
+
+	/**
+	 * 校验令牌
+	 * @param jsEnv 是否为脚本环境
+	 * @param in 入参
+	 * @param token 令牌
+	 * @return 令牌
+	 */
+	private String checkToken(boolean jsEnv, I in, String token) {
+		if (jsEnv) {
+			if (StringUtils.isNotBlank(token)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("token must blank in JAVASCRIPT enviroment."));
+			}
+			token = LKSession.getToken();
+		} else {
+			if (StringUtils.isBlank(token) && (this instanceof LKLoginApiController)) {
+				if (getClass().getAnnotation(WithoutLogin.class) == null) {
+					throw new LKRuntimeException(LKErrorCodesEnum.INVALIDED_TOKEN, new LKFrameworkException("not invoke with token and @WithoutLogin not annotated on controller ."));
 				} else {
-					compId = annotationNotNeedCheckCompId.defaultValue();
+					LKSession.setLogin(session, null);
+					LKSession.setLoginId(session, null);
 				}
 			}
-			in.setCompId(StringUtils.trimToEmpty(compId));
+		}
+		return StringUtils.trimToEmpty(token);
+	}
+
+
+	/**
+	 * 校验公司ID
+	 * @param jsEnv 是否为脚本环境
+	 * @param in 入参
+	 * @param compId 公司ID
+	 * @return 公司ID
+	 */
+	private String checkCompId(boolean jsEnv, I in, String compId) {
+		if (jsEnv) {
+			if (StringUtils.isNotBlank(compId)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("compId must blank in JAVASCRIPT enviroment."));
+			}
+			compId = LKSession.getCompId();
 		} else {
-			if (StringUtils.isBlank(in.getAppKey())) {
-				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("appKey must not blank unless JAVASCRIPT enviroment."));
-			}
-
-			String token = in.getToken();
-			if (StringUtils.isBlank(token) && (cls.getAnnotation(NotNeedCheckToken.class) == null)) {
-				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("@NotNeedCheckToken not annotated on in bean and not invoke with token."));
-			}
-
-			String compId = in.getCompId();
-			NotNeedCheckCompId annotationNotNeedCheckCompId = cls.getAnnotation(NotNeedCheckCompId.class);
 			if (StringUtils.isBlank(compId)) {
-				if (annotationNotNeedCheckCompId == null) {
-					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("@NotNeedCheckCompId not annotated on in bean and not invoke with compId."));
+				WithoutCompId annotationWithoutCompId = getClass().getAnnotation(WithoutCompId.class);
+				if (annotationWithoutCompId == null) {
+					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException(jsEnv ? "no compId in session and @WithoutCompId not annotated on controller ." : "not invoke with compId and @WithoutCompId not annotated on controller ."));
 				} else {
-					compId = annotationNotNeedCheckCompId.defaultValue();
-					in.setCompId(StringUtils.trimToEmpty(compId));
+					compId = annotationWithoutCompId.defaultValue();
+				}
+			} else {
+				if (StringUtils.isBlank(in.getToken())) {// 非登录操作不能直接做公司业务操作
+					throw new LKRuntimeException(LKErrorCodesEnum.INVALIDED_TOKEN);
 				}
 			}
 		}
 
-		return new LKResponseBean<>(handle(validateIn(in)));
+		compId = StringUtils.trimToEmpty(compId);
+		LKSession.setCompId(session, compId);
+		return compId;
 	}
 
 
