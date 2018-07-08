@@ -42,7 +42,6 @@ public class LKSession {
 	 * @param session HttpSession
 	 * @param key 键
 	 * @param value 值
-	 * @return 字符串
 	 */
 	public static void setString(HttpSession session, String key, String value) {
 		getSession(session).setAttribute(key, value);
