@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.lichkin.framework.beans.LKRequestInterface;
 import com.lichkin.framework.beans.impl.LKResponseBean;
@@ -19,7 +20,6 @@ import com.lichkin.framework.defines.exceptions.LKRuntimeException;
 import com.lichkin.framework.web.annotations.LKApiType;
 import com.lichkin.framework.web.annotations.LKController4Api;
 import com.lichkin.framework.web.enums.ApiType;
-import com.lichkin.springframework.configs.LKApplicationContext;
 import com.lichkin.springframework.services.LKApiService;
 import com.lichkin.springframework.services.LKCompService;
 import com.lichkin.springframework.services.LKLoginService;
@@ -190,7 +190,7 @@ public abstract class LKStandardApiController<I extends LKRequestInterface, O, S
 	 */
 	private void checkLogin(String token) {
 		try {
-			I_Login login = ((LKLoginService) LKApplicationContext.getBean(LKRequestUtils.getApiUserService(request))).findUserLoginByToken(token);
+			I_Login login = ((LKLoginService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(LKRequestUtils.getApiUserService(request))).findUserLoginByToken(token);
 			if (login == null) {
 				throw new LKRuntimeException(LKErrorCodesEnum.INVALIDED_TOKEN);
 			}
@@ -208,7 +208,7 @@ public abstract class LKStandardApiController<I extends LKRequestInterface, O, S
 	 */
 	private void checkCompany(String compId) {
 		try {
-			I_Comp comp = ((LKCompService) LKApplicationContext.getBean(Class.forName("com.lichkin.application.services.impl.SysCompService"))).findCompById(compId);
+			I_Comp comp = ((LKCompService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(Class.forName("com.lichkin.application.services.impl.SysCompService"))).findCompById(compId);
 			if (comp == null) {
 				throw new LKRuntimeException(LKErrorCodesEnum.INVALIDED_COMP_ID);
 			}

@@ -27,7 +27,6 @@ import com.lichkin.framework.utils.LKClassUtils;
 import com.lichkin.framework.utils.LKStringUtils;
 import com.lichkin.framework.web.annotations.LKController4Datas;
 import com.lichkin.framework.web.annotations.LKController4Pages;
-import com.lichkin.springframework.configs.LKApplicationContext;
 import com.lichkin.springframework.web.beans.LKPage;
 
 /**
@@ -49,7 +48,7 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 		LOGGER.info("onApplicationEvent -> ServletWebServerInitializedEvent");
 
 		// 验证框架约定
-		ApplicationContext context = LKApplicationContext.getContext();
+		ApplicationContext context = event.getApplicationContext();
 
 		// 验证服务类
 		// 0、在规定的包中。

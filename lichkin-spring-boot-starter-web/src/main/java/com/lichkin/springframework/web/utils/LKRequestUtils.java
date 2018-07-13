@@ -117,7 +117,7 @@ public class LKRequestUtils {
 	 */
 	public static Class<?> getApiUserService(HttpServletRequest request) throws ClassNotFoundException {
 		String requestURI = getRequestURI(request);
-		String userType = requestURI.substring(LKStringUtils.indexOf(requestURI, "/", 0) + 1, LKStringUtils.indexOf(requestURI, "/", 1));
+		String userType = requestURI.substring(LKFrameworkStatics.WEB_MAPPING_API.length() + 1, LKStringUtils.indexOf(requestURI, "/", 2));
 		return Class.forName(String.format("com.lichkin.application.services.impl.Sys%sLoginService", userType));
 	}
 
