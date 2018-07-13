@@ -12,8 +12,8 @@ public abstract class LKApiService<SI, SO> extends LKDBService {
 
 	/**
 	 * 调用
-	 * @param in 入参
-	 * @return 出参
+	 * @param sin 服务类入参
+	 * @return 服务类出参
 	 * @throws LKException 业务处理失败但不希望已处理数据回滚时抛出异常
 	 */
 	public abstract SO handle(SI sin) throws LKException;

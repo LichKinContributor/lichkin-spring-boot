@@ -222,7 +222,6 @@ public abstract class LKStandardApiController<I extends LKRequestInterface, O, S
 
 	/**
 	 * 校验前操作
-	 * @param in 入参
 	 */
 	protected void beforeCheck() {
 	}
@@ -230,7 +229,6 @@ public abstract class LKStandardApiController<I extends LKRequestInterface, O, S
 
 	/**
 	 * 校验后操作
-	 * @param in 校验后的入参
 	 */
 	protected void afterCheck() {
 	}
