@@ -1,8 +1,6 @@
 package com.lichkin.springframework.db.daos;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,9 +19,7 @@ import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.entities.I_Base;
 import com.lichkin.framework.defines.entities.I_Base_Sys;
 import com.lichkin.framework.defines.entities.I_ID;
-import com.lichkin.framework.defines.entities.I_LoginID;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
-import com.lichkin.framework.defines.exceptions.LKFrameworkException;
 import com.lichkin.framework.utils.LKDateTimeUtils;
 import com.lichkin.framework.utils.LKStringUtils;
 
@@ -206,31 +202,6 @@ class LKDaoUtils {
 			}
 			((I_Base_Sys) obj).setUpdateSystemTag(systemTag);
 		}
-
-		if ((obj instanceof I_LoginID)) {
-			((I_LoginID) obj).setLoginId(getLoginId());
-		}
-	}
-
-
-	/**
-	 * 获取操作人登录ID
-	 * @return 操作人登录ID
-	 */
-	private static String getLoginId() {
-		String loginId = null;
-		Class<?> clazz;
-		try {
-			clazz = Class.forName("com.lichkin.springframework.web.LKSession");
-			final Method method = clazz.getMethod("getLoginId");
-			loginId = (String) method.invoke(clazz);
-		} catch (ClassNotFoundException e) {
-			// TODO 非web项目取当前任务ID
-			loginId = "TASK_";
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new LKFrameworkException("incredible");
-		}
-		return loginId;
 	}
 
 }

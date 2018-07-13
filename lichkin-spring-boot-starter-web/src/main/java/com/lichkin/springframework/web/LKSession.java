@@ -54,29 +54,11 @@ public class LKSession {
 
 	/**
 	 * 获取令牌
-	 * @return 令牌
-	 */
-	public static String getToken() {
-		return getString(null, KEY_TOKEN, null);
-	}
-
-
-	/**
-	 * 获取令牌
 	 * @param session HttpSession
 	 * @return 令牌
 	 */
 	public static String getToken(HttpSession session) {
 		return getString(session, KEY_TOKEN, null);
-	}
-
-
-	/**
-	 * 设置令牌
-	 * @param token 令牌
-	 */
-	public static void setToken(String token) {
-		setString(null, KEY_TOKEN, token);
 	}
 
 
@@ -96,29 +78,11 @@ public class LKSession {
 
 	/**
 	 * 获取公司ID
-	 * @return 公司ID
-	 */
-	public static String getCompId() {
-		return getString(null, KEY_COMP_ID, null);
-	}
-
-
-	/**
-	 * 获取公司ID
 	 * @param session HttpSession
 	 * @return 公司ID
 	 */
 	public static String getCompId(HttpSession session) {
 		return getString(session, KEY_COMP_ID, null);
-	}
-
-
-	/**
-	 * 设置公司ID
-	 * @param compId 公司ID
-	 */
-	public static void setCompId(String compId) {
-		setString(null, KEY_COMP_ID, compId);
 	}
 
 
@@ -141,29 +105,11 @@ public class LKSession {
 
 	/**
 	 * 获取登录ID
-	 * @return 登录ID
-	 */
-	public static String getLoginId() {
-		return getString(null, KEY_LOGIN_ID, DEFAULT_VALUE_LOGIN_ID);
-	}
-
-
-	/**
-	 * 获取登录ID
 	 * @param session HttpSession
 	 * @return 登录ID
 	 */
 	public static String getLoginId(HttpSession session) {
 		return getString(session, KEY_LOGIN_ID, DEFAULT_VALUE_LOGIN_ID);
-	}
-
-
-	/**
-	 * 设置登录ID
-	 * @param compId 登录ID
-	 */
-	public static void setLoginId(String compId) {
-		setString(null, KEY_LOGIN_ID, compId);
 	}
 
 
@@ -183,30 +129,12 @@ public class LKSession {
 
 	/**
 	 * 获取登录信息
-	 * @return 登录信息
-	 */
-	public static I_Login getLogin() {
-		return getLogin(null);
-	}
-
-
-	/**
-	 * 获取登录信息
 	 * @param session HttpSession
 	 * @return 登录信息
 	 */
 	public static I_Login getLogin(HttpSession session) {
 		Object login = getSession(session).getAttribute(KEY_LOGIN);
 		return login == null ? null : (I_Login) login;
-	}
-
-
-	/**
-	 * 设置登录信息
-	 * @param login 登录信息
-	 */
-	public static void setLogin(I_Login login) {
-		setLogin(null, login);
 	}
 
 

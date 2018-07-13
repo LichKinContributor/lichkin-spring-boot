@@ -4,9 +4,11 @@ import com.lichkin.framework.defines.exceptions.LKException;
 
 /**
  * 接口服务类定义
+ * @param <SI> 服务类入参类型
+ * @param <SO> 服务类出参类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiService<I, O> extends LKDBService {
+public abstract class LKApiService<SI, SO> extends LKDBService {
 
 	/**
 	 * 调用
@@ -14,6 +16,6 @@ public abstract class LKApiService<I, O> extends LKDBService {
 	 * @return 出参
 	 * @throws LKException 业务处理失败但不希望已处理数据回滚时抛出异常
 	 */
-	public abstract O handle(I in) throws LKException;
+	public abstract SO handle(SI sin) throws LKException;
 
 }

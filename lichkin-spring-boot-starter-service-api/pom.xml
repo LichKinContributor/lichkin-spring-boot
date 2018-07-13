@@ -39,6 +39,10 @@
       <groupId>com.lichkin.springframework.boot</groupId>
       <artifactId>lichkin-spring-boot-starter-database</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.lichkin.springframework.boot</groupId>
+      <artifactId>lichkin-spring-boot-starter-web</artifactId>
+    </dependency>
   </dependencies>
 
 </project>

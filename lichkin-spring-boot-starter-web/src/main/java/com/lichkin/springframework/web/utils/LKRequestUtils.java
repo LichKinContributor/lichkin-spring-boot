@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.lichkin.framework.defines.LKFrameworkStatics;
+import com.lichkin.framework.utils.LKStringUtils;
 import com.lichkin.framework.utils.i18n.LKI18NUtils;
 
 /**
@@ -105,6 +106,19 @@ public class LKRequestUtils {
 			requestURI = requestURI.substring(0, requestURI.indexOf(";"));
 		}
 		return requestURI;
+	}
+
+
+	/**
+	 * 获取用户类型对应的服务类型
+	 * @param request 请求对象
+	 * @return 用户类型对应的服务类型
+	 * @throws ClassNotFoundException 没有实现该类时将抛出异常
+	 */
+	public static Class<?> getApiUserService(HttpServletRequest request) throws ClassNotFoundException {
+		String requestURI = getRequestURI(request);
+		String userType = requestURI.substring(LKStringUtils.indexOf(requestURI, "/", 0) + 1, LKStringUtils.indexOf(requestURI, "/", 1));
+		return Class.forName(String.format("com.lichkin.application.services.impl.Sys%sLoginService", userType));
 	}
 
 }
