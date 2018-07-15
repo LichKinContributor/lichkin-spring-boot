@@ -15,9 +15,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.entities.I_Base;
-import com.lichkin.framework.defines.entities.I_Base_Sys;
 import com.lichkin.framework.defines.entities.I_ID;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
 import com.lichkin.framework.utils.LKDateTimeUtils;
@@ -181,7 +179,6 @@ class LKDaoUtils {
 	 */
 	static void initEntity(final I_ID obj) {
 		final String currentTime = LKDateTimeUtils.now();
-		final String systemTag = LKFrameworkStatics.SYSTEM_TAG;
 
 		if (obj instanceof I_Base) {
 			if (((I_Base) obj).getUsingStatus() == null) {
@@ -190,17 +187,6 @@ class LKDaoUtils {
 			if (StringUtils.isBlank(obj.getId())) {// 新增数据
 				((I_Base) obj).setInsertTime(currentTime);
 			}
-			((I_Base) obj).setUpdateTime(currentTime);
-		}
-
-		if ((obj instanceof I_Base_Sys)) {
-			if (((I_Base_Sys) obj).getSystemTag() == null) {
-				((I_Base_Sys) obj).setSystemTag(systemTag);
-			}
-			if (StringUtils.isBlank(obj.getId())) {// 新增数据
-				((I_Base_Sys) obj).setInsertSystemTag(systemTag);
-			}
-			((I_Base_Sys) obj).setUpdateSystemTag(systemTag);
 		}
 	}
 
