@@ -5,14 +5,15 @@ import com.lichkin.framework.beans.LKRequestInterface;
 /**
  * API数据请求控制器类定义
  * @param <I> 入参类型
- * @param <O> 出参类型
+ * @param <O> 控制器类出参类型
+ * @param <SO> 服务类出参类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiController<I extends LKRequestInterface, O> extends LKNormalApiController<I, O, O> {
+public abstract class LKNormalApiController<I extends LKRequestInterface, O, SO> extends LKStandardApiController<I, O, I, SO> {
 
 	@Override
-	protected O sout2out(O sout) {
-		return sout;
+	protected I in2sin(I in) {
+		return in;
 	}
 
 }
