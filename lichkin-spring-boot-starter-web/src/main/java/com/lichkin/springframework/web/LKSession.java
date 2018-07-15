@@ -1,8 +1,13 @@
 package com.lichkin.springframework.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import com.lichkin.framework.defines.entities.I_Login;
+import com.lichkin.framework.defines.entities.I_Menu;
+import com.lichkin.framework.defines.entities.I_Role;
+import com.lichkin.framework.defines.entities.I_User;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 /**
@@ -145,6 +150,83 @@ public class LKSession {
 	 */
 	public static void setLogin(HttpSession session, I_Login login) {
 		getSession(session).setAttribute(KEY_LOGIN, login);
+	}
+
+
+	/** 键：用户信息 */
+	private static final String KEY_USER = "KEY_USER";
+
+
+	/**
+	 * 获取用户信息
+	 * @param session HttpSession
+	 * @return 用户信息
+	 */
+	public static I_User getUser(HttpSession session) {
+		Object user = getSession(session).getAttribute(KEY_USER);
+		return user == null ? null : (I_User) user;
+	}
+
+
+	/**
+	 * 设置用户信息
+	 * @param session HttpSession
+	 * @param user 用户信息
+	 */
+	public static void setUser(HttpSession session, I_User user) {
+		getSession(session).setAttribute(KEY_USER, user);
+	}
+
+
+	/** 键：角色信息 */
+	private static final String KEY_ROLES = "KEY_ROLES";
+
+
+	/**
+	 * 获取角色信息
+	 * @param session HttpSession
+	 * @return 角色信息
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<I_Role> getRoles(HttpSession session) {
+		Object roles = getSession(session).getAttribute(KEY_ROLES);
+		return roles == null ? null : (List<I_Role>) roles;
+	}
+
+
+	/**
+	 * 设置角色信息
+	 * @param session HttpSession
+	 * @param roles 角色信息
+	 */
+	public static void setRoles(HttpSession session, List<I_Role> roles) {
+		getSession(session).setAttribute(KEY_ROLES, roles);
+	}
+
+
+	/** 键：菜单信息 */
+	private static final String KEY_MENUS = "KEY_MENUS";
+
+
+	/**
+	 * 获取菜单信息
+	 * @param session HttpSession
+	 * @return 菜单信息
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<I_Menu> getMenus(HttpSession session) {
+		Object menus = getSession(session).getAttribute(KEY_MENUS);
+		return menus == null ? null : (List<I_Menu>) menus;
+	}
+
+
+	/**
+	 * 设置菜单信息
+	 * @param session HttpSession
+	 * @param menus 菜单信息
+	 */
+	public static void setMenus(HttpSession session, List<I_Menu> menus) {
+		getSession(session).setAttribute(KEY_MENUS, menus);
 	}
 
 }
