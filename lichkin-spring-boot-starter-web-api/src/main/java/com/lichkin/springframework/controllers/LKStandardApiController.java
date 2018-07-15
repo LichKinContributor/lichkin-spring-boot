@@ -88,7 +88,7 @@ public abstract class LKStandardApiController<I extends LKRequestInterface, O, S
 			case BEFORE_LOGIN: {
 				String token = in.getToken();
 				if (StringUtils.isNotBlank(token)) {
-					checkLogin(token);
+					checkLogin(token, in.getCompId());
 				}
 			}
 			break;
@@ -97,7 +97,7 @@ public abstract class LKStandardApiController<I extends LKRequestInterface, O, S
 				if (StringUtils.isBlank(token)) {
 					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("token must not blank as API is a personal business api."));
 				}
-				checkLogin(token);
+				checkLogin(token, in.getCompId());
 			}
 			break;
 			case COMPANY_BUSINESS: {
@@ -109,8 +109,8 @@ public abstract class LKStandardApiController<I extends LKRequestInterface, O, S
 				if (StringUtils.isBlank(compId)) {
 					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("compId must not blank as API is a company business api."));
 				}
-				checkLogin(token);
 				checkCompany(compId);
+				checkLogin(token, in.getCompId());
 			}
 			break;
 		}
@@ -187,10 +187,11 @@ public abstract class LKStandardApiController<I extends LKRequestInterface, O, S
 	/**
 	 * 校验登录信息
 	 * @param token 令牌
+	 * @param compId 公司ID
 	 */
-	private void checkLogin(String token) {
+	private void checkLogin(String token, String compId) {
 		try {
-			I_Login login = ((LKLoginService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(LKRequestUtils.getApiUserService(request))).findUserLoginByToken(token);
+			I_Login login = ((LKLoginService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(LKRequestUtils.getApiUserService(request))).findUserLoginByToken(token, compId);
 			if (login == null) {
 				throw new LKRuntimeException(LKErrorCodesEnum.INVALIDED_TOKEN);
 			}
