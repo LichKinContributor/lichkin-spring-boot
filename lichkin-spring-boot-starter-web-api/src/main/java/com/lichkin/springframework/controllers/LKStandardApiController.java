@@ -17,6 +17,7 @@ import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.framework.defines.exceptions.LKFrameworkException;
 import com.lichkin.framework.defines.exceptions.LKRuntimeException;
+import com.lichkin.framework.utils.LKStringUtils;
 import com.lichkin.framework.web.annotations.LKApiType;
 import com.lichkin.framework.web.annotations.LKController4Api;
 import com.lichkin.framework.web.enums.ApiType;
@@ -27,7 +28,7 @@ import com.lichkin.springframework.web.LKSession;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 /**
- * API数据请求控制器类定义（开放接口）
+ * API数据请求控制器类定义
  * @param <I> 控制器类入参类型
  * @param <O> 控制器类出参类型
  * @param <SI> 服务类入参类型
@@ -63,143 +64,147 @@ public abstract class LKStandardApiController<I extends LKRequestInterface, O, S
 
 		in.setLocale(LKRequestUtils.getLocale(request).toString());
 
-		boolean jsEnv = LKClientTypeEnum.JAVASCRIPT.equals(in.getClientType());
-
+		String appKey = in.getAppKey();
+		String token = in.getToken();
+		String compId = in.getCompId();
+		LKClientTypeEnum clientType = in.getClientType();
+		boolean jsEnv = LKClientTypeEnum.JAVASCRIPT.equals(clientType);
 		Class<?> clazz = getClass();
 		LKApiType annotationApiType = clazz.getAnnotation(LKApiType.class);
 		if (annotationApiType != null) {
 			apiType = annotationApiType.apiType();
 		}
+		String requestURI = LKRequestUtils.getRequestURI(request);
+		if (jsEnv) {
+			// 脚本环境只能调用/API/Web接口
+			if (!requestURI.startsWith(LKFrameworkStatics.WEB_MAPPING_API_WEB)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException(clientType.toString() + " enviroment can only invoke /API/Web/xxx."));
+			}
 
-		beforeCheck();
+			// 脚本环境不能传入appKey
+			if (StringUtils.isNotBlank(appKey)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException(clientType.toString() + " enviroment appKey must blank."));
+			}
 
-		checkAppKey(jsEnv);
-		checkToken(jsEnv);
-		checkCompId(jsEnv);
+			// 脚本环境不能传入token
+			if (StringUtils.isNotBlank(token)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException(clientType.toString() + " enviroment token must blank."));
+			} else {
+				in.setToken(LKSession.getToken(session));
+				in.setLogin(LKSession.getLogin(session));
+				in.setLoginId(LKSession.getLoginId(session));
+			}
 
-		switch (apiType) {
-			case OPEN: {
+			// 脚本环境不能传入compId
+			if (StringUtils.isNotBlank(compId)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException(clientType.toString() + " enviroment compId must blank."));
+			} else {
+				in.setComp(LKSession.getComp(session));
+				in.setCompId(LKSession.getCompId(session));
 			}
-			break;
-			case ROOT_QUERY: {
-				in.setCompId(LKFrameworkStatics.ROOT);
-			}
-			break;
-			case BEFORE_LOGIN: {
-				String token = in.getToken();
-				if (StringUtils.isNotBlank(token)) {
-					checkLogin(token, in.getCompId());
+
+			switch (apiType) {
+				case OPEN: {
 				}
-			}
-			break;
-			case PERSONAL_BUSINESS: {
-				String token = in.getToken();
-				if (StringUtils.isBlank(token)) {
-					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("token must not blank as API is a personal business api."));
+				break;
+				case ROOT_QUERY: {
+					in.setCompId(LKFrameworkStatics.ROOT);
 				}
-				checkLogin(token, in.getCompId());
-			}
-			break;
-			case COMPANY_BUSINESS: {
-				String token = in.getToken();
-				if (StringUtils.isBlank(token)) {
-					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("token must not blank as API is a company business api."));
+				break;
+				case BEFORE_LOGIN: {
 				}
-				String compId = in.getCompId();
-				if (StringUtils.isBlank(compId)) {
-					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("compId must not blank as API is a company business api."));
+				break;
+				case PERSONAL_BUSINESS: {
+					if (StringUtils.isBlank(in.getToken()) || StringUtils.isBlank(in.getLoginId()) || (in.getLogin() == null)) {
+						throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("You must login before when invoke a personal business API."));
+					}
 				}
-				checkCompany(compId);
-				checkLogin(token, in.getCompId());
+				break;
+				case COMPANY_BUSINESS: {
+					if (StringUtils.isBlank(in.getToken()) || StringUtils.isBlank(in.getLoginId()) || (in.getLogin() == null)) {
+						throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("You must login before when invoke a company business API."));
+					}
+					if (StringUtils.isBlank(in.getCompId()) || (in.getComp() == null)) {
+						throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("You must belongs to a company when invoke a company business API."));
+					}
+				}
+				break;
 			}
-			break;
+		} else {
+			// 非脚本环境只能调用/API/App接口
+			if (!requestURI.startsWith(LKFrameworkStatics.WEB_MAPPING_API_APP)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException(clientType.toString() + " enviroment can only invoke /API/App/xxx."));
+			}
+
+			// 非脚本环境必须传入appKey
+			if (StringUtils.isBlank(appKey)) {
+				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException(clientType.toString() + " enviroment appKey must not blank."));
+			}
+
+			switch (apiType) {
+				case OPEN: {
+				}
+				break;
+				case ROOT_QUERY: {
+					in.setCompId(LKFrameworkStatics.ROOT);
+				}
+				break;
+				case BEFORE_LOGIN: {
+					if (StringUtils.isNotBlank(token)) {
+						checkLogin(requestURI, token);
+					}
+				}
+				break;
+				case PERSONAL_BUSINESS: {
+					if (StringUtils.isBlank(token)) {
+						throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("token must not blank as API is a personal business api."));
+					}
+					checkLogin(requestURI, token);
+				}
+				break;
+				case COMPANY_BUSINESS: {
+					if (StringUtils.isBlank(token)) {
+						throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("token must not blank as API is a company business api."));
+					}
+					if (StringUtils.isBlank(compId)) {
+						throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("compId must not blank as API is a company business api."));
+					}
+					checkLogin(requestURI, token);
+					checkCompany(compId);
+				}
+				break;
+			}
 		}
-
-		afterCheck();
 
 		return new LKResponseBean<>(sout2out(getService().handle(in2sin(in))));
 	}
 
 
 	/**
-	 * 校验客户端唯一标识
-	 * @param jsEnv 是否为脚本环境
-	 * @return 客户端唯一标识
-	 */
-	private void checkAppKey(boolean jsEnv) {
-		String appKey = in.getAppKey();
-		boolean blank = StringUtils.isBlank(appKey);
-
-		// 脚本环境不能传入appKey
-		if (jsEnv && !blank) {
-			throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("appKey must blank in JAVASCRIPT enviroment."));
-		}
-
-		// 非脚本环境必须传入appKey
-		if (!jsEnv && blank) {
-			throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("appKey must not blank unless in JAVASCRIPT enviroment."));
-		}
-	}
-
-
-	/**
-	 * 校验令牌
-	 * @param jsEnv 是否为脚本环境
-	 * @return 令牌
-	 */
-	private void checkToken(boolean jsEnv) {
-		String token = in.getToken();
-		boolean blank = StringUtils.isBlank(token);
-
-		if (jsEnv) {
-			if (blank) {
-				// 从session中取token设置值
-				in.setToken(LKSession.getToken(session));
-			} else {
-				// 脚本环境不能传入token
-				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("token must blank in JAVASCRIPT enviroment."));
-			}
-		}
-	}
-
-
-	/**
-	 * 校验公司ID
-	 * @param jsEnv 是否为脚本环境
-	 * @return 公司ID
-	 */
-	private void checkCompId(boolean jsEnv) {
-		String compId = in.getCompId();
-		boolean blank = StringUtils.isBlank(compId);
-
-		if (jsEnv) {
-			if (blank) {
-				// 从session中取compId设置值
-				in.setCompId(LKSession.getCompId(session));
-			} else {
-				// 脚本环境不能传入compId
-				throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("compId must blank in JAVASCRIPT enviroment."));
-			}
-		}
-	}
-
-
-	/**
 	 * 校验登录信息
+	 * @param requestURI 请求地址
 	 * @param token 令牌
-	 * @param compId 公司ID
 	 */
-	private void checkLogin(String token, String compId) {
+	private void checkLogin(String requestURI, String token) {
+		LKLoginService loginService = null;
 		try {
-			I_Login login = ((LKLoginService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(LKRequestUtils.getApiUserService(request))).findUserLoginByToken(token, compId);
-			if (login == null) {
-				throw new LKRuntimeException(LKErrorCodesEnum.INVALIDED_TOKEN);
-			}
-			in.setLogin(login);
-			in.setLoginId(login.getId());
-		} catch (ClassNotFoundException e) {
+			Class<?> serviceClass = Class.forName(String.format("com.lichkin.application.services.impl.Sys%sLoginService", requestURI.substring(LKStringUtils.indexOf(requestURI, "/", 2) + 1, LKStringUtils.indexOf(requestURI, "/", 3))));
+			loginService = (LKLoginService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(serviceClass);
+		} catch (Exception e) {
 			throw new LKFrameworkException(e);
 		}
+
+		if (loginService == null) {
+			throw new LKFrameworkException("loginService can not be null.");
+		}
+
+		I_Login login = loginService.findUserLoginByToken(token);
+		if (login == null) {
+			throw new LKRuntimeException(LKErrorCodesEnum.INVALIDED_TOKEN);
+		}
+
+		in.setLogin(login);
+		in.setLoginId(login.getId());
 	}
 
 
@@ -208,30 +213,25 @@ public abstract class LKStandardApiController<I extends LKRequestInterface, O, S
 	 * @param compId 公司ID
 	 */
 	private void checkCompany(String compId) {
+		LKCompService compService = null;
 		try {
-			I_Comp comp = ((LKCompService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(Class.forName("com.lichkin.application.services.impl.SysCompService"))).findCompById(compId);
-			if (comp == null) {
-				throw new LKRuntimeException(LKErrorCodesEnum.INVALIDED_COMP_ID);
-			}
-			in.setComp(comp);
-			in.setCompId(comp.getId());
+			Class<?> compServiceClass = Class.forName("com.lichkin.application.services.impl.SysCompService");
+			compService = (LKCompService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(compServiceClass);
 		} catch (ClassNotFoundException e) {
 			throw new LKFrameworkException(e);
 		}
-	}
 
+		if (compService == null) {
+			throw new LKFrameworkException("compService can not be null.");
+		}
 
-	/**
-	 * 校验前操作
-	 */
-	protected void beforeCheck() {
-	}
+		I_Comp comp = compService.findCompById(compId);
+		if (comp == null) {
+			throw new LKRuntimeException(LKErrorCodesEnum.INVALIDED_COMP_ID);
+		}
 
-
-	/**
-	 * 校验后操作
-	 */
-	protected void afterCheck() {
+		in.setComp(comp);
+		in.setCompId(comp.getId());
 	}
 
 
@@ -245,9 +245,9 @@ public abstract class LKStandardApiController<I extends LKRequestInterface, O, S
 
 	/**
 	 * 调用service方法后将服务类出参转换为控制器类出参
-	 * @param out 服务类出参
+	 * @param sout 服务类出参
 	 * @return 控制器类出参
 	 */
-	protected abstract O sout2out(SO out);
+	protected abstract O sout2out(SO sout);
 
 }
