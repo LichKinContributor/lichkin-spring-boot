@@ -169,13 +169,13 @@ public class LKApplicationListener4ServletWebServerInitializedEvent implements A
 		boolean allow = false;
 		List<Class<?>> supperClasses = LKClassUtils.getAllExtendsClasses(beanClass);
 		for (Class<?> cls : supperClasses) {
-			if (cls.getName().equals("com.lichkin.springframework.controllers.LKApiController")) {
+			if (cls.getName().equals("com.lichkin.springframework.controllers.LKStandardApiController")) {
 				allow = true;
 				break;
 			}
 		}
 		if (!allow) {
-			throw new LKFrameworkException(String.format("controller[%s] annotation[%s] mapping[%s] starts with [%s] must extends [%s].", beanName, RequestMapping.class.getName(), controllerMapping, LKFrameworkStatics.WEB_MAPPING_API, "com.lichkin.springframework.controllers.LKApiController"));
+			throw new LKFrameworkException(String.format("controller[%s] annotation[%s] mapping[%s] starts with [%s] must extends [%s].", beanName, RequestMapping.class.getName(), controllerMapping, LKFrameworkStatics.WEB_MAPPING_API, "com.lichkin.springframework.controllers.LKStandardApiController"));
 		}
 	}
 
