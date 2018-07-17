@@ -37,6 +37,9 @@ class LKErrorLogger {
 	 * @param request HttpServletRequest
 	 */
 	static LKResponseBean<Object> logError(LKLog logger, Exception ex, HttpServletRequest request) {
+		// 输出到控制台
+		ex.printStackTrace();
+
 		// 统一响应对象
 		LKResponseBean<Object> responseBean = null;
 
@@ -75,19 +78,11 @@ class LKErrorLogger {
 			}
 			break;
 			case "org.springframework.dao.DataIntegrityViolationException": {
-				// 输出到控制台
-				if (LKFrameworkStatics.SYSTEM_DEBUG) {
-					ex.printStackTrace();
-				}
 				errorCode = LKErrorCodesEnum.DB_VALIDATE_ERROR;
 			}
 			break;
 			case "org.springframework.web.bind.MethodArgumentNotValidException": {
 				excludeLogExceptions = true;
-				// 输出到控制台
-				if (LKFrameworkStatics.SYSTEM_DEBUG) {
-					ex.printStackTrace();
-				}
 				errorCode = LKErrorCodesEnum.PARAM_ERROR;
 				List<ObjectError> errors = ((MethodArgumentNotValidException) ex).getBindingResult().getAllErrors();
 				StringBuffer sb = new StringBuffer();
@@ -98,10 +93,6 @@ class LKErrorLogger {
 			}
 			break;
 			default: {
-				// 输出到控制台
-				if (LKFrameworkStatics.SYSTEM_DEBUG) {
-					ex.printStackTrace();
-				}
 				errorCode = LKErrorCodesEnum.INTERNAL_SERVER_ERROR;
 				logger.warn("exception[%s] catched by Framework, but not declared errorCode, use INTERNAL_SERVER_ERROR by default.", exClassName);
 			}
