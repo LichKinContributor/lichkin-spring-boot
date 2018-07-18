@@ -84,6 +84,8 @@ public abstract class LKApiBusInsertService<SI, SO, E extends I_Base> extends LK
 	 * @param in 入参对象
 	 * @return 冲突数据
 	 */
-	protected abstract List<E> findExist(SI in);
+	protected List<E> findExist(SI in) {
+		return null;
+	}
 
 }
