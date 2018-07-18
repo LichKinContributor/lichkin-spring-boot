@@ -66,7 +66,9 @@ public abstract class LKApiBusUpdateService<SI extends I_ID, SO, E extends I_Bas
 	 * @param in 入参对象
 	 * @return 冲突数据
 	 */
-	protected abstract List<E> findExist(E entity, SI in);
+	protected List<E> findExist(E entity, SI in) {
+		return null;
+	}
 
 
 	/**
@@ -75,6 +77,8 @@ public abstract class LKApiBusUpdateService<SI extends I_ID, SO, E extends I_Bas
 	 * @param in 入参对象
 	 * @return true:进行业务规则校验;false:不进行业务规则校验.
 	 */
-	protected abstract boolean needCheckExist(E entity, SI in);
+	protected boolean needCheckExist(E entity, SI in) {
+		return false;
+	}
 
 }
