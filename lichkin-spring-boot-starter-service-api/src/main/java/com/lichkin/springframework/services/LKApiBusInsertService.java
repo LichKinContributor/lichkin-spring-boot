@@ -47,7 +47,7 @@ public abstract class LKApiBusInsertService<SI, SO, E extends I_Base> extends LK
 			beforeSaveMainTable(entity, in);
 
 			// 使用除主键外的新数据替换原有数据
-			LKBeanUtils.copyProperties(entity, exist, "id");
+			LKBeanUtils.copyProperties(false, false, entity, exist, "id");
 
 			// 保存主表数据
 			dao.mergeOne(exist);

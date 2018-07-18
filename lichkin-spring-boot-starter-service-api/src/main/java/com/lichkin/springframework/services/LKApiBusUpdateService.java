@@ -44,7 +44,7 @@ public abstract class LKApiBusUpdateService<SI extends I_ID, SO, E extends I_Bas
 		beforeSaveMainTable(entity, in);
 
 		// 修改数据
-		LKBeanUtils.copyProperties(false, in, entity);
+		LKBeanUtils.copyProperties(false, true, in, entity, "id");
 
 		// 保存主表数据
 		dao.mergeOne(entity);
