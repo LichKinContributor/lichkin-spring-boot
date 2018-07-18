@@ -43,6 +43,7 @@ public abstract class LKApiBusGetOneService<SI extends I_ID, SO, E extends I_ID>
 	 * @param in 入参对象
 	 * @param out 出参对象
 	 */
-	protected abstract void setOtherValues(E entity, SI in, SO out);
+	protected void setOtherValues(E entity, SI in, SO out) {
+	}
 
 }
