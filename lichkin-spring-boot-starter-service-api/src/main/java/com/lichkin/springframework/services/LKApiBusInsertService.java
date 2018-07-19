@@ -41,7 +41,7 @@ public abstract class LKApiBusInsertService<SI, SO, E extends I_Base> extends LK
 			}
 
 			// 冲突数据是删除状态，改为在用状态，即还原数据。
-			E entity = LKBeanUtils.newInstance(true, in, classE);// 先创建新的实体对象，此操作将会进行与新增一致的初始化操作。
+			E entity = LKBeanUtils.newInstance(true, in, classE, excludeFieldNames());// 先创建新的实体对象，此操作将会进行与新增一致的初始化操作。
 
 			// 保存主表数据前操作
 			beforeSaveMainTable(entity, in);
@@ -62,7 +62,7 @@ public abstract class LKApiBusInsertService<SI, SO, E extends I_Base> extends LK
 			return handleResult(exist, in);
 		} else {
 			// 无冲突数据，直接做新增业务。
-			E entity = LKBeanUtils.newInstance(true, in, classE);
+			E entity = LKBeanUtils.newInstance(true, in, classE, excludeFieldNames());
 
 			// 保存主表数据前操作
 			beforeSaveMainTable(entity, in);

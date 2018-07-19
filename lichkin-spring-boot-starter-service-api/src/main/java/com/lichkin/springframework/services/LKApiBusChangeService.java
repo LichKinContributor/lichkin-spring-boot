@@ -53,4 +53,13 @@ abstract class LKApiBusChangeService<SI, SO, E extends I_ID> extends LKApiBusSer
 		}
 	}
 
+
+	/**
+	 * 从入参复制参数时需要忽略的字段
+	 * @return 字段名数组
+	 */
+	protected String[] excludeFieldNames() {
+		return new String[] { "id" };
+	}
+
 }
