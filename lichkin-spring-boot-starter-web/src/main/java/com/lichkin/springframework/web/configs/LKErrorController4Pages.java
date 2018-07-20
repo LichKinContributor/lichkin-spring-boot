@@ -49,7 +49,6 @@ public class LKErrorController4Pages extends LKErrorController {
 
 		// 存入mapping信息
 		mv.addObject("mappingPages", LKFrameworkStatics.WEB_MAPPING_PAGES);
-		mv.addObject("mappingDatas", LKFrameworkStatics.WEB_MAPPING_DATAS);
 		mv.addObject("mappingApi", LKFrameworkStatics.WEB_MAPPING_API);
 		return mv;
 	}

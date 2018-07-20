@@ -60,7 +60,6 @@ public class LKErrorControllerAdvice4Pages {
 
 		// 存入mapping信息
 		mv.addObject("mappingPages", LKFrameworkStatics.WEB_MAPPING_PAGES);
-		mv.addObject("mappingDatas", LKFrameworkStatics.WEB_MAPPING_DATAS);
 		mv.addObject("mappingApi", LKFrameworkStatics.WEB_MAPPING_API);
 		mv.addObject("provider", provider);
 		return mv;
