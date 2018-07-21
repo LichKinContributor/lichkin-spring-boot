@@ -17,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 
+import com.lichkin.framework.defines.LKConfigStatics;
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.json.LKJsonUtils;
 
@@ -41,7 +42,7 @@ public class LKWebMvcConfigurerAdapter implements WebMvcConfigurer {
 		VersionResourceResolver versionResourceResolver = new VersionResourceResolver().addContentVersionStrategy("/**");
 		int aYear = 31556926;
 
-		if (LKFrameworkStatics.WEB_DEBUG) {
+		if (LKConfigStatics.WEB_DEBUG) {
 			aYear = 10;
 		}
 

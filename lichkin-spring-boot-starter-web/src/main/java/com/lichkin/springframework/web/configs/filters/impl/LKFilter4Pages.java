@@ -4,6 +4,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
+import com.lichkin.framework.defines.LKConfigStatics;
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.springframework.web.configs.filters.LKFilter;
 
@@ -19,7 +20,7 @@ public class LKFilter4Pages extends LKFilter {
 		super.beforeChain(request, response, chain);
 
 		// 解析页面需要使用到的变量
-		if (LKFrameworkStatics.WEB_DEBUG) {
+		if (LKConfigStatics.WEB_DEBUG) {
 			request.setAttribute("compressSuffix", "");
 		} else {
 			request.setAttribute("compressSuffix", ".min");

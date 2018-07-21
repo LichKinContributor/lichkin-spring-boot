@@ -9,7 +9,7 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.lichkin.framework.defines.LKFrameworkStatics;
+import com.lichkin.framework.defines.LKConfigStatics;
 import com.lichkin.framework.utils.i18n.LKI18NUtils;
 
 /**
@@ -26,7 +26,7 @@ public class LKRequestUtils {
 	public static Locale getLocale(HttpServletRequest request) {
 		Locale locale = analyzeLocale(request);
 		if (!locale.getLanguage().equals("en")) {
-			for (Locale implementedLocale : LKFrameworkStatics.IMPLEMENTED_LOCALE_ARR) {
+			for (Locale implementedLocale : LKConfigStatics.IMPLEMENTED_LOCALE_ARR) {
 				if (implementedLocale.equals(locale)) {
 					return locale;
 				}
@@ -70,7 +70,7 @@ public class LKRequestUtils {
 		}
 
 		// 返回默认值
-		return LKFrameworkStatics.DEFAULT_LOCALE;
+		return LKConfigStatics.DEFAULT_LOCALE;
 	}
 
 

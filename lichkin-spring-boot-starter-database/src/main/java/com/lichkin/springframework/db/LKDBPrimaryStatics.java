@@ -1,7 +1,5 @@
 package com.lichkin.springframework.db;
 
-import com.lichkin.framework.defines.LKFrameworkStatics;
-
 /**
  * 数据库常量定义
  * @author SuZhou LichKin Information Technology Co., Ltd.
@@ -39,9 +37,9 @@ public interface LKDBPrimaryStatics {
 	public static final String DAO_NAME = "dao";
 
 	/** dao扫描包 */
-	public static final String DAO_PACKAGES = LKFrameworkStatics.DB_PRIMARY_DAO_PACKAGES;
+	public static final String DAO_PACKAGES = "com.lichkin.**.daos.impl";
 
 	/** entity扫描包 */
-	public static final String ENTITY_PACKAGES = LKFrameworkStatics.DB_PRIMARY_ENTITY_PACKAGES;
+	public static final String ENTITY_PACKAGES = "com.lichkin.**.entities.impl";
 
 }
