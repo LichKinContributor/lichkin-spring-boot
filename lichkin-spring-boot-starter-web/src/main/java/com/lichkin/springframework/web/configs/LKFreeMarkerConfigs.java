@@ -17,6 +17,7 @@ public class LKFreeMarkerConfigs {
 		FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
 		configurer.setTemplateLoaderPath("/WEB-INF/templates");
 		configurer.setPreferFileSystemAccess(false);
+		configurer.setDefaultEncoding("UTF-8");
 		return configurer;
 	}
 
