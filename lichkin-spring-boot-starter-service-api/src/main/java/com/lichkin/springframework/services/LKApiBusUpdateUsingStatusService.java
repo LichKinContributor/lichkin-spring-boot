@@ -31,8 +31,13 @@ public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus,
 		if (CollectionUtils.isNotEmpty(listEntity)) {
 			// 修改主表状态
 			for (E entity : listEntity) {
+				beforeSaveMainTable(entity, in);
+
 				entity.setUsingStatus(usingStatus);
 			}
+
+			beforeSaveMainTable(listEntity, in);
+
 			dao.mergeList(listEntity);
 		}
 
@@ -54,6 +59,24 @@ public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus,
 		sql.in(getIdColumnResId(), ids);
 
 		return dao.getList(sql, classE);
+	}
+
+
+	/**
+	 * 保存主表数据前操作
+	 * @param entity 实体类对象
+	 * @param in 入参对象
+	 */
+	protected void beforeSaveMainTable(E entity, SI in) {
+	}
+
+
+	/**
+	 * 保存主表数据前操作
+	 * @param listEntity 实体类列表对象
+	 * @param in 入参对象
+	 */
+	protected void beforeSaveMainTable(List<E> listEntity, SI in) {
 	}
 
 
