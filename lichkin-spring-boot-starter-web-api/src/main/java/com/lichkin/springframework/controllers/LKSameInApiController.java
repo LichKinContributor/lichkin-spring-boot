@@ -9,10 +9,10 @@ import com.lichkin.framework.beans.LKRequestInterface;
  * @param <SO> 服务类出参类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKNormalApiController<I extends LKRequestInterface, O, SO> extends LKStandardApiController<I, O, I, SO> {
+public abstract class LKSameInApiController<I extends LKRequestInterface, O, SO> extends LKStandardApiController<I, O, I, SO> {
 
 	@Override
-	protected I in2sin(I in) {
+	protected I beforeInvokeService() {
 		return in;
 	}
 

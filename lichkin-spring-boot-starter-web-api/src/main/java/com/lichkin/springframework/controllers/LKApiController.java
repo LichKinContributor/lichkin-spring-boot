@@ -1,6 +1,7 @@
 package com.lichkin.springframework.controllers;
 
 import com.lichkin.framework.beans.LKRequestInterface;
+import com.lichkin.framework.defines.exceptions.LKException;
 
 /**
  * API数据请求控制器类定义
@@ -8,10 +9,10 @@ import com.lichkin.framework.beans.LKRequestInterface;
  * @param <O> 出参类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiController<I extends LKRequestInterface, O> extends LKNormalApiController<I, O, O> {
+public abstract class LKApiController<I extends LKRequestInterface, O> extends LKSameInApiController<I, O, O> {
 
 	@Override
-	protected O sout2out(O sout) {
+	protected O returnOut() throws LKException {
 		return sout;
 	}
 
