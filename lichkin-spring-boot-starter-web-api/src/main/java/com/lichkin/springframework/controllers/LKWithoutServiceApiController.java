@@ -1,8 +1,5 @@
 package com.lichkin.springframework.controllers;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
@@ -43,21 +40,6 @@ public abstract class LKWithoutServiceApiController<I extends LKRequestInterface
 
 	/** 入参 */
 	protected I in;
-
-	/** 控制器类入参类型 */
-	protected Class<I> classI;
-
-	/** 控制器类出参类型 */
-	protected Class<O> classO;
-
-
-	@SuppressWarnings("unchecked")
-	public LKWithoutServiceApiController() {
-		super();
-		Type[] types = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-		classI = (Class<I>) types[0];
-		classO = (Class<O>) types[1];
-	}
 
 
 	/**
