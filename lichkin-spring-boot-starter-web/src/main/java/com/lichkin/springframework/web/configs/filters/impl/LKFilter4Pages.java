@@ -19,12 +19,8 @@ public class LKFilter4Pages extends LKFilter {
 	protected void beforeChain(LKHttpServletRequestWrapper request, ServletResponse response, FilterChain chain) {
 		super.beforeChain(request, response, chain);
 
-		// 解析页面需要使用到的变量
-		if (LKConfigStatics.WEB_DEBUG) {
-			request.setAttribute("compressSuffix", "");
-		} else {
-			request.setAttribute("compressSuffix", ".min");
-		}
+		request.setAttribute("compressSuffix", LKConfigStatics.WEB_COMPRESS ? ".min" : "");
+		request.setAttribute("webDebug", LKConfigStatics.WEB_DEBUG);
 	}
 
 }

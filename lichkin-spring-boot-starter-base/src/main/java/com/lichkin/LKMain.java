@@ -43,6 +43,8 @@ public class LKMain {
 
 	private static final String WEB_DEBUG = "--lichkin.web.debug=";
 
+	private static final String WEB_COMPRESS = "--lichkin.web.compress=";
+
 	private static final String WEB_ADMIN_DEBUG = "--lichkin.web.admin.debug=";
 
 	static {
@@ -75,6 +77,7 @@ public class LKMain {
 		String systemName = LKConfigStatics.SYSTEM_NAME;
 		String systemDebug = String.valueOf(LKConfigStatics.SYSTEM_DEBUG);
 		String webDebug = String.valueOf(LKConfigStatics.WEB_DEBUG);
+		String webCompress = String.valueOf(LKConfigStatics.WEB_COMPRESS);
 		String webAdminDebug = String.valueOf(LKConfigStatics.WEB_ADMIN_DEBUG);
 
 		if (ArrayUtils.isNotEmpty(args)) {
@@ -148,6 +151,12 @@ public class LKMain {
 					webDebug = String.valueOf(LKConfigStatics.WEB_DEBUG);
 
 					args = ArrayUtils.remove(args, i);
+				} else if (StringUtils.startsWith(arg, WEB_COMPRESS)) {
+					LKConfigStatics.WEB_COMPRESS = Boolean.parseBoolean(arg.substring(WEB_COMPRESS.length()));
+
+					webCompress = String.valueOf(LKConfigStatics.WEB_COMPRESS);
+
+					args = ArrayUtils.remove(args, i);
 				} else if (StringUtils.startsWith(arg, WEB_ADMIN_DEBUG)) {
 					LKConfigStatics.WEB_ADMIN_DEBUG = Boolean.parseBoolean(arg.substring(WEB_ADMIN_DEBUG.length()));
 
@@ -169,6 +178,7 @@ public class LKMain {
 		args = ArrayUtils.add(args, SYSTEM_NAME + systemName);
 		args = ArrayUtils.add(args, SYSTEM_DEBUG + systemDebug);
 		args = ArrayUtils.add(args, WEB_DEBUG + webDebug);
+		args = ArrayUtils.add(args, WEB_COMPRESS + webCompress);
 		args = ArrayUtils.add(args, WEB_ADMIN_DEBUG + webAdminDebug);
 
 		LOGGER.warn("systemId[%s] -> main args after analyzed. %s", SYSTEM_ID, ArrayUtils.toString(args));
