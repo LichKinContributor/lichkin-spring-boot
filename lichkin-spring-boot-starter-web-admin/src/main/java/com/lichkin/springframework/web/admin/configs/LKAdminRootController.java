@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.lichkin.framework.web.annotations.WithoutLogin;
 import com.lichkin.springframework.controllers.LKPagesController;
 import com.lichkin.springframework.web.LKSession;
 import com.lichkin.springframework.web.beans.LKPage;
@@ -12,6 +13,7 @@ import com.lichkin.springframework.web.beans.LKPage;
 @RequestMapping("/admin")
 public class LKAdminRootController extends LKPagesController {
 
+	@WithoutLogin
 	@GetMapping(value = "/index" + MAPPING)
 	public LKPage toIndex() {
 		return null;
@@ -24,6 +26,7 @@ public class LKAdminRootController extends LKPagesController {
 	}
 
 
+	@WithoutLogin
 	@GetMapping(value = "/logout" + MAPPING)
 	public LKPage toLogout() {
 		LKSession.setComp(session, null);

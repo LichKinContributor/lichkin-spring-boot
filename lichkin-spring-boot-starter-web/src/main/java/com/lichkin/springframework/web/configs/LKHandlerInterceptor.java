@@ -1,5 +1,7 @@
 package com.lichkin.springframework.web.configs;
 
+import java.lang.reflect.Method;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,6 +13,10 @@ import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
+import com.lichkin.framework.utils.LKClassUtils;
+import com.lichkin.framework.web.annotations.WithoutLogin;
+import com.lichkin.springframework.controllers.LKPagesController;
+import com.lichkin.springframework.web.LKSession;
 import com.lichkin.springframework.web.beans.LKRequestInfo;
 import com.lichkin.springframework.web.beans.LKResponseInfo;
 
@@ -26,11 +32,17 @@ public class LKHandlerInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object obj) throws Exception {
-		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
 		HandlerMethod handler = (HandlerMethod) obj;
 		Class<?> controllerClass = handler.getBean().getClass();
+		Method method = handler.getMethod();
+
+		if (LKClassUtils.checkExtendsClass(controllerClass, LKPagesController.class) && (method.getAnnotation(WithoutLogin.class) == null) && (LKSession.getLogin(request.getSession()) == null)) {
+			response.sendRedirect("/index");
+		}
+
+		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
 		requestInfo.setHandlerClassName(controllerClass.getName());
-		requestInfo.setHandlerMethod(handler.getMethod().getName());
+		requestInfo.setHandlerMethod(method.getName());
 		String requestInfoJson = LKJsonUtils.toJsonWithExcludes(requestInfo, "exceptionClassName", "exceptionMessage");
 		request.setAttribute("requestInfoJson", requestInfoJson);
 		LOGGER.info(requestInfoJson);
