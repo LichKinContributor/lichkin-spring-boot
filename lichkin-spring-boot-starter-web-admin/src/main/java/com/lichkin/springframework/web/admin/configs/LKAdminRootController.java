@@ -9,7 +9,7 @@ import com.lichkin.springframework.web.LKSession;
 import com.lichkin.springframework.web.beans.LKPage;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/admin")
 public class LKAdminRootController extends LKPagesController {
 
 	@GetMapping(value = "/index" + MAPPING)
