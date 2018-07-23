@@ -175,6 +175,7 @@ public abstract class LKWithoutServiceApiController<I extends LKRequestInterface
 	/**
 	 * 返回前处理方法
 	 * @deprecated 框架内部实现
+	 * @throws LKException 业务处理可能抛出异常
 	 */
 	@Deprecated
 	protected void beforeReturn() throws LKException {
@@ -184,6 +185,7 @@ public abstract class LKWithoutServiceApiController<I extends LKRequestInterface
 	/**
 	 * 返回出参对象
 	 * @return 出参对象
+	 * @throws LKException 业务处理可能抛出异常
 	 */
 	protected O returnOut() throws LKException {
 		return null;

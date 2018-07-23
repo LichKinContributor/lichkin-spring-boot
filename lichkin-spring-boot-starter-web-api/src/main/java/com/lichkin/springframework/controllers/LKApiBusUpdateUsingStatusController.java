@@ -9,7 +9,6 @@ import com.lichkin.springframework.services.LKApiBusUpdateUsingStatusService;
 
 /**
  * API数据请求控制器类定义
- * @param <I> 控制器类入参类型
  * @param <SI> 服务类入参类型
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
