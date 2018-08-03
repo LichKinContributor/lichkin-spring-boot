@@ -1,6 +1,6 @@
 package com.lichkin.springframework.controllers;
 
-import com.lichkin.framework.beans.impl.LKRequestIDsUsingStatusBean;
+import com.lichkin.framework.beans.LKRequestInterface;
 import com.lichkin.framework.beans.impl.LKResponseBlankBean;
 import com.lichkin.framework.defines.entities.I_Base;
 import com.lichkin.framework.defines.entities.I_UsingStatus;
@@ -14,7 +14,7 @@ import com.lichkin.springframework.services.LKApiBusUpdateUsingStatusService;
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 @LKController4Api
-public abstract class LKApiBusUpdateUsingStatusController<SI extends I_UsingStatus, E extends I_Base> extends LKVoidServiceApiController<LKRequestIDsUsingStatusBean, LKResponseBlankBean, SI> {
+public abstract class LKApiBusUpdateUsingStatusController<I extends LKRequestInterface, SI extends I_UsingStatus, E extends I_Base> extends LKVoidServiceApiController<I, LKResponseBlankBean, SI> {
 
 	/**
 	 * 获取服务类

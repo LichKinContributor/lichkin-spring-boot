@@ -10,10 +10,10 @@ import com.lichkin.framework.web.annotations.LKController4Api;
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 @LKController4Api
-public abstract class LKSameInApiBusUpdateUsingStatusController<E extends I_Base> extends LKApiBusUpdateUsingStatusController<LKRequestIDsUsingStatusBean, E> {
+public abstract class LKSameInApiBusUpdateUsingStatusController<I extends LKRequestIDsUsingStatusBean, E extends I_Base> extends LKApiBusUpdateUsingStatusController<I, I, E> {
 
 	@Override
-	protected LKRequestIDsUsingStatusBean beforeInvokeService() {
+	protected I beforeInvokeService() {
 		return in;
 	}
 
