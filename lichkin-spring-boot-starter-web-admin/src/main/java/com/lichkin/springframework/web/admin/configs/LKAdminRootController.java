@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.lichkin.framework.web.annotations.WithoutLogin;
 import com.lichkin.springframework.controllers.LKPagesController;
-import com.lichkin.springframework.web.LKSession;
 import com.lichkin.springframework.web.beans.LKPage;
 
 @Controller
@@ -22,19 +21,6 @@ public class LKAdminRootController extends LKPagesController {
 
 	@GetMapping(value = "/home" + MAPPING)
 	public LKPage toHome() {
-		return null;
-	}
-
-
-	@WithoutLogin
-	@GetMapping(value = "/logout" + MAPPING)
-	public LKPage toLogout() {
-		LKSession.setComp(session, null);
-		LKSession.setLogin(session, null);
-		LKSession.setMenus(session, null);
-		LKSession.setRoles(session, null);
-		LKSession.setUser(session, null);
-		session.invalidate();
 		return null;
 	}
 
