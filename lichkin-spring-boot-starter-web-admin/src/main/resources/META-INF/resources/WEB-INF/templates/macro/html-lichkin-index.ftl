@@ -31,8 +31,7 @@
 		</#if>
 		<#if section="javascript-links">
 			<#nested "javascript-links"/>
-			<@lichkin@jsTag url="/res/js/index/i18n/${locale}.js" />
-			<@lichkin@jsTag url="/res/js/index/i18n/addition/${locale}.js" />
+			<@lichkin@jsTag url="/res/js${mappingUri}/i18n/addition/${locale}.js" />
 			<@lichkin@jsTag url="/webjars/spark-md5/spark-md5${compressSuffix}.js" />
 			<@lichkin@jsTag/>
 		</#if>
