@@ -1,23 +1,14 @@
 <#include "/_define.ftl"/>
 
-<#macro html type="">
-
-<#assign _$=_$!"">
-<#assign calculateType=type>
-<#if type=="" && _$=="">
-	<#assign calculateType="web">
-</#if>
-
-<#if calculateType!="">
+<#macro html type="",css=true,js=false>
 	<#include "html-lichkin-simple.ftl"/>
 
-	<@html ;section>
+	<@html type=type css=css js=js;section>
 		<#if section="meta">
 			<#nested "meta"/>
 		</#if>
 		<#if section="link">
 			<#nested "link"/>
-			<@lichkin@cssTag/>
 		</#if>
 		<#if section="style">
 			<#nested "style"/>
@@ -29,11 +20,13 @@
 		<#if section="javascript-contents-before-links">
 			<#nested "javascript-contents-before-links"/>
 		</#if>
+		<#if section="javascript-links-icons">
+			<@lichkin@jsTag url="/res/js/admin/index/icons.js" />
+		</#if>
 		<#if section="javascript-links">
 			<#nested "javascript-links"/>
 			<@lichkin@jsTag url="/res/js${mappingUri}/i18n/addition/${locale}.js" />
 			<@lichkin@jsTag url="/webjars/spark-md5/spark-md5${compressSuffix}.js" />
-			<@lichkin@jsTag/>
 		</#if>
 		<#if section="javascript-contents-after-links">
 			<#nested "javascript-contents-after-links-bofore-init"/>
@@ -48,11 +41,11 @@ LK.UI.text({
 $('.systemName').html($.LKGetI18N('systemName'));
 
 var $loginName = $('input[name=loginName]');
-$loginName.attr('placeholder', $.LKGetI18N('loginName'));
+$loginName.attr('placeholder', $.LKGetI18N('NoLoginName'));
 
 var $pwd = $('input[name=pwd]');
 $pwd.attr({
-  'placeholder' : $.LKGetI18N('pwd'),
+  'placeholder' : $.LKGetI18N('NoPassword'),
   'type' : 'password'
 });
 
@@ -85,6 +78,5 @@ $loginBtn.click(function(e) {
 			<#nested "javascript-contents-after-links-after-init"/>
 		</#if>
 	</@html>
-</#if>
 
 </#macro>
