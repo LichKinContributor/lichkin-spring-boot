@@ -3,23 +3,26 @@ package com.lichkin.springframework.web.beans;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 /**
  * 页面对象，控制器类方法需要设定该类型返回值，才可以使用框架提供的模板。
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
+@Getter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class LKPage {
 
 	/** 属性集合 */
 	private Map<String, Object> attributes = new HashMap<>();
 
-
-	/**
-	 * 获取属性集合
-	 * @return 属性集合
-	 */
-	public Map<String, ?> getAttributes() {
-		return attributes;
-	}
+	/** 视图名称 */
+	@NonNull
+	private String viewName;
 
 
 	/**

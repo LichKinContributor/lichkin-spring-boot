@@ -10,6 +10,7 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.lichkin.framework.defines.LKFrameworkStatics;
+import com.lichkin.framework.utils.LKStringUtils;
 import com.lichkin.springframework.web.beans.LKPage;
 import com.lichkin.springframework.web.beans.LKRequestInfo;
 
@@ -34,6 +35,10 @@ public class LKHandlerMethodReturnValueHandler4Pages implements HandlerMethodRet
 
 		// 根据requestUri动态设定视图名，视图名为请求对应的目录的模板。
 		String viewName = requestUri.substring(0, requestUri.lastIndexOf(LKFrameworkStatics.WEB_MAPPING_PAGES));
+		if (returnValue != null) {
+			String subViewName = LKStringUtils.toStandardPath(((LKPage) returnValue).getViewName());
+			viewName += subViewName;
+		}
 		mavContainer.addAttribute("mappingUri", viewName);
 		mavContainer.setViewName(viewName);
 
