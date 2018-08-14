@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.json.LKJsonUtils;
@@ -28,7 +27,7 @@ public class LKErrorControllerAdvice4Pages {
 	private static final LKLog LOGGER = LKLogFactory.getLog(LKErrorControllerAdvice4Pages.class);
 
 	@Autowired
-	private ResourceUrlProvider provider;
+	private LKResourceUrlProvider provider;
 
 
 	/**

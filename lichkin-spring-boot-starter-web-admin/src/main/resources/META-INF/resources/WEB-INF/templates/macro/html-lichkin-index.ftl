@@ -21,12 +21,12 @@
 			<#nested "javascript-contents-before-links"/>
 		</#if>
 		<#if section="javascript-links-icons">
-			<@lichkin@jsTag url="/res/js/admin/index/icons.js" />
+			<@lichkin@jsTag url="/res/js/admin/index/icons" />
 		</#if>
 		<#if section="javascript-links">
 			<#nested "javascript-links"/>
-			<@lichkin@jsTag url="/res/js${mappingUri}/i18n/addition/${locale}.js" />
-			<@lichkin@jsTag url="/webjars/spark-md5/spark-md5${compressSuffix}.js" />
+			<@lichkin@jsTag url="/res/js${mappingUri}/i18n/addition/${locale}" />
+			<@lichkin@jsTag url="/webjars/spark-md5/spark-md5" />
 		</#if>
 		<#if section="javascript-contents-after-links">
 			<#nested "javascript-contents-after-links-bofore-init"/>

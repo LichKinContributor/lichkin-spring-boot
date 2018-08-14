@@ -9,18 +9,18 @@
 	<#if type!="">
 		<#if result=="">
 			<#-- 没有输入地址，处理为当前页面对应的脚本文件。 -->
-			<#assign result = "${ctx}${provider.getForLookupPath('/res/${type}${mappingUri}.${type}')}"/>
+			<#assign result = "${ctx}${provider.getForLookupPath('/res/${type}${mappingUri}${compressSuffix}.${type}')}"/>
 		<#else>
 			<#if type=="js"||type=="css">
 				<#-- 补全结尾符 -->
 				<#if !result?ends_with(".${type}")>
-					<#assign result="${url}.${type}">
+					<#assign result="${url}${compressSuffix}.${type}">
 				</#if>
 			</#if>
 
 			<#if result?starts_with("http")>
-				<#-- http开头表示引入站外脚本，直接引入。 -->
-				<#assign result = "${result}"/>
+				<#-- http开头表示引入站外脚本，不予引入。 -->
+				<#assign result="">
 			<#elseif result?starts_with("/res/${type}")>
 				<#-- 符合框架约定的，按照约定引入。 -->
 				<#assign result = "${ctx}${provider.getForLookupPath('${result}')}"/>

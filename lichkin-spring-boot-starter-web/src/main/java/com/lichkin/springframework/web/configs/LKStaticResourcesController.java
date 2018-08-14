@@ -3,7 +3,6 @@ package com.lichkin.springframework.web.configs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 import com.lichkin.framework.web.annotations.LKController4Pages;
 
@@ -15,7 +14,7 @@ import com.lichkin.framework.web.annotations.LKController4Pages;
 public class LKStaticResourcesController {
 
 	@Autowired
-	ResourceUrlProvider provider;
+	LKResourceUrlProvider provider;
 
 
 	/**
@@ -23,7 +22,7 @@ public class LKStaticResourcesController {
 	 * @return 提供者
 	 */
 	@ModelAttribute("provider")
-	public ResourceUrlProvider provider() {
+	public LKResourceUrlProvider provider() {
 		return provider;
 	}
 
