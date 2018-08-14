@@ -23,6 +23,7 @@ import com.lichkin.framework.log.LKLogFactory;
 import com.lichkin.framework.log.log4j2.LKLog4j2Initializer;
 import com.lichkin.framework.utils.LKArrayUtils;
 import com.lichkin.framework.utils.LKRandomUtils;
+import com.lichkin.framework.utils.LKStringUtils;
 
 /**
  * 项目主类
@@ -46,6 +47,8 @@ public class LKMain {
 	private static final String WEB_COMPRESS = "--lichkin.web.compress=";
 
 	private static final String WEB_ADMIN_DEBUG = "--lichkin.web.admin.debug=";
+
+	private static final String WEB_CONTEXT_PATH = "--server.servlet.context-path=";
 
 	static {
 		LKLog4j2Initializer.init();
@@ -78,6 +81,7 @@ public class LKMain {
 		String systemDebug = String.valueOf(LKConfigStatics.SYSTEM_DEBUG);
 		String webDebug = String.valueOf(LKConfigStatics.WEB_DEBUG);
 		String webCompress = String.valueOf(LKConfigStatics.WEB_COMPRESS);
+		String webContextPath = String.valueOf(LKConfigStatics.WEB_CONTEXT_PATH);
 		String webAdminDebug = String.valueOf(LKConfigStatics.WEB_ADMIN_DEBUG);
 
 		if (ArrayUtils.isNotEmpty(args)) {
@@ -157,6 +161,12 @@ public class LKMain {
 					webCompress = String.valueOf(LKConfigStatics.WEB_COMPRESS);
 
 					args = ArrayUtils.remove(args, i);
+				} else if (StringUtils.startsWith(arg, WEB_CONTEXT_PATH)) {
+					LKConfigStatics.WEB_CONTEXT_PATH = arg.substring(WEB_CONTEXT_PATH.length());
+
+					webContextPath = LKStringUtils.toStandardPath(LKConfigStatics.WEB_CONTEXT_PATH);
+
+					args = ArrayUtils.remove(args, i);
 				} else if (StringUtils.startsWith(arg, WEB_ADMIN_DEBUG)) {
 					LKConfigStatics.WEB_ADMIN_DEBUG = Boolean.parseBoolean(arg.substring(WEB_ADMIN_DEBUG.length()));
 
@@ -179,6 +189,7 @@ public class LKMain {
 		args = ArrayUtils.add(args, SYSTEM_DEBUG + systemDebug);
 		args = ArrayUtils.add(args, WEB_DEBUG + webDebug);
 		args = ArrayUtils.add(args, WEB_COMPRESS + webCompress);
+		args = ArrayUtils.add(args, WEB_CONTEXT_PATH + webContextPath);
 		args = ArrayUtils.add(args, WEB_ADMIN_DEBUG + webAdminDebug);
 
 		LOGGER.warn("systemId[%s] -> main args after analyzed. %s", SYSTEM_ID, ArrayUtils.toString(args));

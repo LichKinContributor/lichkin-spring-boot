@@ -9,6 +9,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.lichkin.framework.defines.LKConfigStatics;
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
@@ -37,7 +38,7 @@ public class LKHandlerInterceptor implements HandlerInterceptor {
 		Method method = handler.getMethod();
 
 		if (LKClassUtils.checkExtendsClass(controllerClass, LKPagesController.class) && (method.getAnnotation(WithoutLogin.class) == null) && (LKSession.getLogin(request.getSession()) == null)) {
-			response.sendRedirect("/index");
+			response.sendRedirect(LKConfigStatics.WEB_CONTEXT_PATH + "/index");
 		}
 
 		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
