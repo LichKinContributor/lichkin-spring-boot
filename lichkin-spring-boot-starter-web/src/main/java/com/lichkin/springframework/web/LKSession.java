@@ -1,5 +1,6 @@
 package com.lichkin.springframework.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -179,7 +180,7 @@ public class LKSession {
 	@SuppressWarnings("unchecked")
 	public static List<I_Role> getRoles(HttpSession session) {
 		Object roles = session.getAttribute(KEY_ROLES);
-		return roles == null ? null : (List<I_Role>) roles;
+		return roles == null ? null : new ArrayList<>((List<I_Role>) roles);
 	}
 
 
@@ -205,7 +206,7 @@ public class LKSession {
 	@SuppressWarnings("unchecked")
 	public static List<I_Menu> getMenus(HttpSession session) {
 		Object menus = session.getAttribute(KEY_MENUS);
-		return menus == null ? null : (List<I_Menu>) menus;
+		return menus == null ? null : new ArrayList<>((List<I_Menu>) menus);
 	}
 
 }
