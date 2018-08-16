@@ -19,6 +19,9 @@ import com.lichkin.framework.utils.LKBeanUtils;
  */
 public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKApiBusChangeService<SI, E> {
 
+	/** 待还原数据 */
+	protected E exist;
+
 	@Transactional
 	@Override
 	public void handle(SI in) throws LKException {
@@ -42,6 +45,8 @@ public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKApiB
 					throw new LKRuntimeException(existErrorCode);
 				}
 
+				this.exist = exist;
+
 				// 冲突数据是删除状态，改为在用状态，即还原数据。
 				E entity = LKBeanUtils.newInstance(true, in, classE, excludeFieldNames());// 先创建新的实体对象，此操作将会进行与新增一致的初始化操作。
 
@@ -55,6 +60,8 @@ public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKApiB
 
 				// 保存主表数据
 				dao.mergeOne(exist);
+
+				this.entity = exist;
 
 				// 修改数据，需先清空子表数据
 				clearSubTables();
