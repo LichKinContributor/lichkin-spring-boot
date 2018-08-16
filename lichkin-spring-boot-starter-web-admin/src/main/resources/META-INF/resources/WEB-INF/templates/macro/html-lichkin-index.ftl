@@ -1,31 +1,13 @@
 <#include "/_define.ftl"/>
 
-<#macro html type="",css=true,js=false>
+<#macro html type="",css=true,js=false,i18nJs=true,i18nJsAddition=true,iconsJs=true,iconsJsAddition=true>
 	<#include "html-lichkin-simple.ftl"/>
 
-	<@html type=type css=css js=js;section>
-		<#if section="meta">
-			<#nested "meta"/>
-		</#if>
-		<#if section="link">
-			<#nested "link"/>
-		</#if>
-		<#if section="style">
-			<#nested "style"/>
-		</#if>
-		<#if section="body-attributes"><#nested "body-attributes"/></#if>
+	<@html type=type css=css js=js i18nJs=i18nJs i18nJsAddition=i18nJsAddition iconsJs=iconsJs iconsJsAddition=iconsJsAddition;section>
 		<#if section="body-content">
 			<#nested "body-content"/>
 		</#if>
-		<#if section="javascript-contents-before-links">
-			<#nested "javascript-contents-before-links"/>
-		</#if>
-		<#if section="javascript-links-icons">
-			<@lichkin@jsTag url="/res/js/admin/index/icons" />
-		</#if>
 		<#if section="javascript-links">
-			<#nested "javascript-links"/>
-			<@lichkin@jsTag url="/res/js${mappingUri}/i18n/addition/${locale}" />
 			<@lichkin@jsTag url="/webjars/spark-md5/spark-md5" />
 		</#if>
 		<#if section="javascript-contents-after-links">
