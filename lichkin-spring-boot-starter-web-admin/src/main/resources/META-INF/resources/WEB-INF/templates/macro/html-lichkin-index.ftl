@@ -4,6 +4,9 @@
 	<#include "html-lichkin-simple.ftl"/>
 
 	<@html type=type css=css js=js i18nJs=i18nJs i18nJsAddition=i18nJsAddition iconsJs=iconsJs iconsJsAddition=iconsJsAddition;section>
+		<#if section="link-after-self">
+			<@lichkin@cssTag url="/res/css/admin/index-addition" />
+		</#if>
 		<#if section="body-content">
 			<#nested "body-content"/>
 		</#if>
