@@ -45,7 +45,6 @@
     <module>lichkin-spring-boot-starter-web-api</module>
     <module>lichkin-spring-boot-starter-web-front</module>
     <module>lichkin-spring-boot-starter-web-back</module>
-    <module>lichkin-spring-boot-starter-web-admin</module>
   </modules>
 
   <dependencyManagement>
