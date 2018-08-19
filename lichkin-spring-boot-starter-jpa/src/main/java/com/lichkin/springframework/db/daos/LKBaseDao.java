@@ -61,8 +61,8 @@ public abstract class LKBaseDao extends LKDao {
 	 * @param type 修改类型
 	 * @param entity 实体类对象
 	 */
-	private void logBeforeModify(String sqlId, String type, I_ID entity) {
-		logger.warn("HQL[%s] -> %s [entity:%s]", sqlId, type, LKJsonUtils.toJson(entity));
+	private void logBeforeModify(String sqlId, String type) {
+		logger.warn("HQL[%s] -> %s [entity:%s]", sqlId, type);
 	}
 
 
@@ -84,10 +84,12 @@ public abstract class LKBaseDao extends LKDao {
 	 * @param sqlId 语句唯一标识
 	 * @param type 修改类型
 	 * @param startTime 开始时间
+	 * @param clazz entity类型
+	 * @param id 主键
 	 */
-	private DateTime logAfterModify(String sqlId, String type, DateTime startTime) {
+	private DateTime logAfterModify(String sqlId, String type, DateTime startTime, Class<?> clazz, String id) {
 		DateTime endTime = DateTime.now();
-		logger.info("HQL[%s] -> %s execution time is %sms, from %s to %s.", sqlId, type, String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
+		logger.info("HQL[%s] -> %s execution time is %sms, from %s to %s, %s(id=%s).", sqlId, type, String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime), clazz.getName(), id);
 		return endTime;
 	}
 
@@ -1077,7 +1079,8 @@ public abstract class LKBaseDao extends LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
-		logBeforeModify(sqlId, "merge", entity);
+		Class<? extends I_ID> clazz = entity.getClass();
+		logBeforeModify(sqlId, "merge");
 
 		// 初始化对象
 		LKDaoUtils.initEntity(entity);
@@ -1087,7 +1090,7 @@ public abstract class LKBaseDao extends LKDao {
 		E result = getEntityManager().merge((E) entity);
 
 		// 记录结束日志
-		logAfterModify(sqlId, "merge", startTime);
+		logAfterModify(sqlId, "merge", startTime, clazz, ((I_ID) result).getId());
 
 		// 返回结果
 		return result;
@@ -1115,7 +1118,8 @@ public abstract class LKBaseDao extends LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
-		logBeforeModify(sqlId, "persist", entity);
+		Class<? extends I_ID> clazz = entity.getClass();
+		logBeforeModify(sqlId, "persist");
 
 		// 初始化对象
 		LKDaoUtils.initEntity(entity);
@@ -1124,7 +1128,7 @@ public abstract class LKBaseDao extends LKDao {
 		getEntityManager().persist(entity);
 
 		// 记录结束日志
-		logAfterModify(sqlId, "persist", startTime);
+		logAfterModify(sqlId, "persist", startTime, clazz, entity.getId());
 	}
 
 
@@ -1147,13 +1151,15 @@ public abstract class LKBaseDao extends LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
-		logBeforeModify(sqlId, "remove", entity);
+		Class<? extends I_ID> clazz = entity.getClass();
+		String id = entity.getId();
+		logBeforeModify(sqlId, "remove");
 
 		// 执行修改
 		getEntityManager().remove(entity);
 
 		// 记录结束日志
-		logAfterModify(sqlId, "remove", startTime);
+		logAfterModify(sqlId, "remove", startTime, clazz, id);
 	}
 
 

@@ -77,7 +77,9 @@ public abstract class LKFilter implements Filter {
 
 			String requestDatas = request.readRequestDatasFromInputStream();
 			requestInfo.setRequestDatas(LKJsonUtils.toMap(requestDatas));
-			logger.info(LKJsonUtils.toJsonWithIncludes(requestInfo, "requestId", "requestTime", "requestUri", "requestIp", "requestDatas"));
+			if (logger.isDebugEnabled()) {
+				logger.debug(LKJsonUtils.toJsonWithIncludes(requestInfo, "requestId", "requestTime", "requestUri", "requestIp", "requestDatas"));
+			}
 
 			request.setAttribute("locale", LKRequestUtils.getLocale(request));
 			request.setAttribute("requestInfo", requestInfo);
