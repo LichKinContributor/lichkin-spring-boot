@@ -98,7 +98,7 @@ public abstract class LKWithoutServiceApiController<I extends LKRequestInterface
 				}
 				break;
 				case ROOT_QUERY: {
-					in.setCompId(LKFrameworkStatics.ROOT);
+					in.setCompId(LKFrameworkStatics.LichKin);
 				}
 				break;
 				case BEFORE_LOGIN: {
@@ -136,7 +136,7 @@ public abstract class LKWithoutServiceApiController<I extends LKRequestInterface
 				}
 				break;
 				case ROOT_QUERY: {
-					in.setCompId(LKFrameworkStatics.ROOT);
+					in.setCompId(LKFrameworkStatics.LichKin);
 				}
 				break;
 				case BEFORE_LOGIN: {
