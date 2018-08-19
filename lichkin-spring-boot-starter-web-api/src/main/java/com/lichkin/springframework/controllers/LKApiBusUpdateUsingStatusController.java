@@ -14,7 +14,7 @@ import com.lichkin.springframework.services.LKApiBusUpdateUsingStatusService;
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 @LKController4Api
-public abstract class LKApiBusUpdateUsingStatusController<I extends LKRequestInterface, SI extends I_UsingStatus, E extends I_Base> extends LKVoidServiceApiController<I, LKResponseBlankBean, SI> {
+public abstract class LKApiBusUpdateUsingStatusController<CI extends LKRequestInterface, SI extends I_UsingStatus, E extends I_Base> extends LKVoidServiceApiController<CI, LKResponseBlankBean, SI> {
 
 	/**
 	 * 获取服务类

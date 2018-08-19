@@ -8,13 +8,13 @@ import com.lichkin.springframework.services.LKApiBusInsertService;
 
 /**
  * API数据请求控制器类定义
- * @param <I> 控制器类入参类型
+ * @param <CI> 控制器类入参类型
  * @param <SI> 服务类入参类型
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 @LKController4Api
-public abstract class LKApiBusInsertController<I extends LKRequestInterface, SI, E extends I_Base> extends LKVoidServiceApiController<I, LKResponseBlankBean, SI> {
+public abstract class LKApiBusInsertController<CI extends LKRequestInterface, SI, E extends I_Base> extends LKVoidServiceApiController<CI, LKResponseBlankBean, SI> {
 
 	/**
 	 * 获取服务类

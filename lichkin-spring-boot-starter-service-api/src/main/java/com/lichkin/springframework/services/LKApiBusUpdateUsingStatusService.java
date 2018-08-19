@@ -18,15 +18,9 @@ import com.lichkin.framework.defines.exceptions.LKException;
  */
 public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus, E extends I_UsingStatus> extends LKVoidApiBusService<SI, E> {
 
-	/** 服务类入参 */
-	protected SI in;
-
-
 	@Transactional
 	@Override
 	public void handle(SI in) throws LKException {
-		this.in = in;
-
 		// 取业务字段值
 		String id = in.getId();
 		LKUsingStatusEnum usingStatus = in.getUsingStatus();
@@ -37,15 +31,15 @@ public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus,
 			// 修改主表状态
 			for (E entity : listEntity) {
 				entity.setUsingStatus(usingStatus);
-				beforeSaveMainTable(entity);
+				beforeSaveMainTable(in, entity);
 			}
 
-			beforeSaveMainTable(listEntity);
+			beforeSaveMainTables(in, listEntity);
 
 			dao.mergeList(listEntity);
 		}
 
-		afterSaveMainTable(listEntity);
+		afterSaveMainTables(in, listEntity);
 	}
 
 
@@ -65,25 +59,28 @@ public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus,
 
 	/**
 	 * 保存主表数据前操作
+	 * @param in 入参
 	 * @param entity 实体类对象
 	 */
-	protected void beforeSaveMainTable(E entity) {
+	protected void beforeSaveMainTable(SI in, E entity) {
 	}
 
 
 	/**
 	 * 保存主表数据前操作
+	 * @param in 入参
 	 * @param listEntity 实体类列表对象
 	 */
-	protected void beforeSaveMainTable(List<E> listEntity) {
+	protected void beforeSaveMainTables(SI in, List<E> listEntity) {
 	}
 
 
 	/**
 	 * 保存主表数据后操作
+	 * @param in 入参
 	 * @param listEntity 实体类列表对象
 	 */
-	protected void afterSaveMainTable(List<E> listEntity) {
+	protected void afterSaveMainTables(SI in, List<E> listEntity) {
 	}
 
 

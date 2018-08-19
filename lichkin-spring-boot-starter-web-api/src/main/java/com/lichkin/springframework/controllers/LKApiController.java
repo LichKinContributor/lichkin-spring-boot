@@ -5,14 +5,14 @@ import com.lichkin.framework.defines.exceptions.LKException;
 
 /**
  * API数据请求控制器类定义
- * @param <I> 入参类型
- * @param <O> 出参类型
+ * @param <CI> 入参类型
+ * @param <CO> 出参类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiController<I extends LKRequestInterface, O> extends LKSameInApiController<I, O, O> {
+public abstract class LKApiController<CI extends LKRequestInterface, CO> extends LKSameInApiController<CI, CO, CO> {
 
 	@Override
-	protected O returnOut() throws LKException {
+	protected CO sout2cout(CO sout) throws LKException {
 		return sout;
 	}
 

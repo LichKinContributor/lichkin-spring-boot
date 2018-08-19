@@ -6,16 +6,16 @@ import com.lichkin.framework.web.annotations.LKController4Api;
 
 /**
  * API数据请求控制器类定义
- * @param <I> 控制器类入参类型
+ * @param <CI> 控制器类入参类型
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 @LKController4Api
-public abstract class LKSameInApiBusInsertController<I extends LKRequestInterface, E extends I_Base> extends LKApiBusInsertController<I, I, E> {
+public abstract class LKSameInApiBusInsertController<CI extends LKRequestInterface, E extends I_Base> extends LKApiBusInsertController<CI, CI, E> {
 
 	@Override
-	protected I beforeInvokeService() {
-		return in;
+	protected CI cin2sin(CI cin) {
+		return cin;
 	}
 
 }

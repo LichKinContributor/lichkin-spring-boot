@@ -19,17 +19,32 @@ import com.lichkin.framework.utils.LKBeanUtils;
  */
 public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKApiBusChangeService<SI, E> {
 
-	/** 待还原数据 */
-	protected E exist;
+	/**
+	 * 查询冲突数据
+	 * @param sin 入参
+	 * @return 冲突数据
+	 */
+	protected List<E> findExist(SI sin) {
+		return null;
+	}
+
+
+	/**
+	 * 业务验证规则，为了减少查表次数，设置合适的规则判断，如登录名修改时才需要校验等。
+	 * @param sin 入参
+	 * @return true:进行业务规则校验;false:不进行业务规则校验.
+	 */
+	protected boolean needCheckExist(SI sin) {
+		return false;
+	}
+
 
 	@Transactional
 	@Override
-	public void handle(SI in) throws LKException {
-		this.in = in;
-
-		if (needCheckExist()) {
+	public void handle(SI sin) throws LKException {
+		if (needCheckExist(sin)) {
 			// 查询冲突数据
-			final List<E> listExist = findExist();
+			final List<E> listExist = findExist(sin);
 			if (CollectionUtils.isNotEmpty(listExist)) {
 				// 有冲突数据
 				if (listExist.size() != 1) {
@@ -45,15 +60,11 @@ public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKApiB
 					throw new LKRuntimeException(existErrorCode);
 				}
 
-				this.exist = exist;
-
 				// 冲突数据是删除状态，改为在用状态，即还原数据。
-				E entity = LKBeanUtils.newInstance(true, in, classE, excludeFieldNames());// 先创建新的实体对象，此操作将会进行与新增一致的初始化操作。
-
-				this.entity = entity;
+				E entity = LKBeanUtils.newInstance(true, sin, classE, excludeFieldNames(sin, exist));// 先创建新的实体对象，此操作将会进行与新增一致的初始化操作。
 
 				// 保存主表数据前操作
-				beforeSaveMainTable();
+				beforeSaveMainTable(sin, entity, exist);
 
 				// 使用除主键外的新数据替换原有数据
 				LKBeanUtils.copyProperties(entity, exist, "id");
@@ -61,39 +72,36 @@ public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKApiB
 				// 保存主表数据
 				dao.mergeOne(exist);
 
-				this.entity = exist;
-
 				// 修改数据，需先清空子表数据
-				clearSubTables();
+				clearSubTables(sin, entity, exist);
 
 				// 新增子表数据
-				addSubTables();
+				addSubTables(sin, entity, exist);
 			} else {
-				doAdd();
+				doAdd(sin);
 			}
 		} else {
-			doAdd();
+			doAdd(sin);
 		}
 	}
 
 
 	/**
 	 * 新增
+	 * @param sin 入参
 	 */
-	private void doAdd() {
+	private void doAdd(SI sin) {
 		// 无冲突数据，直接做新增业务。
-		E entity = LKBeanUtils.newInstance(true, in, classE, excludeFieldNames());
-
-		this.entity = entity;
+		E entity = LKBeanUtils.newInstance(true, sin, classE, excludeFieldNames(sin, null));
 
 		// 保存主表数据前操作
-		beforeSaveMainTable();
+		beforeSaveMainTable(sin, entity, null);
 
 		// 保存主表数据
 		dao.persistOne(entity);
 
 		// 新增子表数据
-		addSubTables();
+		addSubTables(sin, entity, null);
 	}
 
 }
