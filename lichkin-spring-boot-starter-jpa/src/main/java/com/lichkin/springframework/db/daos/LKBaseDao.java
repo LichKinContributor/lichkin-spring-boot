@@ -56,17 +56,6 @@ public abstract class LKBaseDao extends LKDao {
 
 
 	/**
-	 * 记录开始日志
-	 * @param sqlId 语句唯一标识
-	 * @param type 修改类型
-	 * @param entity 实体类对象
-	 */
-	private void logBeforeModify(String sqlId, String type) {
-		logger.warn("HQL[%s] -> %s [entity:%s]", sqlId, type);
-	}
-
-
-	/**
 	 * 记录结束日志
 	 * @param useSQL true:SQL;false:HQL.
 	 * @param sqlId 语句唯一标识
@@ -1080,7 +1069,6 @@ public abstract class LKBaseDao extends LKDao {
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
 		Class<? extends I_ID> clazz = entity.getClass();
-		logBeforeModify(sqlId, "merge");
 
 		// 初始化对象
 		LKDaoUtils.initEntity(entity);
@@ -1119,7 +1107,6 @@ public abstract class LKBaseDao extends LKDao {
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
 		Class<? extends I_ID> clazz = entity.getClass();
-		logBeforeModify(sqlId, "persist");
 
 		// 初始化对象
 		LKDaoUtils.initEntity(entity);
@@ -1153,7 +1140,6 @@ public abstract class LKBaseDao extends LKDao {
 		String sqlId = LKRandomUtils.create(32);
 		Class<? extends I_ID> clazz = entity.getClass();
 		String id = entity.getId();
-		logBeforeModify(sqlId, "remove");
 
 		// 执行修改
 		getEntityManager().remove(entity);
