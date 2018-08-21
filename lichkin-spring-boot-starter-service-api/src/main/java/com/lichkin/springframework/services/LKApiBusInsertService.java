@@ -17,7 +17,17 @@ import com.lichkin.framework.utils.LKBeanUtils;
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKApiBusChangeService<SI, E> {
+public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKVoidApiBusService<SI, E> {
+
+	/**
+	 * 业务验证规则，为了减少查表次数，设置合适的规则判断，如登录名修改时才需要校验等。
+	 * @param sin 入参
+	 * @return true:进行业务规则校验;false:不进行业务规则校验.
+	 */
+	protected boolean needCheckExist(SI sin) {
+		return false;
+	}
+
 
 	/**
 	 * 查询冲突数据
@@ -30,12 +40,43 @@ public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKApiB
 
 
 	/**
-	 * 业务验证规则，为了减少查表次数，设置合适的规则判断，如登录名修改时才需要校验等。
+	 * 保存主表数据前操作
 	 * @param sin 入参
-	 * @return true:进行业务规则校验;false:不进行业务规则校验.
+	 * @param entity 待新增实体类对象
+	 * @param exist 待还原实体类对象（非还原数据时为null）
 	 */
-	protected boolean needCheckExist(SI sin) {
-		return false;
+	protected void beforeSaveMainTable(SI sin, E entity, E exist) {
+	}
+
+
+	/**
+	 * 清除子表数据
+	 * @param sin 入参
+	 * @param exist 原实体类对象
+	 * @param id 主表主键
+	 */
+	protected void clearSubTables(SI sin, E exist) {
+	}
+
+
+	/**
+	 * 新增子表数据
+	 * @param sin 入参
+	 * @param exist 原实体类对象
+	 * @param id 主表主键
+	 */
+	protected void addSubTables(SI sin, E exist) {
+	}
+
+
+	/**
+	 * 从入参复制参数时需要忽略的字段
+	 * @param sin 入参
+	 * @param exist 原实体类对象
+	 * @return 字段名数组
+	 */
+	protected String[] excludeFieldNames(SI sin, E exist) {
+		return new String[] { "id" };
 	}
 
 
@@ -73,10 +114,10 @@ public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKApiB
 				dao.mergeOne(exist);
 
 				// 修改数据，需先清空子表数据
-				clearSubTables(sin, entity, exist);
+				clearSubTables(sin, exist);
 
 				// 新增子表数据
-				addSubTables(sin, entity, exist);
+				addSubTables(sin, exist);
 			} else {
 				doAdd(sin);
 			}
@@ -92,16 +133,16 @@ public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKApiB
 	 */
 	private void doAdd(SI sin) {
 		// 无冲突数据，直接做新增业务。
-		E entity = LKBeanUtils.newInstance(true, sin, classE, excludeFieldNames(sin, null));
+		E exist = LKBeanUtils.newInstance(true, sin, classE, excludeFieldNames(sin, null));
 
 		// 保存主表数据前操作
-		beforeSaveMainTable(sin, entity, null);
+		beforeSaveMainTable(sin, exist, null);
 
 		// 保存主表数据
-		dao.persistOne(entity);
+		dao.persistOne(exist);
 
 		// 新增子表数据
-		addSubTables(sin, entity, null);
+		addSubTables(sin, exist);
 	}
 
 }
