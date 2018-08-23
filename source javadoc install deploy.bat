@@ -1,0 +1,1 @@
+mvn clean source:jar javadoc:jar install -Dmaven.test.skip=true deploy -DaltDeploymentRepository=releases::default::http://nexus.lichkin.com:8081/repository/maven-releases/
