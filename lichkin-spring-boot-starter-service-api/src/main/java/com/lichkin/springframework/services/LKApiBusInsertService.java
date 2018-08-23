@@ -53,7 +53,6 @@ public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKVoid
 	 * 清除子表数据
 	 * @param sin 入参
 	 * @param exist 原实体类对象
-	 * @param id 主表主键
 	 */
 	protected void clearSubTables(SI sin, E exist) {
 	}
@@ -63,7 +62,6 @@ public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKVoid
 	 * 新增子表数据
 	 * @param sin 入参
 	 * @param exist 原实体类对象
-	 * @param id 主表主键
 	 */
 	protected void addSubTables(SI sin, E exist) {
 	}
