@@ -1,15 +1,18 @@
 package com.lichkin.springframework.web.configs;
 
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.lichkin.framework.defines.LKFrameworkStatics;
+import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.utils.LKStringUtils;
 import com.lichkin.springframework.web.beans.LKPage;
 import com.lichkin.springframework.web.beans.LKRequestInfo;
@@ -42,6 +45,7 @@ public class LKHandlerMethodReturnValueHandler4Pages implements HandlerMethodRet
 		mavContainer.addAttribute("mappingUri", viewName);
 		mavContainer.setViewName(viewName);
 
+		// 将请求参数放入视图模型中
 		Enumeration<String> parameterNames = request.getParameterNames();
 		for (; parameterNames.hasMoreElements();) {
 			String parameterName = parameterNames.nextElement();
@@ -51,6 +55,16 @@ public class LKHandlerMethodReturnValueHandler4Pages implements HandlerMethodRet
 		// 将数据放入视图模型中
 		if (returnValue != null) {
 			mavContainer.addAllAttributes(((LKPage) returnValue).getAttributes());
+		}
+
+		// 将serverDatas放入视图模型中
+		if (returnValue == null) {
+			mavContainer.addAttribute("serverDatas", new HashedMap());
+			mavContainer.addAttribute("serverDatasJson", "{}");
+		} else {
+			Map<String, Object> serverDatas = ((LKPage) returnValue).getServerDatas();
+			mavContainer.addAttribute("serverDatas", serverDatas);
+			mavContainer.addAttribute("serverDatasJson", LKJsonUtils.toJson(serverDatas));
 		}
 
 		// 存入mapping信息

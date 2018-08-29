@@ -24,6 +24,9 @@ public class LKPage {
 	@NonNull
 	private String viewName;
 
+	/** 服务器解析页面时使用的参数 */
+	private Map<String, Object> serverDatas = new HashMap<>();
+
 
 	/**
 	 * 添加属性
@@ -44,6 +47,29 @@ public class LKPage {
 	 */
 	public LKPage removeAttribute(String key) {
 		attributes.remove(key);
+		return this;
+	}
+
+
+	/**
+	 * 添加数据
+	 * @param key 键
+	 * @param value 值
+	 * @return 当前对象
+	 */
+	public LKPage putServerData(String key, Object value) {
+		serverDatas.put(key, value);
+		return this;
+	}
+
+
+	/**
+	 * 删除数据
+	 * @param key 键
+	 * @return 当前对象
+	 */
+	public LKPage removeServerData(String key) {
+		serverDatas.remove(key);
 		return this;
 	}
 

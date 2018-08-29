@@ -4,6 +4,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,11 +42,16 @@ public class LKErrorController4Pages extends LKErrorController {
 		String viewName = requestUri.substring(0, requestUri.lastIndexOf(LKFrameworkStatics.WEB_MAPPING_PAGES));
 		mv.addObject("mappingUri", viewName);
 
+		// 将请求参数放入视图模型中
 		Enumeration<String> parameterNames = request.getParameterNames();
 		for (; parameterNames.hasMoreElements();) {
 			String parameterName = parameterNames.nextElement();
 			mv.addObject(parameterName, request.getParameter(parameterName));
 		}
+
+		// 将serverDatas放入视图模型中
+		mv.addObject("serverDatas", new HashedMap());
+		mv.addObject("serverDatasJson", "{}");
 
 		// 存入mapping信息
 		mv.addObject("mappingPages", LKFrameworkStatics.WEB_MAPPING_PAGES);
