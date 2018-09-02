@@ -86,7 +86,7 @@ public abstract class LKApiBusUpdateService<SI extends I_ID, E extends I_Base> e
 		E exist = dao.findOneById(classE, sin.getId());
 		if (exist == null) {
 			// 无数据则抛异常
-			throw new LKRuntimeException(inexistentErrorCode);
+			throw new LKRuntimeException(inexistentErrorCode());
 		}
 
 		// 业务规则校验
@@ -95,7 +95,7 @@ public abstract class LKApiBusUpdateService<SI extends I_ID, E extends I_Base> e
 			final List<E> listExist = findExist(sin, exist);
 			if (CollectionUtils.isNotEmpty(listExist)) {
 				// 有冲突数据则抛异常
-				throw new LKRuntimeException(existErrorCode);
+				throw new LKRuntimeException(existErrorCode());
 			}
 		}
 

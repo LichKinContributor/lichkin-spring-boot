@@ -17,10 +17,10 @@ import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 abstract class LKApiBusService<SI, SO, E extends I_ID> extends LKApiService<SI, SO> {
 
 	/** 数据已存在 */
-	protected LKCodeEnum existErrorCode = LKErrorCodesEnum.EXIST;
+	private LKCodeEnum existErrorCode = LKErrorCodesEnum.EXIST;
 
 	/** 数据不存在 */
-	protected LKCodeEnum inexistentErrorCode = LKErrorCodesEnum.INEXIST;
+	private LKCodeEnum inexistentErrorCode = LKErrorCodesEnum.INEXIST;
 
 	/** 服务类入参类型 */
 	protected Class<SI> classSI;
@@ -39,6 +39,24 @@ abstract class LKApiBusService<SI, SO, E extends I_ID> extends LKApiService<SI, 
 		classSI = (Class<SI>) types[0];
 		classSO = (Class<SO>) types[1];
 		classE = (Class<E>) types[2];
+	}
+
+
+	/**
+	 * 数据已存在错误编码
+	 * @return 错误编码
+	 */
+	public LKCodeEnum existErrorCode() {
+		return existErrorCode;
+	}
+
+
+	/**
+	 * 数据不存在错误编码
+	 * @return 错误编码
+	 */
+	public LKCodeEnum inexistentErrorCode() {
+		return inexistentErrorCode;
 	}
 
 }

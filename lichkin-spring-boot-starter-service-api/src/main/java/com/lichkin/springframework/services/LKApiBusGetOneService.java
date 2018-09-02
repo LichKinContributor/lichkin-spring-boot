@@ -23,7 +23,7 @@ public abstract class LKApiBusGetOneService<SI extends I_ID, SO, E extends I_ID>
 		E entity = dao.findOneById(classE, id);
 		if (entity == null) {
 			// 无数据则抛异常
-			throw new LKRuntimeException(inexistentErrorCode);
+			throw new LKRuntimeException(inexistentErrorCode());
 		}
 
 		// 初始化返回值

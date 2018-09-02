@@ -88,7 +88,7 @@ public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKVoid
 				// 有冲突数据
 				if (listExist.size() != 1) {
 					// 冲突数据不只一条，则抛异常。
-					throw new LKRuntimeException(existErrorCode);
+					throw new LKRuntimeException(existErrorCode());
 				}
 
 				// 冲突数据只有一条，取冲突数据。
@@ -96,7 +96,7 @@ public abstract class LKApiBusInsertService<SI, E extends I_Base> extends LKVoid
 
 				if (!exist.getUsingStatus().equals(LKUsingStatusEnum.DEPRECATED)) {
 					// 冲突数据不是删除状态，则抛异常。
-					throw new LKRuntimeException(existErrorCode);
+					throw new LKRuntimeException(existErrorCode());
 				}
 
 				// 冲突数据是删除状态，改为在用状态，即还原数据。
