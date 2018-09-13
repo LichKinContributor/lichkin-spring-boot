@@ -27,6 +27,9 @@ public class LKPage {
 	/** 服务器解析页面时使用的参数 */
 	private Map<String, Object> serverDatas = new HashMap<>();
 
+	/** 空白页 */
+	public static final String BLANK = "/blank";
+
 
 	/**
 	 * 添加属性

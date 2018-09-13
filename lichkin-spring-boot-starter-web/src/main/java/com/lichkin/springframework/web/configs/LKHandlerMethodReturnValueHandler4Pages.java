@@ -38,12 +38,25 @@ public class LKHandlerMethodReturnValueHandler4Pages implements HandlerMethodRet
 
 		// 根据requestUri动态设定视图名，视图名为请求对应的目录的模板。
 		String viewName = requestUri.substring(0, requestUri.lastIndexOf(LKFrameworkStatics.WEB_MAPPING_PAGES));
-		if (returnValue != null) {
-			String subViewName = LKStringUtils.toStandardPath(((LKPage) returnValue).getViewName());
-			viewName += subViewName;
+		if (returnValue == null) {
+			mavContainer.addAttribute("mappingUri", viewName);
+			mavContainer.setViewName(viewName);
+		} else {
+			String subViewName = ((LKPage) returnValue).getViewName();
+			if (subViewName == null) {
+				mavContainer.addAttribute("mappingUri", viewName);
+				mavContainer.setViewName(viewName);
+			} else {
+				if (subViewName.equals(LKPage.BLANK)) {
+					mavContainer.addAttribute("mappingUri", viewName);
+					mavContainer.setViewName(LKPage.BLANK);
+				} else {
+					viewName += LKStringUtils.toStandardPath(subViewName);
+					mavContainer.addAttribute("mappingUri", viewName);
+					mavContainer.setViewName(viewName);
+				}
+			}
 		}
-		mavContainer.addAttribute("mappingUri", viewName);
-		mavContainer.setViewName(viewName);
 
 		// 将请求参数放入视图模型中
 		Enumeration<String> parameterNames = request.getParameterNames();
