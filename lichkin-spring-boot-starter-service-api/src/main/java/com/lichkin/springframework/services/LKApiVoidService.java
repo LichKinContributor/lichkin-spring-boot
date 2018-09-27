@@ -7,7 +7,7 @@ import com.lichkin.framework.defines.exceptions.LKException;
  * @param <SI> 服务类入参类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKVoidApiService<SI> extends LKDBService {
+public interface LKApiVoidService<SI> extends ApiService {
 
 	/**
 	 * 调用

@@ -16,7 +16,19 @@ import com.lichkin.framework.defines.exceptions.LKException;
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus, E extends I_UsingStatus> extends LKVoidApiBusService<SI, E> {
+public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus, E extends I_UsingStatus> extends LKApiBusService<SI, Void, E> implements LKApiVoidService<SI> {
+
+	/**
+	 * 构造方法
+	 */
+	@SuppressWarnings("unchecked")
+	public LKApiBusUpdateUsingStatusService() {
+		super();
+		classSI = (Class<SI>) types[0];
+		classSO = Void.class;
+		classE = (Class<E>) types[1];
+	}
+
 
 	@Transactional
 	@Override

@@ -1,6 +1,7 @@
 package com.lichkin.springframework.services;
 
 import com.lichkin.framework.defines.entities.I_ID;
+import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.framework.defines.exceptions.LKRuntimeException;
 import com.lichkin.framework.utils.LKBeanUtils;
@@ -12,25 +13,37 @@ import com.lichkin.framework.utils.LKBeanUtils;
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusGetOneService<SI extends I_ID, SO, E extends I_ID> extends LKApiBusService<SI, SO, E> {
+public abstract class LKApiBusGetOneService<SI extends I_ID, SO, E extends I_ID> extends LKApiBusService<SI, SO, E> implements LKApiService<SI, SO> {
+
+	/**
+	 * 构造方法
+	 */
+	@SuppressWarnings("unchecked")
+	public LKApiBusGetOneService() {
+		super();
+		classSI = (Class<SI>) types[0];
+		classSO = (Class<SO>) types[1];
+		classE = (Class<E>) types[2];
+	}
+
 
 	@Override
-	public SO handle(SI in) throws LKException {
+	public SO handle(SI sin) throws LKException {
 		// 先取业务规则值
-		String id = in.getId();
+		String id = sin.getId();
 
 		// 通过ID找到该条数据
 		E entity = dao.findOneById(classE, id);
 		if (entity == null) {
 			// 无数据则抛异常
-			throw new LKRuntimeException(inexistentErrorCode());
+			throw new LKRuntimeException(LKErrorCodesEnum.INEXIST);
 		}
 
 		// 初始化返回值
 		SO out = LKBeanUtils.newInstance(entity, classSO);
 
 		// 其它字段赋值
-		setOtherValues(entity, in, out);
+		setOtherValues(entity, sin, out);
 
 		// 返回结果
 		return out;
@@ -40,10 +53,10 @@ public abstract class LKApiBusGetOneService<SI extends I_ID, SO, E extends I_ID>
 	/**
 	 * 其它字段赋值
 	 * @param entity 实体类对象
-	 * @param in 入参对象
+	 * @param sin 入参对象
 	 * @param out 出参对象
 	 */
-	protected void setOtherValues(E entity, SI in, SO out) {
+	protected void setOtherValues(E entity, SI sin, SO out) {
 	}
 
 }
