@@ -1,5 +1,7 @@
 package com.lichkin.springframework.services;
 
+import static com.lichkin.framework.defines.LKFrameworkStatics.SPLITOR;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lichkin.framework.defines.entities.I_ID;
@@ -28,7 +30,17 @@ public abstract class LKApiBusDeleteService<SI extends I_ID, E extends I_ID> ext
 	@Transactional
 	@Override
 	public void handle(SI in) throws LKException {
-		dao.deleteOneOrMoreById(classE, in.getId());
+		String id = in.getId();
+		clearSubTables(id.contains(SPLITOR) ? id.split(SPLITOR) : new String[] { id });
+		dao.deleteOneOrMoreById(classE, id);
+	}
+
+
+	/**
+	 * 删除子表
+	 * @param ids 主表IDs
+	 */
+	protected void clearSubTables(String[] ids) {
 	}
 
 }
