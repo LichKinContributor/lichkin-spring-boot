@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -86,9 +87,13 @@ class LKDaoUtils {
 				final String fieldTypeName = fieldType.getName();
 				if (fieldType.isEnum()) {// 字段类型是枚举定义的，则读取枚举注解中配置的值。
 					try {
+						EnumType enumeratedValue = EnumType.ORDINAL;
 						final Enumerated enumerated = field.getAnnotation(Enumerated.class);
+						if (enumerated != null) {
+							enumeratedValue = enumerated.value();
+						}
 						Object[] enumValues = Class.forName(fieldTypeName).getEnumConstants();
-						switch (enumerated.value()) {
+						switch (enumeratedValue) {
 							case STRING:// 字符串
 								for (final Object enumValue : enumValues) {
 									if (value.equals(enumValue.toString())) {
