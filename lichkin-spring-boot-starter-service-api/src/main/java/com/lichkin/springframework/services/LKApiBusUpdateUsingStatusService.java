@@ -40,13 +40,13 @@ public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus,
 		// 查询主表信息
 		List<E> listEntity = findListByIds(id);
 		if (CollectionUtils.isNotEmpty(listEntity)) {
+			beforeSaveMainTables(in, listEntity);
+
 			// 修改主表状态
 			for (E entity : listEntity) {
-				entity.setUsingStatus(usingStatus);
 				beforeSaveMainTable(in, entity);
+				entity.setUsingStatus(usingStatus);
 			}
-
-			beforeSaveMainTables(in, listEntity);
 
 			dao.mergeList(listEntity);
 		}
