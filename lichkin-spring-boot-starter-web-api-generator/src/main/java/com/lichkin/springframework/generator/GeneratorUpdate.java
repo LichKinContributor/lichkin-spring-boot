@@ -11,7 +11,7 @@ class GeneratorUpdate extends GeneratorCommon {
 	static void generate(String dir, String packageName, String entity, int index, Type type) throws Exception {
 		new FileOutputStream(new File(dir + "/I.java")).write(
 
-				commonReplace(index, type, packageName, entity, I.replaceAll("#fields", getFields(true, entity, "id", "compId", "usingStatus", "insertTime"))).getBytes()
+				commonReplace(index, type, packageName, entity, I.replaceAll("#fields", getFields(true, false, false, entity, "id", "compId", "usingStatus", "insertTime"))).getBytes()
 
 		);
 

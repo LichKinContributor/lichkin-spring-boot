@@ -17,7 +17,7 @@ class GeneratorGetOne extends GeneratorCommon {
 
 		new FileOutputStream(new File(dir + "/O.java")).write(
 
-				commonReplace(index, type, packageName, entity, O.replaceAll("#fields", getFields(true, entity, "compId"))).getBytes()
+				commonReplace(index, type, packageName, entity, O.replaceAll("#fields", getFields(true, false, false, entity, "compId"))).getBytes()
 
 		);
 

@@ -92,11 +92,14 @@ class GeneratorSpecial extends GeneratorCommon {
 		sb.append("").append("\n");
 		sb.append("import com.lichkin.framework.defines.LKFrameworkStatics;").append("\n");
 		sb.append("import com.lichkin.framework.defines.exceptions.LKException;").append("\n");
+		sb.append("import com.lichkin.framework.web.annotations.LKApiType;").append("\n");
+		sb.append("import com.lichkin.framework.web.enums.ApiType;").append("\n");
 		sb.append("import com.lichkin.springframework.controllers.LKApiYYController;").append("\n");
 		sb.append("import com.lichkin.springframework.services.LKApiService;").append("\n");
 		sb.append("").append("\n");
 		sb.append("@RestController(\"#Controller\")").append("\n");
-		sb.append("@RequestMapping(value = LKFrameworkStatics.WEB_MAPPING_API + \"#url\")").append("\n");
+		sb.append("@RequestMapping(value = LKFrameworkStatics.WEB_MAPPING_API_ + \"#url\")").append("\n");
+		sb.append("@LKApiType(apiType = ApiType.COMPANY_BUSINESS)").append("\n");
 		sb.append("public class C extends LKApiYYController<CI, CO, SI, SO> {").append("\n");
 		sb.append("").append("\n");
 		sb.append("	@Autowired").append("\n");
@@ -162,6 +165,7 @@ class GeneratorSpecial extends GeneratorCommon {
 		sb.append("package com.lichkin.application.#packageName;").append("\n");
 		sb.append("").append("\n");
 		sb.append("import org.springframework.stereotype.Service;").append("\n");
+		sb.append("import org.springframework.transaction.annotation.Transactional;").append("\n");
 		sb.append("").append("\n");
 		sb.append("import com.lichkin.framework.defines.exceptions.LKException;").append("\n");
 		sb.append("import com.lichkin.springframework.services.LKApiService;").append("\n");
@@ -170,6 +174,7 @@ class GeneratorSpecial extends GeneratorCommon {
 		sb.append("public class S implements LKApiService<SI, SO> {").append("\n");
 		sb.append("").append("\n");
 		sb.append("	@Override").append("\n");
+		sb.append("	@Transactional").append("\n");
 		sb.append("	public SO handle(SI sin) throws LKException {").append("\n");
 		sb.append("		return null;").append("\n");
 		sb.append("	}").append("\n");
