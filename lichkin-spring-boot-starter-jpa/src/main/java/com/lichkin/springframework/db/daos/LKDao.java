@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 
 import org.springframework.data.domain.Page;
 
+import com.lichkin.framework.db.beans.DeleteSQL;
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SQL;
 import com.lichkin.framework.db.beans.UpdateSQL;
@@ -581,6 +582,19 @@ public abstract class LKDao {
 	 * @return 更新数据数量
 	 */
 	public abstract int update(UpdateSQL sqlObj);
+
+
+	/**
+	 * DELETE
+	 *
+	 * <pre>
+	 * important 谨慎使用
+	 * </pre>
+	 *
+	 * @param sqlObj SQL语句对象
+	 * @return 删除数据数量
+	 */
+	public abstract int delete(DeleteSQL sqlObj);
 
 
 	/**

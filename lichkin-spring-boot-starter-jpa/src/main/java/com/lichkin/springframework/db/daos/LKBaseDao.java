@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.lichkin.framework.db.beans.DeleteSQL;
 import com.lichkin.framework.db.beans.LKDBResource;
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SQL;
@@ -1048,6 +1049,13 @@ public abstract class LKBaseDao extends LKDao {
 	@SuppressWarnings("deprecation")
 	@Override
 	public int update(UpdateSQL sqlObj) {
+		return change(sqlObj.getSQL(), sqlObj.getParams());
+	}
+
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public int delete(DeleteSQL sqlObj) {
 		return change(sqlObj.getSQL(), sqlObj.getParams());
 	}
 
