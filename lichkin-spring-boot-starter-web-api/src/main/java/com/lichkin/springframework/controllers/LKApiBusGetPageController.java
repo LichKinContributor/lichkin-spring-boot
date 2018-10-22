@@ -31,7 +31,7 @@ public abstract class LKApiBusGetPageController<I extends LKRequestPageBean, O, 
 
 
 	@Override
-	protected Page<O> handleInvoke(@Valid I cin) throws LKException {
+	Page<O> handleInvoke(@Valid I cin) throws LKException {
 		return getService(cin).handle(cin);
 	}
 

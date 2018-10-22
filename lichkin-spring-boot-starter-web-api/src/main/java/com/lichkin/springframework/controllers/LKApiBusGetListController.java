@@ -32,7 +32,7 @@ public abstract class LKApiBusGetListController<I extends LKRequestBean, O, E ex
 
 
 	@Override
-	protected List<O> handleInvoke(I cin) throws LKException {
+	List<O> handleInvoke(I cin) throws LKException {
 		return getService(cin).handle(cin);
 	}
 

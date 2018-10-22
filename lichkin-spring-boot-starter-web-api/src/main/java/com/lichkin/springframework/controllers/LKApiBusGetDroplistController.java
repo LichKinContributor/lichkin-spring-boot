@@ -32,7 +32,7 @@ public abstract class LKApiBusGetDroplistController<I extends LKRequestBean> ext
 
 
 	@Override
-	protected List<LKDroplistBean> handleInvoke(@Valid I cin) throws LKException {
+	List<LKDroplistBean> handleInvoke(@Valid I cin) throws LKException {
 		return getService(cin).handle(cin);
 	}
 

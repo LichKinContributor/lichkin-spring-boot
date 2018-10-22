@@ -24,6 +24,7 @@ public abstract class LKApiY0Controller<CI extends LKRequestBean, CO> extends LK
 	 * @return 控制器类出参
 	 * @throws LKException 业务处理失败但不希望已处理数据回滚时抛出异常
 	 */
+	@Override
 	@PostMapping
 	@Deprecated
 	public LKResponseBean<CO> invoke(@Valid @RequestBody CI cin) throws LKException {
@@ -33,7 +34,7 @@ public abstract class LKApiY0Controller<CI extends LKRequestBean, CO> extends LK
 
 
 	@Override
-	protected CO handleInvoke(@Valid CI cin) throws LKException {
+	CO handleInvoke(@Valid CI cin) throws LKException {
 		return doInvoke(cin);
 	}
 

@@ -125,12 +125,10 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 
 	/**
 	 * 请求处理方法
-	 * @deprecated API框架内部实现，不可重写。
 	 * @param cin 控制器类入参
 	 * @return 控制器类出参
 	 * @throws LKException 业务处理失败但不希望已处理数据回滚时抛出异常
 	 */
-	@Deprecated
-	protected abstract CO handleInvoke(@Valid CI cin) throws LKException;
+	abstract CO handleInvoke(@Valid CI cin) throws LKException;
 
 }
