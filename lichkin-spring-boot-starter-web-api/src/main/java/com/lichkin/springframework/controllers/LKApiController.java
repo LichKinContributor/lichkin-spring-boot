@@ -15,6 +15,7 @@ import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.framework.defines.exceptions.LKFrameworkException;
 import com.lichkin.framework.defines.exceptions.LKRuntimeException;
+import com.lichkin.framework.utils.LKClassUtils;
 import com.lichkin.framework.web.annotations.LKApiType;
 import com.lichkin.framework.web.annotations.LKController4Api;
 import com.lichkin.springframework.web.LKSession;
@@ -73,7 +74,7 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 	 * @param cin 控制器类入参
 	 */
 	private void initAsWeb(CI cin) {
-		switch (getClass().getAnnotation(LKApiType.class).apiType()) {
+		switch (((LKApiType) LKClassUtils.deepGetAnnotation(getClass(), LKApiType.class.getName())).apiType()) {
 			case OPEN: {
 			}
 			break;
