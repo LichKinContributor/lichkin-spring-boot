@@ -41,6 +41,7 @@
 	<module>lichkin-spring-boot-starter-service-api</module>
     <module>lichkin-spring-boot-starter-database-secondary</module>
     <module>lichkin-spring-boot-starter-quartz</module>
+    <module>lichkin-spring-boot-starter-quartz-database</module>
     <module>lichkin-spring-boot-starter-web</module>
     <module>lichkin-spring-boot-starter-web-api</module>
     <module>lichkin-spring-boot-starter-web-api-generator</module>

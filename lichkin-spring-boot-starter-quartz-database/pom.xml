@@ -5,7 +5,7 @@
   <packaging>jar</packaging>
 
 
-  <artifactId>lichkin-spring-boot-starter-quartz</artifactId>
+  <artifactId>lichkin-spring-boot-starter-quartz-database</artifactId>
 
 
   <name>lichkin-spring-boot-starter-quartz</name>
@@ -33,27 +33,11 @@
     <!-- lichkin starter -->
     <dependency>
       <groupId>com.lichkin.springframework.boot</groupId>
-      <artifactId>lichkin-spring-boot-starter-base</artifactId>
+      <artifactId>lichkin-spring-boot-starter-quartz</artifactId>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz -->
     <dependency>
-      <groupId>org.quartz-scheduler</groupId>
-      <artifactId>quartz</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>com.zaxxer</groupId>
-          <artifactId>HikariCP-java6</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.mchange</groupId>
-          <artifactId>c3p0</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context-support</artifactId>
+      <groupId>com.lichkin.springframework.boot</groupId>
+      <artifactId>lichkin-spring-boot-starter-database</artifactId>
     </dependency>
   </dependencies>
 
