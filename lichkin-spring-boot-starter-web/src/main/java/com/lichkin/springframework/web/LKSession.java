@@ -3,13 +3,16 @@ package com.lichkin.springframework.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.entities.I_Comp;
 import com.lichkin.framework.defines.entities.I_Login;
 import com.lichkin.framework.defines.entities.I_Menu;
 import com.lichkin.framework.defines.entities.I_Role;
 import com.lichkin.framework.defines.entities.I_User;
+import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 /**
  * 会话信息
@@ -207,6 +210,24 @@ public class LKSession {
 	public static List<I_Menu> getMenus(HttpSession session) {
 		Object menus = session.getAttribute(KEY_MENUS);
 		return menus == null ? null : new ArrayList<>((List<I_Menu>) menus);
+	}
+
+
+	/**
+	 * 验证页面访问权限
+	 * @param request 请求对象
+	 * @param pageName 页面名
+	 * @return 可有访问返回true，否则返回false。
+	 */
+	public static boolean checkMenuAuth(HttpServletRequest request, String pageName) {
+		String url = LKRequestUtils.getRequestURI(request).replace(pageName + LKFrameworkStatics.WEB_MAPPING_PAGES, "");
+		List<I_Menu> menus = getMenus(request.getSession());
+		for (I_Menu menu : menus) {
+			if (menu.getUrl().equals(url)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
