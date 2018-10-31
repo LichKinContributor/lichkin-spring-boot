@@ -1,12 +1,7 @@
 package com.lichkin.springframework.controllers;
 
-import javax.validation.Valid;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
+import com.lichkin.framework.beans.impl.Datas;
 import com.lichkin.framework.beans.impl.LKRequestBean;
-import com.lichkin.framework.beans.impl.LKResponseBean;
 import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.springframework.services.LKApiVoidService;
 
@@ -19,27 +14,12 @@ import com.lichkin.springframework.services.LKApiVoidService;
  */
 public abstract class LKApiYVController<CI extends LKRequestBean, CO, SI> extends LKApiY0Controller<CI, CO> {
 
-	/**
-	 * 请求处理方法
-	 * @deprecated API必有方法，不可重写。
-	 * @param cin 控制器类入参
-	 * @return 控制器类出参
-	 * @throws LKException 业务处理失败但不希望已处理数据回滚时抛出异常
-	 */
-	@Override
-	@PostMapping
-	@Deprecated
-	public LKResponseBean<CO> invoke(@Valid @RequestBody CI cin) throws LKException {
-		initCI(cin);
-		return new LKResponseBean<>(handleInvoke(cin));
-	}
-
-
 	@Override
 	@Deprecated
 	protected CO doInvoke(CI cin) throws LKException {
 		SI sin = beforeInvokeService(cin);
-		getService(cin).handle(sin);
+		Datas datas = cin.getDatas();
+		getService(cin).handle(sin, datas.getLocale(), datas.getCompId(), datas.getLoginId());
 		return afterInvokeService(cin, sin);
 	}
 

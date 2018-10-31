@@ -1,47 +1,58 @@
 package com.lichkin.springframework.controllers;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.apache.commons.lang3.StringUtils;
 
 import com.lichkin.framework.beans.impl.LKRequestBean;
-import com.lichkin.framework.beans.impl.LKResponseBean;
 import com.lichkin.framework.defines.entities.I_ID;
+import com.lichkin.framework.defines.enums.impl.LKOperTypeEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.springframework.services.LKApiBusGetListService;
 
-public abstract class LKApiBusGetListController<I extends LKRequestBean, O, E extends I_ID> extends LKApiController<I, List<O>> {
+public abstract class LKApiBusGetListController<CI extends LKRequestBean, O, E extends I_ID> extends LKApiController<CI, List<O>> {
 
-	/**
-	 * 请求处理方法
-	 * @deprecated API必有方法，不可重写。
-	 * @param cin 控制器类入参
-	 * @return 控制器类出参
-	 * @throws LKException 业务处理失败但不希望已处理数据回滚时抛出异常
-	 */
-	@Override
-	@PostMapping
+	protected abstract LKApiBusGetListService<CI, O, E> getService(CI cin);
+
+
 	@Deprecated
-	public LKResponseBean<List<O>> invoke(@Valid @RequestBody I cin) throws LKException {
-		initCI(cin);
-		return new LKResponseBean<>(handleInvoke(cin));
-	}
-
-
 	@Override
-	List<O> handleInvoke(I cin) throws LKException {
-		return getService(cin).handle(cin);
+	protected LKOperTypeEnum getOperType(@Valid CI cin) {
+		return LKOperTypeEnum.SEARCH;
 	}
 
 
-	/**
-	 * 获取服务类
-	 * @param cin 控制器类入参
-	 * @return 服务类
-	 */
-	protected abstract LKApiBusGetListService<I, O, E> getService(I cin);
+	/** 实体类类型 */
+	Class<E> classE;
+
+
+	@SuppressWarnings("unchecked")
+	public LKApiBusGetListController() {
+		super();
+		classE = (Class<E>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[2];
+	}
+
+
+	@Deprecated
+	@Override
+	protected String getBusType(CI cin) {
+		String subOperBusType = StringUtils.trimToEmpty(getSubOperBusType(cin));
+		return "LIST_" + classE.getSimpleName().replace("Entity", "") + (subOperBusType.isEmpty() ? "" : "_" + subOperBusType);
+	}
+
+
+	protected String getSubOperBusType(CI cin) {
+		return null;
+	}
+
+
+	@Deprecated
+	@Override
+	List<O> handleInvoke(@Valid CI cin, String locale, String compId, String loginId) throws LKException {
+		return getService(cin).handle(cin, locale, compId, loginId);
+	}
 
 }
