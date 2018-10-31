@@ -25,23 +25,15 @@
   <parent>
     <groupId>com.lichkin.springframework.boot</groupId>
     <artifactId>lichkin-spring-boot</artifactId>
-    <version>1.3.2.RELEASE</version>
+    <version>1.4.0.RELEASE</version>
     <relativePath>../</relativePath>
   </parent>
 
   <dependencies>
-    <!-- lichkin framework -->
+    <!-- lichkin starter -->
     <dependency>
-      <groupId>com.lichkin.framework</groupId>
-      <artifactId>lichkin-framework-log</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.lichkin.framework</groupId>
-      <artifactId>lichkin-framework-defines</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.lichkin.framework</groupId>
-      <artifactId>lichkin-framework-utils</artifactId>
+      <groupId>com.lichkin.springframework.boot</groupId>
+      <artifactId>lichkin-spring-boot-starter-jpa</artifactId>
     </dependency>
   </dependencies>
 
