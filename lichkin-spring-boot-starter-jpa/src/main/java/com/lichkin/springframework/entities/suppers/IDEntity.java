@@ -11,6 +11,8 @@ import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.lichkin.framework.defines.annotations.FieldGenerator;
+import com.lichkin.framework.defines.annotations.InsertType;
 import com.lichkin.framework.defines.entities.I_ID;
 
 import lombok.Getter;
@@ -33,6 +35,7 @@ public abstract class IDEntity implements I_ID, Serializable {
 	@Id
 	@GenericGenerator(name = "lichkin", strategy = "com.lichkin.springframework.db.entities.LKIdentifierGenerator")
 	@GeneratedValue(generator = "lichkin")
+	@FieldGenerator(resultColumn = true, updateable = false, insertType = InsertType.DEFAULT_RETAIN)
 	@Column(length = 64)
 	private String id;
 
