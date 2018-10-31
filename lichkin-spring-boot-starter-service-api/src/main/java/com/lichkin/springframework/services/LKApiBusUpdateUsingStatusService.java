@@ -32,26 +32,27 @@ public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus,
 
 	@Transactional
 	@Override
-	public void handle(SI in) throws LKException {
+	public void handle(SI sin, String locale, String compId, String loginId) throws LKException {
 		// 取业务字段值
-		String id = in.getId();
-		LKUsingStatusEnum usingStatus = in.getUsingStatus();
+		String id = sin.getId();
+		LKUsingStatusEnum usingStatus = sin.getUsingStatus();
 
 		// 查询主表信息
 		List<E> listEntity = findListByIds(id);
 		if (CollectionUtils.isNotEmpty(listEntity)) {
-			beforeSaveMainTables(in, listEntity);
+			beforeSaveMains(sin, locale, compId, loginId, listEntity);
 
 			// 修改主表状态
 			for (E entity : listEntity) {
-				beforeSaveMainTable(in, entity);
+				beforeSaveMain(sin, locale, compId, loginId, entity, entity.getId());
 				entity.setUsingStatus(usingStatus);
+				dao.mergeOne(entity);
+				afterSaveMain(sin, locale, compId, loginId, entity, entity.getId());
 			}
 
-			dao.mergeList(listEntity);
 		}
 
-		afterSaveMainTables(in, listEntity);
+		afterSaveMains(sin, locale, compId, loginId, listEntity);
 	}
 
 
@@ -71,28 +72,51 @@ public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus,
 
 	/**
 	 * 保存主表数据前操作
-	 * @param in 入参
+	 * @param sin 入参
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
 	 * @param entity 实体类对象
+	 * @param id 主键
 	 */
-	protected void beforeSaveMainTable(SI in, E entity) {
+	protected void beforeSaveMain(SI sin, String locale, String compId, String loginId, E entity, String id) {
 	}
 
 
 	/**
 	 * 保存主表数据前操作
-	 * @param in 入参
+	 * @param sin 入参
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
 	 * @param listEntity 实体类列表对象
 	 */
-	protected void beforeSaveMainTables(SI in, List<E> listEntity) {
+	protected void beforeSaveMains(SI sin, String locale, String compId, String loginId, List<E> listEntity) {
 	}
 
 
 	/**
 	 * 保存主表数据后操作
-	 * @param in 入参
+	 * @param sin 入参
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
+	 * @param entity 实体类对象
+	 * @param id 主键
+	 */
+	protected void afterSaveMain(SI sin, String locale, String compId, String loginId, E entity, String id) {
+	}
+
+
+	/**
+	 * 保存主表数据后操作
+	 * @param sin 入参
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
 	 * @param listEntity 实体类列表对象
 	 */
-	protected void afterSaveMainTables(SI in, List<E> listEntity) {
+	protected void afterSaveMains(SI sin, String locale, String compId, String loginId, List<E> listEntity) {
 	}
 
 

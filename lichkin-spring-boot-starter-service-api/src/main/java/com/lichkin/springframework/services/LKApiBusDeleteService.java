@@ -9,6 +9,7 @@ import com.lichkin.framework.defines.entities.I_ID;
 import com.lichkin.framework.defines.entities.I_UsingStatus;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
+import com.lichkin.framework.utils.LKClassUtils;
 
 /**
  * 删除接口服务类定义
@@ -32,21 +33,24 @@ public abstract class LKApiBusDeleteService<SI extends I_ID, E extends I_ID> ext
 
 	@Transactional
 	@Override
-	public void handle(SI sin) throws LKException {
+	public void handle(SI sin, String locale, String compId, String loginId) throws LKException {
+		// 先查寻出要删除的数据
 		QuerySQL sql = new QuerySQL(false, classE);
 		sql.in(getIdColumnResId(), sin.getId());
 		List<E> listEntity = dao.getList(sql, classE);
-		if (realDelete(sin)) {
-			for (E entity : listEntity) {
-				beforeDelete(sin, entity, entity.getId());
-			}
-			dao.removeList(listEntity);
-		} else {
+
+		// 判断在用状态实现情况
+		if (LKClassUtils.checkImplementsInterface(classE, I_UsingStatus.class) && !realDelete(sin, locale, compId, loginId)) {
 			for (E entity : listEntity) {
 				((I_UsingStatus) entity).setUsingStatus(LKUsingStatusEnum.DEPRECATED);
-				beforeDelete(sin, entity, entity.getId());
+				beforeLogicDelete(sin, locale, compId, loginId, entity, entity.getId());
 			}
 			dao.mergeList(listEntity);
+		} else {
+			for (E entity : listEntity) {
+				beforeRealDelete(sin, locale, compId, loginId, entity, entity.getId());
+			}
+			dao.removeList(listEntity);
 		}
 	}
 
@@ -59,22 +63,41 @@ public abstract class LKApiBusDeleteService<SI extends I_ID, E extends I_ID> ext
 
 
 	/**
-	 * 删除数据前操作
+	 * 是否实际删除数据（当实体类实现了I_UsingStatus时起作用）
 	 * @param sin 入参
-	 * @param entity 待删除数据
-	 * @param id 主键
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
+	 * @return true:实际删除;false:逻辑删除;
 	 */
-	protected void beforeDelete(SI sin, E entity, String id) {
+	protected boolean realDelete(SI sin, String locale, String compId, String loginId) {
+		return false;
 	}
 
 
 	/**
-	 * 是否实际删除数据
+	 * 实际删除数据前操作
 	 * @param sin 入参
-	 * @return true:实际删除;false:逻辑删除（需主表实体类实现）.
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
+	 * @param entity 待删除数据
+	 * @param id 主键
 	 */
-	protected boolean realDelete(SI sin) {
-		return true;
+	protected void beforeRealDelete(SI sin, String locale, String compId, String loginId, E entity, String id) {
+	}
+
+
+	/**
+	 * 逻辑删除数据前操作
+	 * @param sin 入参
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
+	 * @param entity 待删除数据
+	 * @param id 主键
+	 */
+	protected void beforeLogicDelete(SI sin, String locale, String compId, String loginId, E entity, String id) {
 	}
 
 }

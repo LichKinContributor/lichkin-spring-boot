@@ -29,19 +29,19 @@ public abstract class LKApiBusGetPageService<SI extends LKPageable, SO, E extend
 
 
 	@Override
-	public Page<SO> handle(SI sin) throws LKException {
-		Page<SO> page = beforeQuery(sin);
+	public Page<SO> handle(SI sin, String locale, String compId, String loginId) throws LKException {
+		Page<SO> page = beforeQuery(sin, locale, compId, loginId);
 		if (page != null) {
 			return page;
 		}
 
 		QuerySQL sql = new QuerySQL(!classE.equals(classSO), classE, isDistinct());
 
-		initSQL(sin, sql);
+		initSQL(sin, locale, compId, loginId, sql);
 
 		sql.setPage(sin);
 
-		return afterQuery(sin, dao.getPage(sql, classSO));
+		return afterQuery(sin, locale, compId, loginId, dao.getPage(sql, classSO));
 	}
 
 
@@ -57,18 +57,24 @@ public abstract class LKApiBusGetPageService<SI extends LKPageable, SO, E extend
 	/**
 	 * 初始化SQL语句
 	 * @param sin 入参
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
 	 * @param sql SQL语句对象
 	 */
-	protected void initSQL(SI sin, QuerySQL sql) {
+	protected void initSQL(SI sin, String locale, String compId, String loginId, QuerySQL sql) {
 	}
 
 
 	/**
 	 * 返回结果
 	 * @param sin 入参
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
 	 * @return 出参
 	 */
-	protected Page<SO> beforeQuery(SI sin) {
+	protected Page<SO> beforeQuery(SI sin, String locale, String compId, String loginId) {
 		return null;
 	}
 
@@ -76,10 +82,13 @@ public abstract class LKApiBusGetPageService<SI extends LKPageable, SO, E extend
 	/**
 	 * 查询语句执行后处理
 	 * @param sin 入参
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
 	 * @param page 查询结果
 	 * @return 出参
 	 */
-	protected Page<SO> afterQuery(SI sin, Page<SO> page) {
+	protected Page<SO> afterQuery(SI sin, String locale, String compId, String loginId, Page<SO> page) {
 		return page;
 	}
 

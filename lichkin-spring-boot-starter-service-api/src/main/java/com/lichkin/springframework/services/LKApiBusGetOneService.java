@@ -28,7 +28,7 @@ public abstract class LKApiBusGetOneService<SI extends I_ID, SO, E extends I_ID>
 
 
 	@Override
-	public SO handle(SI sin) throws LKException {
+	public SO handle(SI sin, String locale, String compId, String loginId) throws LKException {
 		// 先取业务规则值
 		String id = sin.getId();
 
@@ -43,7 +43,7 @@ public abstract class LKApiBusGetOneService<SI extends I_ID, SO, E extends I_ID>
 		SO out = LKBeanUtils.newInstance(entity, classSO);
 
 		// 其它字段赋值
-		setOtherValues(entity, sin, out);
+		setOtherValues(entity, id, sin, locale, compId, loginId, out);
 
 		// 返回结果
 		return out;
@@ -53,10 +53,14 @@ public abstract class LKApiBusGetOneService<SI extends I_ID, SO, E extends I_ID>
 	/**
 	 * 其它字段赋值
 	 * @param entity 实体类对象
+	 * @param id 主键
 	 * @param sin 入参对象
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
 	 * @param out 出参对象
 	 */
-	protected void setOtherValues(E entity, SI sin, SO out) {
+	protected void setOtherValues(E entity, String id, SI sin, String locale, String compId, String loginId, SO out) {
 	}
 
 }

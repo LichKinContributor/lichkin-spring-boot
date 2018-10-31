@@ -3,14 +3,11 @@ package com.lichkin.springframework.services;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.lichkin.framework.defines.entities.I_ID;
+import com.lichkin.framework.defines.enums.LKCodeEnum;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
-import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.framework.defines.exceptions.LKRuntimeException;
-import com.lichkin.framework.utils.LKBeanUtils;
-import com.lichkin.springframework.services.checker.BusUpdateChecker;
 
 /**
  * 编辑接口服务类定义
@@ -18,7 +15,7 @@ import com.lichkin.springframework.services.checker.BusUpdateChecker;
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusUpdateService<SI extends I_ID, E extends I_ID> extends LKApiBusService<SI, Void, E> implements LKApiVoidService<SI>, BusUpdateChecker<SI, E> {
+public abstract class LKApiBusUpdateService<SI extends I_ID, E extends I_ID> extends LKApiBusUpdateWithoutCheckerService<SI, E> {
 
 	/**
 	 * 构造方法
@@ -32,78 +29,63 @@ public abstract class LKApiBusUpdateService<SI extends I_ID, E extends I_ID> ext
 	}
 
 
-	@Transactional
 	@Override
-	public void handle(SI sin) throws LKException {
-		// 通过ID找到该条数据
-		E exist = dao.findOneById(classE, sin.getId());
-		if (exist == null) {
-			// 无数据则抛异常
-			throw new LKRuntimeException(LKErrorCodesEnum.INEXIST);
+	protected boolean busCheck(SI sin, String locale, String compId, String loginId, E entity, String id) {
+		if (!needCheckExist(sin, locale, compId, loginId, entity, id)) {// 业务规则字段修改了才需要进行校验
+			return true;
 		}
 
-		// 业务规则校验
-		if (needCheckExist(sin, exist)) {// 业务规则字段修改了才需要进行校验
-			// 查询冲突数据
-			final List<E> listExist = findExist(sin, exist);
-			if (CollectionUtils.isNotEmpty(listExist)) {
-				// 有冲突数据则抛异常
-				throw new LKRuntimeException(existErrorCode(sin));
-			}
+		// 查询冲突数据
+		final List<E> listExist = findExist(sin, locale, compId, loginId, entity, id);
+		if (CollectionUtils.isNotEmpty(listExist)) {
+			// 有冲突数据则抛异常
+			throw new LKRuntimeException(existErrorCode(sin, locale, compId, loginId));
 		}
 
-		// 保存主表数据前操作
-		beforeSaveMainTable(sin, exist);
-
-		// 修改数据
-		LKBeanUtils.copyProperties(false, sin, exist, excludeFieldNames(sin, exist));
-
-		// 保存主表数据
-		dao.mergeOne(exist);
-
-		// 修改数据，需先清空子表数据
-		clearSubTables(sin, exist);
-
-		// 新增子表数据
-		addSubTables(sin, exist);
+		return true;
 	}
 
 
 	/**
-	 * 保存主表数据前操作
+	 * 是否需要校验冲突数据
 	 * @param sin 入参
-	 * @param exist 原实体类对象
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
+	 * @param entity 原实体类对象
+	 * @param id 主键
+	 * @return true:校验;false:不校验;
 	 */
-	protected void beforeSaveMainTable(SI sin, E exist) {
+	protected boolean needCheckExist(SI sin, String locale, String compId, String loginId, E entity, String id) {
+		return false;
 	}
 
 
 	/**
-	 * 清除子表数据
+	 * 查询冲突数据
 	 * @param sin 入参
-	 * @param exist 原实体类对象
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
+	 * @param entity 原实体类对象
+	 * @param id 主键
+	 * @return 冲突数据
 	 */
-	protected void clearSubTables(SI sin, E exist) {
+	protected List<E> findExist(SI sin, String locale, String compId, String loginId, E entity, String id) {
+		return null;
 	}
 
 
 	/**
-	 * 新增子表数据
-	 * @param sin 入参
-	 * @param exist 原实体类对象
-	 */
-	protected void addSubTables(SI sin, E exist) {
-	}
-
-
-	/**
-	 * 从入参复制参数时需要忽略的字段
-	 * @param sin 入参
-	 * @param exist 原实体类对象
-	 * @return 字段名数组
-	 */
-	protected String[] excludeFieldNames(SI sin, E exist) {
-		return new String[] { "id" };
+	* 数据已存在错误编码（findExist返回结果时才使用）
+	* @param sin 入参
+	* @param locale 国际化
+	* @param compId 公司ID
+	* @param loginId 登录ID
+	* @return 错误编码
+	*/
+	protected LKCodeEnum existErrorCode(SI sin, String locale, String compId, String loginId) {
+		return LKErrorCodesEnum.EXIST;
 	}
 
 }
