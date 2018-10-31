@@ -1,7 +1,5 @@
 package com.lichkin.springframework.web.beans;
 
-import java.util.HashMap;
-
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -38,7 +36,7 @@ public class LKRequestInfo {
 	protected String requestIp;
 
 	/** 请求数据 */
-	protected HashMap<String, String> requestDatas;
+	protected String requestDatas;
 
 	/** 处理类 */
 	protected String handlerClassName;

@@ -74,9 +74,7 @@ public abstract class LKFilter implements Filter {
 			HttpServletRequest req = request;
 			requestInfo.setRequestUri(LKRequestUtils.getRequestURI(req));
 			requestInfo.setRequestIp(LKIpUtils.getIp(req));
-
-			String requestDatas = request.readRequestDatasFromInputStream();
-			requestInfo.setRequestDatas(LKJsonUtils.toMap(requestDatas));
+			requestInfo.setRequestDatas(request.readRequestDatasFromInputStream());
 			if (logger.isDebugEnabled()) {
 				logger.debug(LKJsonUtils.toJsonWithIncludes(requestInfo, "requestId", "requestTime", "requestUri", "requestIp", "requestDatas"));
 			}
