@@ -3,27 +3,27 @@ package com.lichkin.springframework.generator;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import com.lichkin.springframework.generator.LKApiGenerator.Type;
+import com.lichkin.springframework.generator.LKApiGenerator.GenerateInfo;
 
 class GeneratorUpdateUsingStatus extends GeneratorCommon {
 
 	@SuppressWarnings("resource")
-	static void generate(String dir, String packageName, String entity, int index, Type type) throws Exception {
-		new FileOutputStream(new File(dir + "/I.java")).write(
+	static void generate(GenerateInfo info) throws Exception {
+		new FileOutputStream(new File(info.dir + "/I.java")).write(
 
-				commonReplace(index, type, packageName, entity, I).getBytes()
-
-		);
-
-		new FileOutputStream(new File(dir + "/C.java")).write(
-
-				commonReplace(index, type, packageName, entity, C).getBytes()
+				commonReplace(info, I).getBytes()
 
 		);
 
-		new FileOutputStream(new File(dir + "/S.java")).write(
+		new FileOutputStream(new File(info.dir + "/C.java")).write(
 
-				commonReplace(index, type, packageName, entity, S).getBytes()
+				commonReplace(info, C).getBytes()
+
+		);
+
+		new FileOutputStream(new File(info.dir + "/S.java")).write(
+
+				commonReplace(info, S).getBytes()
 
 		);
 	}
@@ -56,17 +56,15 @@ class GeneratorUpdateUsingStatus extends GeneratorCommon {
 		sb.append("import org.springframework.web.bind.annotation.RequestMapping;").append("\n");
 		sb.append("import org.springframework.web.bind.annotation.RestController;").append("\n");
 		sb.append("").append("\n");
-		sb.append("import com.lichkin.application.services.impl.SysAdminOperLogService;").append("\n");
 		sb.append("import com.lichkin.framework.defines.LKFrameworkStatics;").append("\n");
 		sb.append("import com.lichkin.framework.web.annotations.LKApiType;").append("\n");
 		sb.append("import com.lichkin.framework.web.enums.ApiType;").append("\n");
 		sb.append("import com.lichkin.springframework.controllers.LKApiBusUpdateUsingStatusController;").append("\n");
 		sb.append("import com.lichkin.springframework.entities.impl.#entityEntity;").append("\n");
 		sb.append("import com.lichkin.springframework.services.LKApiBusUpdateUsingStatusService;").append("\n");
-		sb.append("import com.lichkin.springframework.services.OperLogService;").append("\n");
 		sb.append("").append("\n");
 		sb.append("@RestController(\"#Controller\")").append("\n");
-		sb.append("@RequestMapping(value = LKFrameworkStatics.WEB_MAPPING_API_WEB_ADMIN + \"#url\")").append("\n");
+		sb.append("@RequestMapping(value = LKFrameworkStatics.WEB_MAPPING_API_#userType_#clientType + \"#url\")").append("\n");
 		sb.append("@LKApiType(apiType = ApiType.COMPANY_BUSINESS)").append("\n");
 		sb.append("public class C extends LKApiBusUpdateUsingStatusController<I, #entityEntity> {").append("\n");
 		sb.append("").append("\n");
@@ -77,16 +75,6 @@ class GeneratorUpdateUsingStatus extends GeneratorCommon {
 		sb.append("	@Override").append("\n");
 		sb.append("	protected LKApiBusUpdateUsingStatusService<I, #entityEntity> getService(I cin) {").append("\n");
 		sb.append("		return service;").append("\n");
-		sb.append("	}").append("\n");
-		sb.append("").append("\n");
-		sb.append("").append("\n");
-		sb.append("	@Autowired").append("\n");
-		sb.append("	private SysAdminOperLogService logService;").append("\n");
-		sb.append("").append("\n");
-		sb.append("").append("\n");
-		sb.append("	@Override").append("\n");
-		sb.append("	public OperLogService getLogService() {").append("\n");
-		sb.append("		return logService;").append("\n");
 		sb.append("	}").append("\n");
 		sb.append("").append("\n");
 		sb.append("}").append("\n");

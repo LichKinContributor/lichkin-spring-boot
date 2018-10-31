@@ -3,33 +3,33 @@ package com.lichkin.springframework.generator;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import com.lichkin.springframework.generator.LKApiGenerator.Type;
+import com.lichkin.springframework.generator.LKApiGenerator.GenerateInfo;
 
 class GeneratorGetOne extends GeneratorCommon {
 
 	@SuppressWarnings("resource")
-	static void generate(String dir, String packageName, String entity, int index, Type type) throws Exception {
-		new FileOutputStream(new File(dir + "/I.java")).write(
+	static void generate(GenerateInfo info) throws Exception {
+		new FileOutputStream(new File(info.dir + "/I.java")).write(
 
-				commonReplace(index, type, packageName, entity, I).getBytes()
-
-		);
-
-		new FileOutputStream(new File(dir + "/O.java")).write(
-
-				commonReplace(index, type, packageName, entity, O.replaceAll("#fields", getFields(true, false, false, entity, "compId"))).getBytes()
+				commonReplace(info, I).getBytes()
 
 		);
 
-		new FileOutputStream(new File(dir + "/C.java")).write(
+		new FileOutputStream(new File(info.dir + "/O.java")).write(
 
-				commonReplace(index, type, packageName, entity, C).getBytes()
+				commonReplace(info, O.replaceAll("#fields", getFields(false, false, true, false, false, info.entity, "compId"))).getBytes()
 
 		);
 
-		new FileOutputStream(new File(dir + "/S.java")).write(
+		new FileOutputStream(new File(info.dir + "/C.java")).write(
 
-				commonReplace(index, type, packageName, entity, S).getBytes()
+				commonReplace(info, C).getBytes()
+
+		);
+
+		new FileOutputStream(new File(info.dir + "/S.java")).write(
+
+				commonReplace(info, S).getBytes()
 
 		);
 	}
@@ -86,7 +86,7 @@ class GeneratorGetOne extends GeneratorCommon {
 		sb.append("import com.lichkin.springframework.services.LKApiBusGetOneService;").append("\n");
 		sb.append("").append("\n");
 		sb.append("@RestController(\"#Controller\")").append("\n");
-		sb.append("@RequestMapping(value = LKFrameworkStatics.WEB_MAPPING_API_WEB_ADMIN + \"#url\")").append("\n");
+		sb.append("@RequestMapping(value = LKFrameworkStatics.WEB_MAPPING_API_#userType_#clientType + \"#url\")").append("\n");
 		sb.append("@LKApiType(apiType = ApiType.COMPANY_BUSINESS)").append("\n");
 		sb.append("public class C extends LKApiBusGetOneController<I, O, #entityEntity> {").append("\n");
 		sb.append("").append("\n");

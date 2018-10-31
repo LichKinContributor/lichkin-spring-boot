@@ -3,45 +3,45 @@ package com.lichkin.springframework.generator;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import com.lichkin.springframework.generator.LKApiGenerator.Type;
+import com.lichkin.springframework.generator.LKApiGenerator.GenerateInfo;
 
 class GeneratorSpecial extends GeneratorCommon {
 
 	@SuppressWarnings("resource")
-	static void generate(String dir, String packageName, String entity, int index, Type type) throws Exception {
-		new FileOutputStream(new File(dir + "/CI.java")).write(
+	static void generate(GenerateInfo info) throws Exception {
+		new FileOutputStream(new File(info.dir + "/CI.java")).write(
 
-				commonReplace(index, type, packageName, entity, CI).getBytes()
-
-		);
-
-		new FileOutputStream(new File(dir + "/CO.java")).write(
-
-				commonReplace(index, type, packageName, entity, CO).getBytes()
+				commonReplace(info, CI).getBytes()
 
 		);
 
-		new FileOutputStream(new File(dir + "/C.java")).write(
+		new FileOutputStream(new File(info.dir + "/CO.java")).write(
 
-				commonReplace(index, type, packageName, entity, C).getBytes()
-
-		);
-
-		new FileOutputStream(new File(dir + "/SI.java")).write(
-
-				commonReplace(index, type, packageName, entity, SI).getBytes()
+				commonReplace(info, CO).getBytes()
 
 		);
 
-		new FileOutputStream(new File(dir + "/SO.java")).write(
+		new FileOutputStream(new File(info.dir + "/C.java")).write(
 
-				commonReplace(index, type, packageName, entity, SO).getBytes()
+				commonReplace(info, C).getBytes()
 
 		);
 
-		new FileOutputStream(new File(dir + "/S.java")).write(
+		new FileOutputStream(new File(info.dir + "/SI.java")).write(
 
-				commonReplace(index, type, packageName, entity, S).getBytes()
+				commonReplace(info, SI).getBytes()
+
+		);
+
+		new FileOutputStream(new File(info.dir + "/SO.java")).write(
+
+				commonReplace(info, SO).getBytes()
+
+		);
+
+		new FileOutputStream(new File(info.dir + "/S.java")).write(
+
+				commonReplace(info, S).getBytes()
 
 		);
 	}
@@ -98,7 +98,7 @@ class GeneratorSpecial extends GeneratorCommon {
 		sb.append("import com.lichkin.springframework.services.LKApiService;").append("\n");
 		sb.append("").append("\n");
 		sb.append("@RestController(\"#Controller\")").append("\n");
-		sb.append("@RequestMapping(value = LKFrameworkStatics.WEB_MAPPING_API_ + \"#url\")").append("\n");
+		sb.append("@RequestMapping(value = LKFrameworkStatics.WEB_MAPPING_API_#userType_#clientType + \"#url\")").append("\n");
 		sb.append("@LKApiType(apiType = ApiType.COMPANY_BUSINESS)").append("\n");
 		sb.append("public class C extends LKApiYYController<CI, CO, SI, SO> {").append("\n");
 		sb.append("").append("\n");
@@ -175,7 +175,7 @@ class GeneratorSpecial extends GeneratorCommon {
 		sb.append("").append("\n");
 		sb.append("	@Override").append("\n");
 		sb.append("	@Transactional").append("\n");
-		sb.append("	public SO handle(SI sin) throws LKException {").append("\n");
+		sb.append("	public SO handle(SI sin, String locale, String compId, String loginId) throws LKException {").append("\n");
 		sb.append("		return null;").append("\n");
 		sb.append("	}").append("\n");
 		sb.append("").append("\n");
