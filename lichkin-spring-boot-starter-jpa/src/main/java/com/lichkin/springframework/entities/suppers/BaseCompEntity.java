@@ -23,7 +23,7 @@ public abstract class BaseCompEntity extends BaseEntity implements I_CompId {
 	private static final long serialVersionUID = 1L;
 
 	/** 公司ID（SysCompEntity.id） */
-	@FieldGenerator(check = true, insertType = InsertType.COPY_ERROR, updateable = false)
+	@FieldGenerator(check = true, insertType = InsertType.CHANGE_RETAIN, updateable = false, queryCondition = true)
 	@Column(length = 64, nullable = false)
 	private String compId;
 

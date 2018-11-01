@@ -30,7 +30,7 @@ public abstract class BaseEntity extends IDEntity implements I_Base {
 
 	/** 在用状态（枚举） */
 	@Enumerated(EnumType.STRING)
-	@FieldGenerator(resultColumn = true, updateable = false, insertType = InsertType.DEFAULT_RETAIN)
+	@FieldGenerator(resultColumn = true, updateable = false, insertType = InsertType.DEFAULT_RETAIN, queryCondition = true)
 	@Column(length = 10, nullable = false)
 	private LKUsingStatusEnum usingStatus;
 
