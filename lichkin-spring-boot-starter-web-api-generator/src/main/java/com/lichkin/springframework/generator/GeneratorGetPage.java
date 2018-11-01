@@ -19,24 +19,35 @@ import com.lichkin.springframework.generator.LKApiGenerator.GenerateInfo;
 
 class GeneratorGetPage extends GeneratorCommon {
 
-	@SuppressWarnings("resource")
 	static void generate(GenerateInfo info) throws Exception {
-		initIn(info);
+		generate(info, false);
+	}
+
+
+	@SuppressWarnings("resource")
+	static void generate(GenerateInfo info, boolean list) throws Exception {
+		initIn(info, list);
 
 		initOut(info);
 
 		new FileOutputStream(new File(info.dir + "/C.java")).write(
 
-				commonReplace(info, C).getBytes()
+				commonReplace(info,
+
+						C//
+								.replaceAll("LKApiBusGetPageController", list ? "LKApiBusGetListController" : "LKApiBusGetPageController")//
+								.replaceAll("LKApiBusGetPageService", list ? "LKApiBusGetListService" : "LKApiBusGetPageService")//
+
+				).getBytes("UTF-8")
 
 		);
 
-		initS(info);
+		initS(info, list);
 	}
 
 
 	@SuppressWarnings("resource")
-	private static void initIn(GenerateInfo info) throws IOException, FileNotFoundException {
+	private static void initIn(GenerateInfo info, boolean list) throws IOException, FileNotFoundException {
 		StringBuilder fields = new StringBuilder();
 		StringBuilder importEnums = new StringBuilder();
 
@@ -67,7 +78,14 @@ class GeneratorGetPage extends GeneratorCommon {
 
 		new FileOutputStream(new File(info.dir + "/I.java")).write(
 
-				commonReplace(info, I.replaceAll("#fields", fields.toString()).replaceAll("#importEnums", importEnums.toString())).getBytes()
+				commonReplace(info,
+
+						I//
+								.replaceAll("LKRequestPageBean", list ? "LKRequestBean" : "LKRequestPageBean")//
+								.replaceAll("#fields", fields.toString())//
+								.replaceAll("#importEnums", importEnums.toString())//
+
+				).getBytes("UTF-8")
 
 		);
 	}
@@ -106,14 +124,14 @@ class GeneratorGetPage extends GeneratorCommon {
 
 		new FileOutputStream(new File(info.dir + "/O.java")).write(
 
-				commonReplace(info, O.replaceAll("#fields", fields.toString())).getBytes()
+				commonReplace(info, O.replaceAll("#fields", fields.toString())).getBytes("UTF-8")
 
 		);
 	}
 
 
 	@SuppressWarnings("resource")
-	private static void initS(GenerateInfo info) throws IOException, FileNotFoundException {
+	private static void initS(GenerateInfo info, boolean list) throws IOException, FileNotFoundException {
 		StringBuilder fields = new StringBuilder();
 		StringBuilder jrs = new StringBuilder();
 		StringBuilder dictionarys = new StringBuilder();
@@ -151,15 +169,15 @@ class GeneratorGetPage extends GeneratorCommon {
 		}
 
 		for (Field field : listField) {
+			String fieldName = field.getName();
 			FieldGenerator fieldGenerator = field.getAnnotation(FieldGenerator.class);
-			if (!fieldGenerator.queryCondition()) {
+			if (!fieldGenerator.queryCondition() || fieldName.equals("compId") || fieldName.equals("usingStatus")) {
 				continue;
 			}
 			Class<?> type = field.getType();
-			String fieldName = field.getName();
 			conditions.append("\t\t").append(type.getSimpleName()).append(" ").append(fieldName).append(" = ").append(get("sin", fieldName)).append(";").append("\n");
 			conditions.append("\t\t").append("if (").append(type.isEnum() ? fieldName + " != null" : "StringUtils.isNotBlank(" + fieldName + ")").append(") {").append("\n");
-			conditions.append("\t\t\t").append("sql.").append(type.isEnum() ? "eq(#entityR." + fieldName + ", " + fieldName + ")" : "like(" + (fieldGenerator.dictionary() ? "SysDictionaryR.dictName" : "#entityR" + "." + fieldName) + ", LikeType." + (StringUtils.containsIgnoreCase(fieldName, "cellphone") ? "RIGHT" : "ALL") + ", " + fieldName + ")").append(";").append("\n");
+			conditions.append("\t\t\t").append("sql.").append(type.isEnum() || !fieldGenerator.queryConditionLike() ? "eq(#entityR." + fieldName + ", " + fieldName + ")" : "like(" + (fieldGenerator.dictionary() ? "SysDictionaryR.dictName" : "#entityR" + "." + fieldName) + ", LikeType." + (StringUtils.containsIgnoreCase(fieldName, "cellphone") ? "RIGHT" : "ALL") + ", " + fieldName + ")").append(";").append("\n");
 			conditions.append("\t\t").append("}").append("\n").append("\n");
 		}
 
@@ -183,7 +201,7 @@ class GeneratorGetPage extends GeneratorCommon {
 					conditions.append("\t\t\t").append("sql.").append("gte(#entityR.insertTime, LKDateTimeUtils.toString(LKDateTimeUtils.toDateTime(startDate, LKDateTimeTypeEnum.DATE_ONLY), LKDateTimeTypeEnum.TIMESTAMP_MIN)" + ")").append(";").append("\n");
 				break;
 				case "endDate":
-					conditions.append("\t\t\t").append("sql.").append("lte(#entityR.insertTime, LKDateTimeUtils.toString(LKDateTimeUtils.toDateTime(endDate, LKDateTimeTypeEnum.DATE_ONLY).plusDays(1), LKDateTimeTypeEnum.TIMESTAMP_MIN)" + ")").append(";").append("\n");
+					conditions.append("\t\t\t").append("sql.").append("lt(#entityR.insertTime, LKDateTimeUtils.toString(LKDateTimeUtils.toDateTime(endDate, LKDateTimeTypeEnum.DATE_ONLY).plusDays(1), LKDateTimeTypeEnum.TIMESTAMP_MIN)" + ")").append(";").append("\n");
 				break;
 				case "includes":
 					conditions.append("\t\t\t").append("sql.").append("in(" + pageQueryConditionArr[3] + ".id, " + fieldName + ")").append(";").append("\n");
@@ -211,15 +229,18 @@ class GeneratorGetPage extends GeneratorCommon {
 		boolean implemetsUsingStatus = LKClassUtils.checkImplementsInterface(info.entityClass, I_UsingStatus.class);
 		new FileOutputStream(new File(info.dir + "/S.java")).write(
 
-				commonReplace(info, S//
-						.replaceAll("#Rs", fields.toString()).replaceAll("#importUsingStatus", implemetsUsingStatus ? "import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;\n" : "")//
-						.replaceAll("#Jrs", jrs.toString())//
-						.replaceAll("#compId", LKClassUtils.checkImplementsInterface(info.entityClass, I_CompId.class) ? "\t\tif (!LKFrameworkStatics.LichKin.equals(compId)) {\n\t\t\tsql.eq(#entityR.compId, compId);\n\t\t}\n" : "")//
-						.replaceAll("#usingStatus", implemetsUsingStatus ? "\t\tsql.eq(#entityR.usingStatus, LKUsingStatusEnum.USING);\n" : "")//
-						.replaceAll("#importLKFrameworkStatics", LKClassUtils.checkImplementsInterface(info.entityClass, I_CompId.class) ? "import com.lichkin.framework.defines.LKFrameworkStatics;\n" : "")//
-						.replaceAll("#dictionarys", dictionarys.toString())//
-						.replaceAll("#conditions", conditions.toString())//
-				).getBytes()
+				commonReplace(info,
+
+						S//
+								.replaceAll("LKApiBusGetPageService", list ? "LKApiBusGetListService" : "LKApiBusGetPageService")//
+								.replaceAll("#Rs", fields.toString())//
+								.replaceAll("#Jrs", jrs.toString())//
+								.replaceAll("#compId", LKClassUtils.checkImplementsInterface(info.entityClass, I_CompId.class) ? compId() : "")//
+								.replaceAll("#usingStatus", implemetsUsingStatus ? usingStatus() : "")//
+								.replaceAll("#dictionarys", dictionarys.toString())//
+								.replaceAll("#conditions", conditions.toString())//
+
+				).getBytes("UTF-8")
 
 		);
 	}
@@ -307,8 +328,8 @@ class GeneratorGetPage extends GeneratorCommon {
 		sb.append("import com.lichkin.framework.db.beans.QuerySQL;").append("\n");
 		sb.append("import com.lichkin.framework.db.beans.#entityR;").append("\n");
 		sb.append("import com.lichkin.framework.db.enums.LikeType;").append("\n");
-		sb.append("#importLKFrameworkStatics");
-		sb.append("#importUsingStatus");
+		sb.append("import com.lichkin.framework.defines.LKFrameworkStatics;").append("\n");
+		sb.append("import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;").append("\n");
 		sb.append("import com.lichkin.springframework.entities.impl.#entityEntity;").append("\n");
 		sb.append("import com.lichkin.springframework.services.LKApiBusGetPageService;").append("\n");
 		sb.append("").append("\n");

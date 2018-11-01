@@ -11,37 +11,37 @@ class GeneratorSpecial extends GeneratorCommon {
 	static void generate(GenerateInfo info) throws Exception {
 		new FileOutputStream(new File(info.dir + "/CI.java")).write(
 
-				commonReplace(info, CI).getBytes()
+				commonReplace(info, CI).getBytes("UTF-8")
 
 		);
 
 		new FileOutputStream(new File(info.dir + "/CO.java")).write(
 
-				commonReplace(info, CO).getBytes()
+				commonReplace(info, CO).getBytes("UTF-8")
 
 		);
 
 		new FileOutputStream(new File(info.dir + "/C.java")).write(
 
-				commonReplace(info, C).getBytes()
+				commonReplace(info, C).getBytes("UTF-8")
 
 		);
 
 		new FileOutputStream(new File(info.dir + "/SI.java")).write(
 
-				commonReplace(info, SI).getBytes()
+				commonReplace(info, SI).getBytes("UTF-8")
 
 		);
 
 		new FileOutputStream(new File(info.dir + "/SO.java")).write(
 
-				commonReplace(info, SO).getBytes()
+				commonReplace(info, SO).getBytes("UTF-8")
 
 		);
 
 		new FileOutputStream(new File(info.dir + "/S.java")).write(
 
-				commonReplace(info, S).getBytes()
+				commonReplace(info, S).getBytes("UTF-8")
 
 		);
 	}

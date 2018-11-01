@@ -9,6 +9,8 @@ import com.lichkin.framework.defines.annotations.FieldGenerator;
 import com.lichkin.framework.defines.annotations.InsertCheckType;
 import com.lichkin.framework.defines.annotations.InsertType;
 import com.lichkin.framework.defines.entities.I_CompId;
+import com.lichkin.framework.defines.entities.I_Locale;
+import com.lichkin.framework.defines.entities.I_UsingStatus;
 import com.lichkin.framework.utils.LKClassUtils;
 import com.lichkin.framework.utils.LKFieldUtils;
 import com.lichkin.springframework.generator.LKApiGenerator.GenerateInfo;
@@ -28,7 +30,6 @@ class GeneratorInsert extends GeneratorCommon {
 				case DEFAULT_DEFAULT:
 				case DEFAULT_RETAIN:
 				case HANDLE_RETAIN:
-				case HANDLE_ERROR:
 				case HANDLE_HANDLE:
 					continue;
 				default:
@@ -48,7 +49,7 @@ class GeneratorInsert extends GeneratorCommon {
 
 		new FileOutputStream(new File(info.dir + "/I.java")).write(
 
-				commonReplace(info, I.replaceAll("#fields", fields.toString()).replaceAll("#importEnums", importEnums.toString())).getBytes()
+				commonReplace(info, I.replaceAll("#fields", fields.toString()).replaceAll("#importEnums", importEnums.toString())).getBytes("UTF-8")
 
 		);
 
@@ -56,7 +57,7 @@ class GeneratorInsert extends GeneratorCommon {
 
 		new FileOutputStream(new File(info.dir + "/C.java")).write(
 
-				commonReplace(info, C.replaceAll("#importStringUtils", LKClassUtils.checkImplementsInterface(info.entityClass, I_CompId.class) ? "import org.apache.commons.lang3.StringUtils;\n" : "").replaceAll("#subOperBusType", LKClassUtils.checkImplementsInterface(info.entityClass, I_CompId.class) ? "StringUtils.isBlank(cin.getCompId()) ? \"\" : \"Comp\"" : "null")).replaceAll("LKApiBusInsertService", insertCheckType.equals(InsertCheckType.UNCHECK) ? "LKApiBusInsertWithoutCheckerService" : "LKApiBusInsertService").getBytes()
+				commonReplace(info, C.replaceAll("#importStringUtils", LKClassUtils.checkImplementsInterface(info.entityClass, I_CompId.class) ? "import org.apache.commons.lang3.StringUtils;\n" : "").replaceAll("#subOperBusType", LKClassUtils.checkImplementsInterface(info.entityClass, I_CompId.class) ? "StringUtils.isBlank(cin.getCompId()) ? \"\" : \"Comp\"" : "null")).replaceAll("LKApiBusInsertService", insertCheckType.equals(InsertCheckType.UNCHECK) ? "LKApiBusInsertWithoutCheckerService" : "LKApiBusInsertService").getBytes("UTF-8")
 
 		);
 
@@ -64,20 +65,35 @@ class GeneratorInsert extends GeneratorCommon {
 
 				commonReplace(info, analysisFields(info, S))
 
-						.getBytes()
+						.getBytes("UTF-8")
 
 		);
 	}
 
 
 	private static String analysisFields(GenerateInfo info, String str) {
-		List<Field> listFields = LKFieldUtils.getFieldListWithAnnotation(info.entityClass, FieldGenerator.class, "compId");
+		List<Field> listFields = LKFieldUtils.getFieldListWithAnnotation(info.entityClass, FieldGenerator.class, "id", "compId", "locale", "insertTime", "usingStatus");
 		StringBuilder errorCodes = new StringBuilder();
 		StringBuilder checkExistFields = new StringBuilder();
 		StringBuilder restoreFields = new StringBuilder();
 		StringBuilder addNewFields = new StringBuilder();
 		StringBuilder saveMainFields = new StringBuilder();
-		StringBuilder analysisMethods = new StringBuilder();
+
+		boolean checkImplementsInterfaceUS = LKClassUtils.checkImplementsInterface(info.entityClass, I_UsingStatus.class);
+		if (checkImplementsInterfaceUS) {
+			restoreFields.append("\t\t").append(set("entity", "usingStatus", "LKUsingStatusEnum.USING")).append(";").append("\n");
+		}
+		boolean checkImplementsInterfaceCompId = LKClassUtils.checkImplementsInterface(info.entityClass, I_CompId.class);
+		if (checkImplementsInterfaceCompId) {
+			addNewFields.append("\t\t").append(set("entity", "compId", "getCompId(compId, sin.getCompId())")).append(";").append("\n");
+			restoreFields.append("\t\t").append(set("entity", "compId", get("exist", "compId"))).append(";").append("\n");
+		}
+		boolean checkImplementsInterfaceLocale = LKClassUtils.checkImplementsInterface(info.entityClass, I_Locale.class);
+		if (checkImplementsInterfaceLocale) {
+			addNewFields.append("\t\t").append(set("entity", "locale", "getLocale(locale, sin.getLocale())")).append(";").append("\n");
+			restoreFields.append("\t\t").append(set("entity", "locale", get("exist", "locale"))).append(";").append("\n");
+		}
+
 		boolean containsError = false;
 		boolean callThrow = false;
 		boolean containsHandle = false;
@@ -93,8 +109,12 @@ class GeneratorInsert extends GeneratorCommon {
 				// LKBeanUtils.newInstance(true, sin, classE);
 				break;
 				case DEFAULT_RETAIN:
-					// LKBeanUtils.newInstance(true, sin, classE);
-					retain(restoreFields, fieldName);
+					if (fieldName.equals("usingStatus")) {
+						restoreFields.append("\t\t").append(set("entity", fieldName, "LKUsingStatusEnum.USING")).append(";\n");
+					} else {
+						// LKBeanUtils.newInstance(true, sin, classE);
+						retain(restoreFields, fieldName);
+					}
 				break;
 
 				case COPY_COPY:
@@ -117,14 +137,6 @@ class GeneratorInsert extends GeneratorCommon {
 					handle(true, addNewFields, fieldName, fieldTypeName);
 					retain(restoreFields, fieldName);
 				break;
-				case CHANGE_ERROR:
-					handle(true, addNewFields, fieldName, fieldTypeName);
-					if (insertCheckType.equals(InsertCheckType.CHECK_RESTORE)) {
-						containsHandle = true;
-						callThrow = true;
-						error(info.errorCode, errorCodes, restoreFields, fieldName, fieldTypeName);
-					}
-				break;
 				case CHANGE_HANDLE:
 					containsHandle = true;
 					handle(true, saveMainFields, fieldName, fieldTypeName);
@@ -135,14 +147,6 @@ class GeneratorInsert extends GeneratorCommon {
 					handle(false, addNewFields, fieldName, fieldTypeName);
 					retain(restoreFields, fieldName);
 				break;
-				case HANDLE_ERROR:
-					handle(false, addNewFields, fieldName, fieldTypeName);
-					if (insertCheckType.equals(InsertCheckType.CHECK_RESTORE)) {
-						containsHandle = true;
-						callThrow = true;
-						error(info.errorCode, errorCodes, restoreFields, fieldName, fieldTypeName);
-					}
-				break;
 				case HANDLE_HANDLE:
 					containsHandle = true;
 					handle(false, saveMainFields, fieldName, fieldTypeName);
@@ -150,8 +154,21 @@ class GeneratorInsert extends GeneratorCommon {
 				default:
 				break;
 			}
-			if (fieldGenerator.check() && !(insertType.equals(InsertType.HANDLE_RETAIN) || insertType.equals(InsertType.HANDLE_ERROR) || insertType.equals(InsertType.HANDLE_HANDLE))) {
-				checkExistFields.append(", ").append(get("sin", fieldName));
+			if (fieldGenerator.check()) {
+				if (!fieldName.equals("compId")) {
+					if (fieldName.equals("locale")) {
+						checkExistFields.append(", getLocale(locale, sin.getLocale())");
+					} else {
+						checkExistFields.append(", ");
+						if (insertType.equals(InsertType.HANDLE_RETAIN) || insertType.equals(InsertType.HANDLE_HANDLE)) {
+							checkExistFields.append(m("busService.analysis", fieldName, ""));
+						} else if (insertType.equals(InsertType.CHANGE_RETAIN) || insertType.equals(InsertType.CHANGE_HANDLE)) {
+							checkExistFields.append(m("busService.analysis", fieldName, get("sin", fieldName)));
+						} else {
+							checkExistFields.append(get("sin", fieldName));
+						}
+					}
+				}
 			}
 		}
 
@@ -184,7 +201,7 @@ class GeneratorInsert extends GeneratorCommon {
 			case CHECK_RESTORE:
 				containsError = true;
 				findExist = true;
-				str = str.replaceAll("#findExist", findExist(LKClassUtils.checkImplementsInterface(info.entityClass, I_CompId.class)));
+				str = str.replaceAll("#findExist", findExist(checkImplementsInterfaceCompId, checkImplementsInterfaceLocale));
 				str = str.replaceAll("#forceCheck", forceCheck(false));
 				str = str.replaceAll("#existErrorCode", existErrorCode());
 				str = str.replaceAll("#beforeRestore", beforeRestore());
@@ -197,7 +214,7 @@ class GeneratorInsert extends GeneratorCommon {
 			case FORCE_CHECK:
 				containsError = true;
 				findExist = true;
-				str = str.replaceAll("#findExist", findExist(LKClassUtils.checkImplementsInterface(info.entityClass, I_CompId.class)));
+				str = str.replaceAll("#findExist", findExist(checkImplementsInterfaceCompId, checkImplementsInterfaceLocale));
 				str = str.replaceAll("#forceCheck", forceCheck(true));
 				str = str.replaceAll("#existErrorCode", existErrorCode());
 				str = str.replaceAll("#beforeRestore", "");
@@ -227,7 +244,6 @@ class GeneratorInsert extends GeneratorCommon {
 				.replaceAll("#restoreFields", restoreFields.toString())//
 				.replaceAll("#addNewFields", addNewFields.toString())//
 				.replaceAll("#saveMainFields", saveMainFields.toString())//
-				.replaceAll("#analysisMethods", analysisMethods.toString())//
 				.replaceAll("#LKRuntimeException", callThrow ? "import com.lichkin.framework.defines.exceptions.LKRuntimeException;\n" : "")//
 		;
 	}
@@ -304,6 +320,7 @@ class GeneratorInsert extends GeneratorCommon {
 		sb.append("import org.springframework.stereotype.Service;").append("\n");
 		sb.append("").append("\n");
 		sb.append("import com.lichkin.application.services.bus.impl.#entityBusService;").append("\n");
+		sb.append("import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;").append("\n");
 		sb.append("import com.lichkin.framework.defines.enums.LKCodeEnum;").append("\n");
 		sb.append("#LKRuntimeException");
 		sb.append("import com.lichkin.springframework.entities.impl.#entityEntity;").append("\n");
@@ -351,21 +368,19 @@ class GeneratorInsert extends GeneratorCommon {
 
 		sb.append("#addSubs");
 
-		sb.append("#analysisMethods");
-
 		sb.append("").append("\n");
 		sb.append("}").append("\n");
 		S = sb.toString();
 	}
 
 
-	private static String findExist(boolean needCompId) {
+	private static String findExist(boolean needCompId, boolean needLocale) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("").append("\n");
 		sb.append("").append("\n");
 		sb.append("	@Override").append("\n");
 		sb.append("	protected List<#entityEntity> findExist(I sin, String locale, String compId, String loginId) {").append("\n");
-		sb.append("		return busService.findExist(null").append(needCompId ? ", compId, sin.getCompId()" : "").append("#checkExistFields);").append("\n");
+		sb.append("		return busService.findExist(null").append(needCompId ? ", compId, sin.getCompId()" : "").append(needLocale ? ", getLocale(locale, sin.getLocale())" : "").append("#checkExistFields);").append("\n");
 		sb.append("	}").append("\n");
 		return sb.toString();
 	}

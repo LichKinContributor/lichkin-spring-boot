@@ -23,7 +23,6 @@ class GeneratorCommon {
 				switch (insertType) {
 					case DEFAULT_DEFAULT:
 					case HANDLE_RETAIN:
-					case HANDLE_ERROR:
 					case HANDLE_HANDLE:
 						continue;
 					default:
@@ -180,6 +179,32 @@ class GeneratorCommon {
 		sb.append("	protected void addSubs(I sin, String locale, String compId, String loginId, #entityEntity entity, String id) {").append("\n");
 		sb.append(addSubs.toString());
 		sb.append("	}").append("\n");
+		return sb.toString();
+	}
+
+
+	protected static String compId() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t\t").append("// 公司ID").append("\n");
+		sb.append("\t\t").append("String busCompId = sin.getCompId();").append("\n");
+		sb.append("\t\t").append("sql.eq(#entityR.compId, LKFrameworkStatics.LichKin.equals(compId) && StringUtils.isNotBlank(busCompId) ? busCompId : compId);").append("\n");
+		return sb.toString();
+	}
+
+
+	protected static String usingStatus() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t\t").append("// 在用状态").append("\n");
+		sb.append("\t\t").append("LKUsingStatusEnum usingStatus = sin.getUsingStatus();").append("\n");
+		sb.append("\t\t").append("if (usingStatus == null) {").append("\n");
+		sb.append("\t\t\t").append("if (LKFrameworkStatics.LichKin.equals(compId)) {").append("\n");
+		sb.append("\t\t\t\t").append("sql.neq(#entityR.usingStatus, LKUsingStatusEnum.DEPRECATED);").append("\n");
+		sb.append("\t\t\t").append("} else {").append("\n");
+		sb.append("\t\t\t\t").append("sql.eq(#entityR.usingStatus, LKUsingStatusEnum.USING);").append("\n");
+		sb.append("\t\t\t").append("}").append("\n");
+		sb.append("\t\t").append("} else {").append("\n");
+		sb.append("\t\t\t").append("sql.eq(#entityR.usingStatus, usingStatus);").append("\n");
+		sb.append("\t\t").append("}").append("\n");
 		return sb.toString();
 	}
 

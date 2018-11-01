@@ -28,15 +28,24 @@ class GeneratorUpdate extends GeneratorCommon {
 			if (!updateable) {
 				continue;
 			}
+			InsertType insertType = fieldGenerator.insertType();
+			boolean open = false;
+			switch (insertType) {
+				case CHANGE_HANDLE:
+					open = true;
+				break;
+				default:
+				break;
+			}
 			Class<?> type = field.getType();
 			boolean check = fieldGenerator.check();
 			fields.append("\n");
-			if (!check) {
+			if (!check && !open) {
 				fields.append("//");
 			}
 			fields.append("\t").append("private ").append(type.getSimpleName()).append(" ").append(field.getName()).append(";").append("\n");
 			if (type.isEnum()) {
-				if (!check) {
+				if (!check && !open) {
 					importEnums.append("//");
 				}
 				importEnums.append("import ").append(type.getName()).append(";").append("\n");
@@ -51,7 +60,7 @@ class GeneratorUpdate extends GeneratorCommon {
 
 		new FileOutputStream(new File(info.dir + "/I.java")).write(
 
-				commonReplace(info, I.replaceAll("#fields", fields.toString()).replaceAll("#importEnums", importEnums.toString())).getBytes()
+				commonReplace(info, I.replaceAll("#fields", fields.toString()).replaceAll("#importEnums", importEnums.toString())).getBytes("UTF-8")
 
 		);
 
@@ -59,7 +68,7 @@ class GeneratorUpdate extends GeneratorCommon {
 
 		new FileOutputStream(new File(info.dir + "/C.java")).write(
 
-				commonReplace(info, C.replaceAll("#importStringUtils", "").replaceAll("#subOperBusType", "\"\"")).replaceAll("LKApiBusUpdateService", updateCheckType.equals(UpdateCheckType.UNCHECK) ? "LKApiBusUpdateWithoutCheckerService" : "LKApiBusUpdateService").getBytes()
+				commonReplace(info, C.replaceAll("#importStringUtils", "").replaceAll("#subOperBusType", "\"\"")).replaceAll("LKApiBusUpdateService", updateCheckType.equals(UpdateCheckType.UNCHECK) ? "LKApiBusUpdateWithoutCheckerService" : "LKApiBusUpdateService").getBytes("UTF-8")
 
 		);
 
@@ -67,7 +76,7 @@ class GeneratorUpdate extends GeneratorCommon {
 
 				commonReplace(info, analysisFields(info, S))
 
-						.getBytes()
+						.getBytes("UTF-8")
 
 		);
 	}
@@ -98,7 +107,7 @@ class GeneratorUpdate extends GeneratorCommon {
 				break;
 			}
 			boolean check = fieldGenerator.check();
-			if (check && !(insertType.equals(InsertType.HANDLE_RETAIN) || insertType.equals(InsertType.HANDLE_ERROR) || insertType.equals(InsertType.HANDLE_HANDLE))) {
+			if (check && !(insertType.equals(InsertType.HANDLE_RETAIN) || insertType.equals(InsertType.HANDLE_HANDLE))) {
 				checkExistFields.append(", ").append(updateable ? get("sin", fieldName) : get("entity", fieldName));
 			}
 			if (check && updateable) {

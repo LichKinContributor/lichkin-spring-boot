@@ -14,13 +14,13 @@ class GeneratorGetDroplist extends GeneratorCommon {
 	static void generate(GenerateInfo info) throws Exception {
 		new FileOutputStream(new File(info.dir + "/I.java")).write(
 
-				commonReplace(info, I).getBytes()
+				commonReplace(info, I).getBytes("UTF-8")
 
 		);
 
 		new FileOutputStream(new File(info.dir + "/C.java")).write(
 
-				commonReplace(info, C).getBytes()
+				commonReplace(info, C).getBytes("UTF-8")
 
 		);
 
@@ -32,7 +32,7 @@ class GeneratorGetDroplist extends GeneratorCommon {
 								.replaceAll("#importUsingStatus", implemetsUsingStatus ? "import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;\n" : "")//
 								.replaceAll("#compId", LKClassUtils.checkImplementsInterface(info.entityClass, I_CompId.class) ? "" : "//")//
 								.replaceAll("#usingStatus", implemetsUsingStatus ? "" : "//")//
-								.getBytes()
+								.getBytes("UTF-8")
 
 		);
 	}

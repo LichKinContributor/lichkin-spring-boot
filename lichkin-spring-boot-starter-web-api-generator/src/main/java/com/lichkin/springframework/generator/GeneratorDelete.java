@@ -13,13 +13,13 @@ class GeneratorDelete extends GeneratorCommon {
 	static void generate(GenerateInfo info) throws Exception {
 		new FileOutputStream(new File(info.dir + "/I.java")).write(
 
-				commonReplace(info, I).getBytes()
+				commonReplace(info, I).getBytes("UTF-8")
 
 		);
 
 		new FileOutputStream(new File(info.dir + "/C.java")).write(
 
-				commonReplace(info, C).getBytes()
+				commonReplace(info, C).getBytes("UTF-8")
 
 		);
 
@@ -31,7 +31,7 @@ class GeneratorDelete extends GeneratorCommon {
 						.replaceAll("#realDelete", implemetsUsingStatus ? realDelete : "")//
 						.replaceAll("#beforeRealDelete", beforeRealDelete)//
 						.replaceAll("#beforeLogicDelete", implemetsUsingStatus ? beforeLogicDelete : ""))//
-								.getBytes()
+								.getBytes("UTF-8")
 
 		);
 	}

@@ -95,7 +95,7 @@ public class LKApiGenerator {
 			File packageDir = new File(projectDir + "/src/main/java/com/lichkin/application/" + packageName.replaceAll("\\.", "/"));
 			packageDir.mkdirs();
 			String dir = packageDir.getAbsolutePath();
-			new FileOutputStream(new File(dir + "/description")).write((entity + "\n" + descContent).getBytes());
+			new FileOutputStream(new File(dir + "/description")).write((entity + "\n" + descContent).getBytes("UTF-8"));
 			type.getGenerator().getDeclaredMethod("generate", GenerateInfo.class).invoke(null, new GenerateInfo(apiType, userType, dir, packageName, entity, index, errorCode, type, entityClass, entityClass.getAnnotation(ClassGenerator.class)));
 		} catch (Exception e) {
 			e.printStackTrace();
