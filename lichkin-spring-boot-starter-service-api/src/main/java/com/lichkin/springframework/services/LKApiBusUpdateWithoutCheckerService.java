@@ -43,6 +43,9 @@ public abstract class LKApiBusUpdateWithoutCheckerService<SI extends I_ID, E ext
 			return;
 		}
 
+		// 复制属性前操作
+		beforeCopyProperties(sin, locale, compId, loginId, entity);
+
 		// 修改数据
 		LKBeanUtils.copyProperties(false, sin, entity, "id", "insertTime", "locale", "compId", "loginId");
 
@@ -60,6 +63,18 @@ public abstract class LKApiBusUpdateWithoutCheckerService<SI extends I_ID, E ext
 
 		// 新增子表数据
 		addSubs(sin, locale, compId, loginId, entity, entity.getId());
+	}
+
+
+	/**
+	 * 复制属性前操作
+	 * @param sin 入参
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
+	 * @param entity 保存前的实体类对象
+	 */
+	protected void beforeCopyProperties(SI sin, String locale, String compId, String loginId, E entity) {
 	}
 
 
