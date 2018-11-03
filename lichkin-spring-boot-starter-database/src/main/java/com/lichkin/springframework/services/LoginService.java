@@ -19,13 +19,4 @@ public abstract class LoginService<E extends I_Login, U extends I_User> extends 
 	 */
 	public abstract E findUserLoginByToken(boolean throwException, String token);
 
-
-	/**
-	 * 按照登录信息获取用户信息
-	 * @param throwException 是否抛出异常
-	 * @param userLogin 登录信息
-	 * @return 用户信息
-	 */
-	public abstract U findUserByUserLogin(boolean throwException, E userLogin);
-
 }

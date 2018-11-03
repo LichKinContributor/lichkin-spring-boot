@@ -101,13 +101,13 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 			case BEFORE_LOGIN: {
 				datas.setToken(LKSession.getToken(session));
 				datas.setLogin(LKSession.getLogin(session));
-				datas.setLoginId(LKSession.getLoginId(session));
+				datas.setLoginId(LKSession.getLoginId(session, "Employee".equals(userType)));
 			}
 			break;
 			case PERSONAL_BUSINESS: {
 				String token = LKSession.getToken(session);
 				I_Login login = LKSession.getLogin(session);
-				String loginId = LKSession.getLoginId(session);
+				String loginId = LKSession.getLoginId(session, "Employee".equals(userType));
 				if (StringUtils.isBlank(token) || StringUtils.isBlank(loginId) || (login == null)) {
 					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("You must login before when invoke a personal business API."));
 				}
@@ -119,7 +119,7 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 			case COMPANY_BUSINESS: {
 				String token = LKSession.getToken(session);
 				I_Login login = LKSession.getLogin(session);
-				String loginId = LKSession.getLoginId(session);
+				String loginId = LKSession.getLoginId(session, "Employee".equals(userType));
 				if (StringUtils.isBlank(token) || StringUtils.isBlank(loginId) || (login == null)) {
 					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("You must login before when invoke a company business API."));
 				}

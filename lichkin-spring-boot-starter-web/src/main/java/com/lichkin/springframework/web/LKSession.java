@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.entities.I_Comp;
+import com.lichkin.framework.defines.entities.I_Dept;
 import com.lichkin.framework.defines.entities.I_Login;
 import com.lichkin.framework.defines.entities.I_Menu;
 import com.lichkin.framework.defines.entities.I_Role;
@@ -19,6 +20,30 @@ import com.lichkin.springframework.web.utils.LKRequestUtils;
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 public class LKSession {
+
+	/**
+	 * 获取字符串
+	 * @param session HttpSession
+	 * @param key 键
+	 * @param defaultValue 默认值
+	 * @return 字符串
+	 */
+	public static Object getObject(HttpSession session, String key, Object defaultValue) {
+		Object obj = session.getAttribute(key);
+		return obj == null ? defaultValue : obj;
+	}
+
+
+	/**
+	 * 获取字符串
+	 * @param session HttpSession
+	 * @param key 键
+	 * @param value 值
+	 */
+	public static void setObject(HttpSession session, String key, Object value) {
+		session.setAttribute(key, value);
+	}
+
 
 	/**
 	 * 获取字符串
@@ -69,6 +94,31 @@ public class LKSession {
 	}
 
 
+	/** 键：部门信息 */
+	private static final String KEY_DEPT = "KEY_DEPT";
+
+
+	/**
+	 * 设置部门信息
+	 * @param session HttpSession
+	 * @param dept 公司信息
+	 */
+	public static void setDept(HttpSession session, I_Dept dept) {
+		session.setAttribute(KEY_DEPT, dept);
+	}
+
+
+	/**
+	 * 获取部门信息
+	 * @param session HttpSession
+	 * @return 部门信息
+	 */
+	public static I_Dept getDept(HttpSession session) {
+		Object dept = session.getAttribute(KEY_DEPT);
+		return dept == null ? null : (I_Dept) dept;
+	}
+
+
 	/**
 	 * 获取公司ID
 	 * @param session HttpSession
@@ -111,14 +161,23 @@ public class LKSession {
 	/**
 	 * 获取登录ID
 	 * @param session HttpSession
+	 * @param isEmployee 是否为员工（如果为员工时，返回的是I_User的ID）
 	 * @return 登录ID
 	 */
-	public static String getLoginId(HttpSession session) {
-		I_Login login = getLogin(session);
-		if (login == null) {
-			return null;
+	public static String getLoginId(HttpSession session, boolean isEmployee) {
+		if (isEmployee) {
+			I_User user = getUser(session);
+			if (user == null) {
+				return null;
+			}
+			return user.getId();
+		} else {
+			I_Login login = getLogin(session);
+			if (login == null) {
+				return null;
+			}
+			return login.getId();
 		}
-		return login.getId();
 	}
 
 
