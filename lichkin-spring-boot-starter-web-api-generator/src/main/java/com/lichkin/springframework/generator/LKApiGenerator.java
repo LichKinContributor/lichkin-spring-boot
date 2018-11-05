@@ -3,6 +3,8 @@ package com.lichkin.springframework.generator;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.lichkin.framework.defines.annotations.ClassGenerator;
 import com.lichkin.framework.defines.entities.I_UsingStatus;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
@@ -85,6 +87,9 @@ public class LKApiGenerator {
 
 	@SuppressWarnings("resource")
 	public static void generate(String apiType, String userType, String projectDir, String entity, int index, int errorCode, Type type, String descContent) {
+		if (StringUtils.isBlank(entity)) {
+			return;
+		}
 		try {
 			entity = entity.replaceAll("Entity", "");
 			Class<?> entityClass = Class.forName("com.lichkin.springframework.entities.impl." + entity + "Entity");
