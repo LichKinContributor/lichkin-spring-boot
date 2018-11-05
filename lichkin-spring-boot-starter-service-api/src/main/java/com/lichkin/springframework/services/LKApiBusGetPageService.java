@@ -1,6 +1,9 @@
 package com.lichkin.springframework.services;
 
+import java.util.Collections;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.defines.beans.LKPageable;
@@ -14,7 +17,7 @@ import com.lichkin.framework.defines.exceptions.LKException;
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusGetPageService<SI extends LKPageable, SO, E extends I_ID> extends LKApiBusService<SI, SO, E> implements LKApiService<SI, Page<SO>> {
+public abstract class LKApiBusGetPageService<SI extends LKPageable, SO, E extends I_ID> extends LKApiBusGetPLService<SI, SO, E> implements LKApiService<SI, Page<SO>> {
 
 	/**
 	 * 构造方法
@@ -46,23 +49,11 @@ public abstract class LKApiBusGetPageService<SI extends LKPageable, SO, E extend
 
 
 	/**
-	 * 是否去重
-	 * @return true:去重;false:不去重;
+	 * 返回空的分页数据
+	 * @return 空的分页数据
 	 */
-	protected boolean isDistinct() {
-		return false;
-	}
-
-
-	/**
-	 * 初始化SQL语句
-	 * @param sin 入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
-	 * @param sql SQL语句对象
-	 */
-	protected void initSQL(SI sin, String locale, String compId, String loginId, QuerySQL sql) {
+	protected <T> Page<T> emptyPage() {
+		return new PageImpl<>(Collections.emptyList());
 	}
 
 

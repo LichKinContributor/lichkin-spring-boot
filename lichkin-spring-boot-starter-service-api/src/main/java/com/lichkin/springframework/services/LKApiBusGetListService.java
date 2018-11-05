@@ -1,5 +1,6 @@
 package com.lichkin.springframework.services;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.lichkin.framework.db.beans.QuerySQL;
@@ -13,7 +14,7 @@ import com.lichkin.framework.defines.exceptions.LKException;
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusGetListService<SI, SO, E extends I_ID> extends LKApiBusService<SI, SO, E> implements LKApiService<SI, List<SO>> {
+public abstract class LKApiBusGetListService<SI, SO, E extends I_ID> extends LKApiBusGetPLService<SI, SO, E> implements LKApiService<SI, List<SO>> {
 
 	/**
 	 * 构造方法
@@ -43,23 +44,11 @@ public abstract class LKApiBusGetListService<SI, SO, E extends I_ID> extends LKA
 
 
 	/**
-	 * 是否去重
-	 * @return true:去重;false:不去重;
+	 * 返回空的列表数据
+	 * @return 空的列表数据
 	 */
-	protected boolean isDistinct() {
-		return false;
-	}
-
-
-	/**
-	 * 初始化SQL语句
-	 * @param sin 入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
-	 * @param sql SQL语句对象
-	 */
-	protected void initSQL(SI sin, String locale, String compId, String loginId, QuerySQL sql) {
+	protected <T> List<T> emptyList() {
+		return Collections.emptyList();
 	}
 
 
