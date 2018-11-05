@@ -1,5 +1,6 @@
 package com.lichkin.springframework.services;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +53,7 @@ public class OperLogService extends LKDBService {
 
 	) throws Exception {
 		OperLogEntity entity = (OperLogEntity) Class.forName(String.format("com.lichkin.springframework.entities.impl.Sys%sOperLogEntity", userType)).newInstance();
-		entity.setBusType(busType);
+		entity.setBusType(StringUtils.isBlank(busType) ? requestId : busType);
 		entity.setCompId(compId);
 		entity.setLoginId(loginId);
 		entity.setRequestId(requestId);
