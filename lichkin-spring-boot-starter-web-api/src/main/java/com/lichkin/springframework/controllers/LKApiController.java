@@ -102,6 +102,8 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 				datas.setToken(LKSession.getToken(session));
 				datas.setLogin(LKSession.getLogin(session));
 				datas.setLoginId(LKSession.getLoginId(session, "Employee".equals(userType)));
+				datas.setUser(LKSession.getUser(session));
+				datas.setUserId(LKSession.getUserId(session));
 			}
 			break;
 			case PERSONAL_BUSINESS: {
@@ -114,6 +116,8 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 				datas.setToken(token);
 				datas.setLogin(login);
 				datas.setLoginId(loginId);
+				datas.setUser(LKSession.getUser(session));
+				datas.setUserId(LKSession.getUserId(session));
 			}
 			break;
 			case COMPANY_BUSINESS: {
@@ -131,6 +135,8 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 				datas.setToken(token);
 				datas.setLogin(login);
 				datas.setLoginId(loginId);
+				datas.setUser(LKSession.getUser(session));
+				datas.setUserId(LKSession.getUserId(session));
 				datas.setComp(comp);
 				datas.setCompId(compId);
 			}

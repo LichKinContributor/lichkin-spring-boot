@@ -220,6 +220,20 @@ public class LKSession {
 	}
 
 
+	/**
+	 * 获取用户ID
+	 * @param session HttpSession
+	 * @return 登录ID
+	 */
+	public static String getUserId(HttpSession session) {
+		I_User user = getUser(session);
+		if (user == null) {
+			return null;
+		}
+		return user.getId();
+	}
+
+
 	/** 键：角色信息 */
 	private static final String KEY_ROLES = "KEY_ROLES";
 
