@@ -20,6 +20,7 @@ public class LKCodeService extends LKDBService {
 
 	/**
 	 * 创建编码，如果有同级编码则创建下一个编码，如果没有同级编码则创建一个新的编码。
+	 * @param <T> 泛型
 	 * @param tableClazz 实体类类型
 	 * @param compId 公司ID
 	 * @param parentCode 上级编码值

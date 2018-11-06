@@ -50,6 +50,7 @@ public abstract class LKApiBusGetPageService<SI extends LKPageable, SO, E extend
 
 	/**
 	 * 返回空的分页数据
+	 * @param <T> 分页内类型泛型
 	 * @return 空的分页数据
 	 */
 	protected <T> Page<T> emptyPage() {

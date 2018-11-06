@@ -45,6 +45,7 @@ public abstract class LKApiBusGetListService<SI, SO, E extends I_ID> extends LKA
 
 	/**
 	 * 返回空的列表数据
+	 * @param <T> 列表内类型泛型
 	 * @return 空的列表数据
 	 */
 	protected <T> List<T> emptyList() {
