@@ -101,24 +101,49 @@ public abstract class LKDBService extends LKService {
 			}
 		} else {
 			if (usingStatus == null) {
-				if (defaultUsingStatus == null) {
-					sql.eq(usingStatusColumnResId, LKUsingStatusEnum.USING);
-				} else {
-					if (defaultUsingStatus.length == 1) {
-						sql.eq(usingStatusColumnResId, defaultUsingStatus);
-					} else {
-						Condition condition0 = new Condition(null, new eq(usingStatusColumnResId, defaultUsingStatus[0]));
-						Condition condition1 = new Condition(false, new eq(usingStatusColumnResId, defaultUsingStatus[1]));
-						if (defaultUsingStatus.length == 2) {
-							sql.where(new Condition(condition0, condition1));
-						} else {
-							Condition[] conditions = new Condition[defaultUsingStatus.length - 2];
-							for (int i = 2; i < defaultUsingStatus.length; i++) {
-								conditions[i - 2] = new Condition(false, new eq(usingStatusColumnResId, defaultUsingStatus[i]));
-							}
-							sql.where(new Condition(condition0, condition1, conditions));
-						}
+				int length = defaultUsingStatus.length;
+				switch (length) {
+					case 0: {
+						sql.eq(usingStatusColumnResId, LKUsingStatusEnum.USING);
 					}
+					break;
+					case 1: {
+						sql.eq(usingStatusColumnResId, defaultUsingStatus);
+					}
+					break;
+					case 2: {
+						sql.where(
+
+								new Condition(
+
+										new Condition(null, new eq(usingStatusColumnResId, defaultUsingStatus[0]))
+
+										, new Condition(false, new eq(usingStatusColumnResId, defaultUsingStatus[1]))
+
+								)
+
+						);
+					}
+					default: {
+						Condition[] conditions = new Condition[length - 2];
+						for (int i = 2; i < length; i++) {
+							conditions[i - 2] = new Condition(false, new eq(usingStatusColumnResId, defaultUsingStatus[i]));
+						}
+						sql.where(
+
+								new Condition(
+
+										new Condition(null, new eq(usingStatusColumnResId, defaultUsingStatus[0]))
+
+										, new Condition(false, new eq(usingStatusColumnResId, defaultUsingStatus[1]))
+
+										, conditions
+
+								)
+
+						);
+					}
+					break;
 				}
 			} else {
 				sql.eq(usingStatusColumnResId, usingStatus);
