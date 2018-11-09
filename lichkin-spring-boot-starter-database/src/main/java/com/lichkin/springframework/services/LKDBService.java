@@ -3,7 +3,9 @@ package com.lichkin.springframework.services;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.lichkin.framework.db.beans.Condition;
 import com.lichkin.framework.db.beans.QuerySQL;
+import com.lichkin.framework.db.beans.eq;
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
 import com.lichkin.springframework.db.daos.LKDao;
@@ -82,14 +84,15 @@ public abstract class LKDBService extends LKService {
 	 *
 	 *   公司ID是非ROOT权限时
 	 *     如果入参有值，则使用入参值匹配；
-	 *     如果入参无值，则默认匹配在用状态；
+	 *     如果入参无值，则默认匹配默认值（如果默认值为null则匹配在用状态）；
 	 * </pre>
 	 * @param sql SQL语句
 	 * @param usingStatusColumnResId 在用状态字段资源ID
 	 * @param compId 公司ID
 	 * @param usingStatus 在用状态（入参输入的值）
+	 * @param defaultUsingStatus 默认值
 	 */
-	protected void addConditionUsingStatus(QuerySQL sql, int usingStatusColumnResId, String compId, LKUsingStatusEnum usingStatus) {
+	protected void addConditionUsingStatus(QuerySQL sql, int usingStatusColumnResId, String compId, LKUsingStatusEnum usingStatus, LKUsingStatusEnum... defaultUsingStatus) {
 		if (LKFrameworkStatics.LichKin.equals(compId)) {
 			if (usingStatus == null) {
 				sql.neq(usingStatusColumnResId, LKUsingStatusEnum.DEPRECATED);
@@ -98,7 +101,25 @@ public abstract class LKDBService extends LKService {
 			}
 		} else {
 			if (usingStatus == null) {
-				sql.eq(usingStatusColumnResId, LKUsingStatusEnum.USING);
+				if (defaultUsingStatus == null) {
+					sql.eq(usingStatusColumnResId, LKUsingStatusEnum.USING);
+				} else {
+					if (defaultUsingStatus.length == 1) {
+						sql.eq(usingStatusColumnResId, defaultUsingStatus);
+					} else {
+						Condition condition0 = new Condition(null, new eq(usingStatusColumnResId, defaultUsingStatus[0]));
+						Condition condition1 = new Condition(false, new eq(usingStatusColumnResId, defaultUsingStatus[1]));
+						if (defaultUsingStatus.length == 2) {
+							sql.where(new Condition(condition0, condition1));
+						} else {
+							Condition[] conditions = new Condition[defaultUsingStatus.length - 2];
+							for (int i = 2; i < defaultUsingStatus.length; i++) {
+								conditions[i - 2] = new Condition(false, new eq(usingStatusColumnResId, defaultUsingStatus[i]));
+							}
+							sql.where(new Condition(condition0, condition1, conditions));
+						}
+					}
+				}
 			} else {
 				sql.eq(usingStatusColumnResId, usingStatus);
 			}
