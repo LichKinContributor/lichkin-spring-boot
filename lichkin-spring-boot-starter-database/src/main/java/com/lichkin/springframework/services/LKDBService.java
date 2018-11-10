@@ -108,7 +108,7 @@ public abstract class LKDBService extends LKService {
 					}
 					break;
 					case 1: {
-						sql.eq(usingStatusColumnResId, defaultUsingStatus);
+						sql.eq(usingStatusColumnResId, defaultUsingStatus[0]);
 					}
 					break;
 					case 2: {
@@ -124,6 +124,7 @@ public abstract class LKDBService extends LKService {
 
 						);
 					}
+					break;
 					default: {
 						Condition[] conditions = new Condition[length - 2];
 						for (int i = 2; i < length; i++) {
