@@ -51,6 +51,9 @@ public abstract class LKApiBusInsertWithoutCheckerService<SI, E extends I_ID> ex
 
 		// 新增子表数据
 		addSubs(sin, locale, compId, loginId, entity, entity.getId());
+
+		// 新增子表后操作
+		afterSubs(sin, locale, compId, loginId, entity, entity.getId());
 	}
 
 
@@ -62,7 +65,7 @@ public abstract class LKApiBusInsertWithoutCheckerService<SI, E extends I_ID> ex
 	 * @param loginId 登录ID
 	 * @return 需要执行新增操作返回true，否则返回false。
 	 */
-	protected boolean busCheck(SI sin, String locale, String compId, String loginId) {
+	protected boolean busCheck(SI sin, String locale, String compId, String loginId) throws LKException {
 		return true;
 	}
 
@@ -76,6 +79,20 @@ public abstract class LKApiBusInsertWithoutCheckerService<SI, E extends I_ID> ex
 	 * @param entity 待还原实体类对象
 	 */
 	protected void beforeAddNew(SI sin, String locale, String compId, String loginId, E entity) {
+	}
+
+
+	/**
+	 * 新增子后操作
+	 * @param sin 入参
+	 * @param locale 国际化
+	 * @param compId 公司ID
+	 * @param loginId 登录ID
+	 * @param entity 保存后的实体类对象
+	 * @param id 主键
+	 * @throws LKException 不回滚主子表操作时抛出的异常
+	 */
+	protected void afterSubs(SI sin, String locale, String compId, String loginId, E entity, String id) throws LKException {
 	}
 
 }

@@ -10,6 +10,7 @@ import com.lichkin.framework.defines.entities.I_UsingStatus;
 import com.lichkin.framework.defines.enums.LKCodeEnum;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
+import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.framework.defines.exceptions.LKRuntimeException;
 import com.lichkin.framework.utils.LKBeanUtils;
 import com.lichkin.framework.utils.LKClassUtils;
@@ -35,7 +36,7 @@ public abstract class LKApiBusInsertService<SI, E extends I_ID> extends LKApiBus
 
 
 	@Override
-	protected boolean busCheck(SI sin, String locale, String compId, String loginId) {
+	protected boolean busCheck(SI sin, String locale, String compId, String loginId) throws LKException {
 		// 查询冲突数据
 		final List<E> listExist = findExist(sin, locale, compId, loginId);
 		if (CollectionUtils.isEmpty(listExist)) {
@@ -86,6 +87,9 @@ public abstract class LKApiBusInsertService<SI, E extends I_ID> extends LKApiBus
 
 		// 新增子表数据
 		addSubs(sin, locale, compId, loginId, exist, exist.getId());
+
+		// 新增子表后操作
+		afterSubs(sin, locale, compId, loginId, exist, exist.getId());
 
 		return false;
 	}
