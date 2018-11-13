@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.lichkin.framework.beans.impl.Datas;
 import com.lichkin.framework.beans.impl.LKRequestBean;
@@ -13,6 +14,7 @@ import com.lichkin.framework.beans.impl.LKResponseBean;
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.entities.I_Comp;
 import com.lichkin.framework.defines.entities.I_Login;
+import com.lichkin.framework.defines.entities.I_User;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.enums.impl.LKOperTypeEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
@@ -23,7 +25,10 @@ import com.lichkin.framework.utils.LKDateTimeUtils;
 import com.lichkin.framework.utils.LKStringUtils;
 import com.lichkin.framework.web.annotations.LKApiType;
 import com.lichkin.framework.web.annotations.LKController4Api;
+import com.lichkin.springframework.services.CompService;
+import com.lichkin.springframework.services.LoginService;
 import com.lichkin.springframework.services.OperLogService;
+import com.lichkin.springframework.services.UserToEmployeeService;
 import com.lichkin.springframework.web.LKSession;
 import com.lichkin.springframework.web.beans.LKRequestInfo;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
@@ -50,7 +55,14 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 		Datas datas = cin.getDatas();
 		String requestURI = LKRequestUtils.getRequestURI(request);
 		String userType = requestURI.substring(LKStringUtils.indexOf(requestURI, "/", 2) + 1, LKStringUtils.indexOf(requestURI, "/", 3));
-		initCI(datas, requestURI, userType);
+
+		datas.setLocale(LKRequestUtils.getLocale(request).toString());
+		if (requestURI.startsWith(LKFrameworkStatics.WEB_MAPPING_API_APP)) {
+			initAsApp(datas, userType, datas.getToken(), datas.getCompToken());
+		} else {
+			initAsWeb(datas, userType);
+		}
+
 		LKResponseBean<CO> responseBean = new LKResponseBean<>(handleInvoke(cin, datas.getLocale(), datas.getCompId(), datas.getLoginId()));
 		if (saveLog(cin)) {
 			saveLog(cin, datas, requestURI, userType);
@@ -60,27 +72,105 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 
 
 	/**
-	 * 初始化控制器类入参
+	 * 客户端访问接口
 	 * @param datas 统一请求参数
-	 * @param requestURI 请求地址
 	 * @param userType 用户类型
+	 * @param token 令牌
+	 * @param compToken 公司令牌
 	 */
-	private void initCI(Datas datas, String requestURI, String userType) {
-		datas.setLocale(LKRequestUtils.getLocale(request).toString());
-		if (requestURI.startsWith(LKFrameworkStatics.WEB_MAPPING_API_APP)) {
-			initAsApp(datas, userType);
-		} else {
-			initAsWeb(datas, userType);
+	private void initAsApp(Datas datas, String userType, String token, String compToken) {
+		switch (((LKApiType) LKClassUtils.deepGetAnnotation(getClass(), LKApiType.class.getName())).apiType()) {
+			case OPEN: {
+			}
+			break;
+			case ROOT_QUERY: {
+				datas.setCompId(LKFrameworkStatics.LichKin);
+			}
+			break;
+			case BEFORE_LOGIN: {
+				if (StringUtils.isBlank(token)) {
+					return;
+				}
+				initUserLogin(datas, userType, token, compToken);
+			}
+			break;
+			case PERSONAL_BUSINESS: {
+				if (StringUtils.isBlank(token)) {
+					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
+				}
+				initUserLogin(datas, userType, token, compToken);
+			}
+			break;
+			case COMPANY_BUSINESS: {
+				if (StringUtils.isBlank(token) || StringUtils.isBlank(compToken)) {
+					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
+				}
+				initUserLogin(datas, userType, token, compToken);
+				initComp(datas, compToken);
+			}
+			break;
 		}
 	}
 
 
 	/**
-	 * 客户端访问接口
+	 * 初始化用户及登录信息
 	 * @param datas 统一请求参数
 	 * @param userType 用户类型
+	 * @param token 令牌
+	 * @param compToken 公司令牌
 	 */
-	private void initAsApp(Datas datas, String userType) {
+	@SuppressWarnings("rawtypes")
+	private void initUserLogin(Datas datas, String userType, String token, String compToken) {
+		LoginService loginService = null;
+		try {
+			loginService = (LoginService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(Class.forName(String.format("com.lichkin.application.services.extend.impl.X%sLoginService", "Employee".equals(userType) ? "User" : userType)));
+		} catch (Exception e) {
+			throw new LKFrameworkException(e);
+		}
+
+		if (loginService == null) {
+			throw new LKFrameworkException("loginService can not be null.");
+		}
+
+		I_Login login = loginService.findUserLoginByToken(true, token);
+
+		datas.setLogin(login);
+
+		if ("Employee".equals(userType)) {
+			I_User employee = ((UserToEmployeeService) loginService).findEmployeeByUserLoginAndCompToken(true, login, compToken);
+			datas.setLoginId(employee.getId());
+			datas.setUser(employee);
+			datas.setUserId(employee.getId());
+		} else {
+			datas.setLoginId(login.getId());
+			datas.setUser((I_User) login);
+			datas.setUserId(login.getId());
+		}
+//		datas.setToken(token);
+	}
+
+
+	/**
+	 * 初始化公司信息
+	 * @param datas 统一请求参数
+	 * @param compToken 公司令牌
+	 */
+	private void initComp(Datas datas, String compToken) {
+		CompService compService = null;
+		try {
+			compService = (CompService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(Class.forName("com.lichkin.application.services.extend.impl.XCompService"));
+		} catch (ClassNotFoundException e) {
+			throw new LKFrameworkException(e);
+		}
+
+		if (compService == null) {
+			throw new LKFrameworkException("compService can not be null.");
+		}
+
+		I_Comp comp = compService.findCompByToken(true, compToken);
+		datas.setComp(comp);
+		datas.setCompId(comp.getId());
 	}
 
 
