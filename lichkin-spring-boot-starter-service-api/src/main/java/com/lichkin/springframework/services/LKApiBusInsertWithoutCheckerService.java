@@ -64,6 +64,7 @@ public abstract class LKApiBusInsertWithoutCheckerService<SI, E extends I_ID> ex
 	 * @param compId 公司ID
 	 * @param loginId 登录ID
 	 * @return 需要执行新增操作返回true，否则返回false。
+	 * @throws LKException 不回滚时抛出的异常
 	 */
 	protected boolean busCheck(SI sin, String locale, String compId, String loginId) throws LKException {
 		return true;
