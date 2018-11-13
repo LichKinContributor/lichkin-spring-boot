@@ -109,6 +109,13 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 				initComp(datas, compToken);
 			}
 			break;
+			case COMPANY_QUERY: {
+				if (StringUtils.isBlank(compToken)) {
+					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
+				}
+				initComp(datas, compToken);
+			}
+			break;
 		}
 	}
 
@@ -227,6 +234,15 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 				datas.setLoginId(loginId);
 				datas.setUser(LKSession.getUser(session));
 				datas.setUserId(LKSession.getUserId(session));
+				datas.setComp(comp);
+				datas.setCompId(compId);
+			}
+			case COMPANY_QUERY: {
+				I_Comp comp = LKSession.getComp(session);
+				String compId = LKSession.getCompId(session);
+				if (StringUtils.isBlank(compId) || (comp == null)) {
+					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("You must belongs to a company when invoke a company business API."));
+				}
 				datas.setComp(comp);
 				datas.setCompId(compId);
 			}
