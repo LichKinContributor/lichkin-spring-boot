@@ -82,6 +82,11 @@
       </dependency>
       <dependency>
         <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-quartz-database</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
         <artifactId>lichkin-spring-boot-starter-web</artifactId>
         <version>${com.lichkin.springframework.boot.version}</version>
       </dependency>
