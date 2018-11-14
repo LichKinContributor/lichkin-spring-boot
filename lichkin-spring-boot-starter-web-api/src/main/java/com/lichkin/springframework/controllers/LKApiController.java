@@ -93,21 +93,21 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 				if (StringUtils.isBlank(token)) {
 					return;
 				}
-				initUserLogin(datas, userType, token, compToken);
+				initUserLogin(datas, "Employee".equals(userType) ? null : ("Admin".equals(userType) ? false : null), token, compToken);
 			}
 			break;
 			case PERSONAL_BUSINESS: {
 				if (StringUtils.isBlank(token)) {
 					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
 				}
-				initUserLogin(datas, userType, token, compToken);
+				initUserLogin(datas, "Employee".equals(userType) ? null : ("Admin".equals(userType) ? false : null), token, compToken);
 			}
 			break;
 			case COMPANY_BUSINESS: {
 				if (StringUtils.isBlank(token) || StringUtils.isBlank(compToken)) {
 					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
 				}
-				initUserLogin(datas, userType, token, compToken);
+				initUserLogin(datas, "Employee".equals(userType) ? true : ("Admin".equals(userType) ? false : null), token, compToken);
 				initComp(datas, compToken);
 			}
 			break;
@@ -142,10 +142,10 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 	 * @param compToken 公司令牌
 	 */
 	@SuppressWarnings("rawtypes")
-	private void initUserLogin(Datas datas, String userType, String token, String compToken) {
+	private void initUserLogin(Datas datas, Boolean userType, String token, String compToken) {
 		LoginService loginService = null;
 		try {
-			loginService = (LoginService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(Class.forName(String.format("com.lichkin.application.services.extend.impl.X%sLoginService", "Employee".equals(userType) ? "User" : userType)));
+			loginService = (LoginService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(Class.forName(String.format("com.lichkin.application.services.extend.impl.X%sLoginService", Boolean.FALSE.equals(userType) ? "Admin" : "User")));
 		} catch (Exception e) {
 			throw new LKFrameworkException(e);
 		}
@@ -157,17 +157,19 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 		I_Login login = loginService.findUserLoginByToken(true, token);
 
 		datas.setLogin(login);
+		datas.setLoginId(login.getId());
 
-		if ("Employee".equals(userType)) {
+		if (Boolean.TRUE.equals(userType)) {// 员工
 			I_User employee = ((UserToEmployeeService) loginService).findEmployeeByUserLoginAndCompToken(true, login, compToken);
 			datas.setLoginId(employee.getId());
 			datas.setUser(employee);
 			datas.setUserId(employee.getId());
-		} else {
-			datas.setLoginId(login.getId());
+		} else if (Boolean.FALSE.equals(userType)) {// 管理员
 			datas.setUser((I_User) login);
 			datas.setUserId(login.getId());
+		} else {// 用户
 		}
+
 //		datas.setToken(token);
 	}
 
@@ -213,23 +215,19 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 			case BEFORE_LOGIN: {
 				datas.setToken(LKSession.getToken(session));
 				datas.setLogin(LKSession.getLogin(session));
-				datas.setLoginId(LKSession.getLoginId(session, "Employee".equals(userType)));
-				datas.setUser(LKSession.getUser(session));
-				datas.setUserId(LKSession.getUserId(session));
+				datas.setLoginId(LKSession.getLoginId(session, false));
 			}
 			break;
 			case PERSONAL_BUSINESS: {
 				String token = LKSession.getToken(session);
 				I_Login login = LKSession.getLogin(session);
-				String loginId = LKSession.getLoginId(session, "Employee".equals(userType));
+				String loginId = LKSession.getLoginId(session, false);
 				if (StringUtils.isBlank(token) || StringUtils.isBlank(loginId) || (login == null)) {
 					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR, new LKFrameworkException("You must login before when invoke a personal business API."));
 				}
 				datas.setToken(token);
 				datas.setLogin(login);
 				datas.setLoginId(loginId);
-				datas.setUser(LKSession.getUser(session));
-				datas.setUserId(LKSession.getUserId(session));
 			}
 			break;
 			case COMPANY_BUSINESS: {
