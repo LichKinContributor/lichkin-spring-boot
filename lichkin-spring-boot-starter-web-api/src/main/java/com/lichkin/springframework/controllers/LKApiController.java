@@ -12,6 +12,7 @@ import com.lichkin.framework.beans.impl.Datas;
 import com.lichkin.framework.beans.impl.LKRequestBean;
 import com.lichkin.framework.beans.impl.LKResponseBean;
 import com.lichkin.framework.defines.LKFrameworkStatics;
+import com.lichkin.framework.defines.beans.impl.LichKin;
 import com.lichkin.framework.defines.entities.I_Comp;
 import com.lichkin.framework.defines.entities.I_Login;
 import com.lichkin.framework.defines.entities.I_User;
@@ -84,6 +85,7 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 			}
 			break;
 			case ROOT_QUERY: {
+				datas.setComp(LichKin.getInstance());
 				datas.setCompId(LKFrameworkStatics.LichKin);
 			}
 			break;
@@ -114,6 +116,18 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
 				}
 				initComp(datas, compToken);
+			}
+			break;
+			case COMPANY_ROOT_QUERY: {
+				if (StringUtils.isBlank(compToken)) {
+					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
+				}
+				if (LKFrameworkStatics.LichKin.equals(compToken)) {
+					datas.setComp(LichKin.getInstance());
+					datas.setCompId(LKFrameworkStatics.LichKin);
+				} else {
+					initComp(datas, compToken);
+				}
 			}
 			break;
 		}
@@ -192,6 +206,7 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 			}
 			break;
 			case ROOT_QUERY: {
+				datas.setComp(LichKin.getInstance());
 				datas.setCompId(LKFrameworkStatics.LichKin);
 			}
 			break;
@@ -237,7 +252,8 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 				datas.setComp(comp);
 				datas.setCompId(compId);
 			}
-			case COMPANY_QUERY: {
+			case COMPANY_QUERY:
+			case COMPANY_ROOT_QUERY: {
 				I_Comp comp = LKSession.getComp(session);
 				String compId = LKSession.getCompId(session);
 				if (StringUtils.isBlank(compId) || (comp == null)) {
