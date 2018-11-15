@@ -191,6 +191,22 @@ public class LKQuartzManager {
 
 
 	/**
+	 * 判断是否存在任务
+	 * @param groupName 组名称
+	 * @param jobName 任务名称
+	 * @return 存在任务返回true，否则返回false。
+	 */
+	public boolean checkExistSecheduleJob(String groupName, String jobName) {
+		try {
+			return scheduler.getTrigger(new TriggerKey(jobName, groupName)) != null;
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
+	/**
 	 * 启动计划
 	 * @return 成功返回true，否则返回false。
 	 */
