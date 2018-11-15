@@ -49,6 +49,11 @@
       <groupId>com.lichkin.springframework.boot</groupId>
       <artifactId>lichkin-spring-boot-starter-base</artifactId>
     </dependency>
+    <!-- hibernate validation -->
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
   </dependencies>
 
 </project>
