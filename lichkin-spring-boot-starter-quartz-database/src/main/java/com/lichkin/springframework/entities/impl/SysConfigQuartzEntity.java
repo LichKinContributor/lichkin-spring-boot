@@ -40,4 +40,12 @@ public final class SysConfigQuartzEntity extends BaseEntity {
 	@Column(nullable = false, length = 64)
 	private String cronExpression;
 
+	/** 最后一次任务执行时间（yyyyMMddHHmmssSSS） */
+	@Column(length = 17)
+	private String lastExecuteTime;
+
+	/** 最后一次任务完成时间（yyyyMMddHHmmssSSS） */
+	@Column(length = 17)
+	private String lastFinishedTime;
+
 }
