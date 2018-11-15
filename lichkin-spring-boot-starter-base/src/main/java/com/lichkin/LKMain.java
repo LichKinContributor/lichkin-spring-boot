@@ -18,10 +18,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.lichkin.framework.defines.LKConfigStatics;
+import com.lichkin.framework.defines.enums.LKPlatform;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
 import com.lichkin.framework.log.log4j2.LKLog4j2Initializer;
 import com.lichkin.framework.utils.LKArrayUtils;
+import com.lichkin.framework.utils.LKEnumUtils;
 import com.lichkin.framework.utils.LKRandomUtils;
 import com.lichkin.framework.utils.LKStringUtils;
 
@@ -49,6 +51,8 @@ public class LKMain {
 	private static final String WEB_ADMIN_DEBUG = "--lichkin.web.admin.debug=";
 
 	private static final String WEB_CONTEXT_PATH = "--server.servlet.context-path=";
+
+	private static final String PLATFORM = "--lichkin.system.platform=";
 
 	static {
 		LKLog4j2Initializer.init();
@@ -83,6 +87,7 @@ public class LKMain {
 		String webCompress = String.valueOf(LKConfigStatics.WEB_COMPRESS);
 		String webContextPath = String.valueOf(LKConfigStatics.WEB_CONTEXT_PATH);
 		String webAdminDebug = String.valueOf(LKConfigStatics.WEB_ADMIN_DEBUG);
+		String platform = String.valueOf(LKConfigStatics.PLATFORM);
 
 		if (ArrayUtils.isNotEmpty(args)) {
 			// 遍历主参数
@@ -173,6 +178,12 @@ public class LKMain {
 					webAdminDebug = String.valueOf(LKConfigStatics.WEB_ADMIN_DEBUG);
 
 					args = ArrayUtils.remove(args, i);
+				} else if (StringUtils.startsWith(arg, PLATFORM)) {
+					LKConfigStatics.PLATFORM = LKEnumUtils.getEnum(LKPlatform.class, arg.substring(PLATFORM.length()));
+
+					platform = String.valueOf(LKConfigStatics.PLATFORM);
+
+					args = ArrayUtils.remove(args, i);
 				}
 			}
 		}
@@ -191,6 +202,7 @@ public class LKMain {
 		args = ArrayUtils.add(args, WEB_COMPRESS + webCompress);
 		args = ArrayUtils.add(args, WEB_CONTEXT_PATH + webContextPath);
 		args = ArrayUtils.add(args, WEB_ADMIN_DEBUG + webAdminDebug);
+		args = ArrayUtils.add(args, PLATFORM + platform);
 
 		LOGGER.warn("systemId[%s] -> main args after analyzed. %s", SYSTEM_ID, ArrayUtils.toString(args));
 
