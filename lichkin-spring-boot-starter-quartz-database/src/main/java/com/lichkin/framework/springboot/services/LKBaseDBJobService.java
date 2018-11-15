@@ -38,14 +38,14 @@ public abstract class LKBaseDBJobService extends LKBaseTaskDBService implements 
 	@Override
 	protected void doTask() {
 		// 查询任务信息
-		SysConfigQuartzEntity quartzEntity = quartzService.getOneByClassName(getClass().getSimpleName());
+		SysConfigQuartzEntity quartzEntity = quartzService.getOneByClassName(getClass().getName());
 
 		if (quartzEntity == null) {
 			throw new LKFrameworkException("no quartz found.");
 		}
 
 		try {
-			doTask(LKDateTimeUtils.toDateTime(quartzEntity.getLastExecuteTime()), LKDateTimeUtils.toDateTime(quartzEntity.getLastFinishedTime()));
+			doTask(quartzEntity.getLastExecuteTime() == null ? null : LKDateTimeUtils.toDateTime(quartzEntity.getLastExecuteTime()), quartzEntity.getLastFinishedTime() == null ? null : LKDateTimeUtils.toDateTime(quartzEntity.getLastFinishedTime()));
 		} catch (Exception e) {
 			logger.error(e);
 			return;

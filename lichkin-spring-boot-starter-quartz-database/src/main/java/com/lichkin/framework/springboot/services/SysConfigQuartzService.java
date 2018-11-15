@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SysConfigQuartzR;
+import com.lichkin.framework.defines.LKConfigStatics;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
 import com.lichkin.framework.utils.LKDateTimeUtils;
 import com.lichkin.springframework.entities.impl.SysConfigQuartzEntity;
@@ -18,6 +19,7 @@ public class SysConfigQuartzService extends LKDBService {
 		QuerySQL sql = new QuerySQL(false, SysConfigQuartzEntity.class);
 		sql.eq(SysConfigQuartzR.usingStatus, LKUsingStatusEnum.USING);
 		sql.eq(SysConfigQuartzR.className, className);
+		sql.eq(SysConfigQuartzR.groupName, LKConfigStatics.SYSTEM_DEBUG ? "DEBUG-" + LKConfigStatics.SYSTEM_TAG : LKConfigStatics.SYSTEM_TAG);
 		SysConfigQuartzEntity entity = dao.getOne(sql, SysConfigQuartzEntity.class);
 		entity.setLastExecuteTime(LKDateTimeUtils.now());
 		return entity;
