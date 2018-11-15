@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 
+import com.lichkin.framework.defines.beans.LKInvokeBean;
 import com.lichkin.framework.defines.entities.I_ID;
 import com.lichkin.framework.defines.entities.I_UsingStatus;
 import com.lichkin.framework.defines.enums.LKCodeEnum;
@@ -21,7 +22,7 @@ import com.lichkin.framework.utils.LKClassUtils;
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusInsertService<SI, E extends I_ID> extends LKApiBusInsertWithoutCheckerService<SI, E> {
+public abstract class LKApiBusInsertService<SI extends LKInvokeBean, E extends I_ID> extends LKApiBusInsertWithoutCheckerService<SI, E> {
 
 	/**
 	 * 构造方法
@@ -65,7 +66,8 @@ public abstract class LKApiBusInsertService<SI, E extends I_ID> extends LKApiBus
 		}
 
 		// 先从入参创建新的实体对象
-		E entity = LKBeanUtils.newInstance(true, sin, classE, "id");
+		E entity = LKBeanUtils.newInstance(true, sin.getDatas(), classE);
+		LKBeanUtils.copyProperties(sin, entity, "id");
 
 		// 替换数据前操作
 		beforeRestore(sin, locale, compId, loginId, entity, exist);

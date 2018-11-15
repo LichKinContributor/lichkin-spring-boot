@@ -2,6 +2,7 @@ package com.lichkin.springframework.services;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lichkin.framework.defines.beans.LKInvokeBean;
 import com.lichkin.framework.defines.entities.I_ID;
 import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.framework.utils.LKBeanUtils;
@@ -12,7 +13,7 @@ import com.lichkin.framework.utils.LKBeanUtils;
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusInsertWithoutCheckerService<SI, E extends I_ID> extends LKApiBusIUService<SI, E> {
+public abstract class LKApiBusInsertWithoutCheckerService<SI extends LKInvokeBean, E extends I_ID> extends LKApiBusIUService<SI, E> {
 
 	/**
 	 * 构造方法
@@ -35,7 +36,8 @@ public abstract class LKApiBusInsertWithoutCheckerService<SI, E extends I_ID> ex
 		}
 
 		// 先从入参创建新的实体对象
-		E entity = LKBeanUtils.newInstance(true, sin, classE);
+		E entity = LKBeanUtils.newInstance(true, sin.getDatas(), classE);
+		LKBeanUtils.copyProperties(sin, entity, "id");
 
 		// 新增时数据所需的特殊操作
 		beforeAddNew(sin, locale, compId, loginId, entity);
