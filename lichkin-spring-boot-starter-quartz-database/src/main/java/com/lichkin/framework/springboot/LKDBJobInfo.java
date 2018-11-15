@@ -1,6 +1,6 @@
 package com.lichkin.framework.springboot;
 
-import com.lichkin.framework.springboot.services.LKBaseJobService;
+import com.lichkin.framework.springboot.services.LKBaseDBJobService;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +11,10 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public class LKJobInfo {
+public class LKDBJobInfo {
 
 	/** 定时任务类 */
-	private final Class<? extends LKBaseJobService> clazz;
+	private final Class<? extends LKBaseDBJobService> clazz;
 
 	/** 表达式 */
 	private final String cronExpression;
@@ -24,7 +24,7 @@ public class LKJobInfo {
 	 * 构造方法
 	 * @param clazz 定时任务类
 	 */
-	public LKJobInfo(Class<? extends LKBaseJobService> clazz) {
+	public LKDBJobInfo(Class<? extends LKBaseDBJobService> clazz) {
 		super();
 		this.clazz = clazz;
 		cronExpression = "once";

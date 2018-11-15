@@ -21,12 +21,12 @@ public abstract class LKTaskRunner4InitSysConfigQuartz extends LKTaskDBRunnerWit
 	@Override
 	protected void doTask() {
 		logger.debug("==============================初始化定时任务表==============================");
-		final List<LKJobInfo> listJob = getJobs();
+		final List<LKDBJobInfo> listJob = getJobs();
 		if (CollectionUtils.isEmpty(listJob)) {
 			throw new LKRuntimeException(LKErrorCodesEnum.CONFIG_ERROR);
 		}
 
-		for (final LKJobInfo job : listJob) {
+		for (final LKDBJobInfo job : listJob) {
 			initDebugJob(job);
 			initJob(job);
 		}
@@ -37,7 +37,7 @@ public abstract class LKTaskRunner4InitSysConfigQuartz extends LKTaskDBRunnerWit
 	 * 初始化任务
 	 * @param job 定时任务
 	 */
-	private void initDebugJob(LKJobInfo job) {
+	private void initDebugJob(LKDBJobInfo job) {
 		final Class<?> clazz = job.getClazz();
 		final String groupName = "DEBUG-" + LKConfigStatics.SYSTEM_TAG;
 		final String jobName = clazz.getSimpleName();
@@ -78,7 +78,7 @@ public abstract class LKTaskRunner4InitSysConfigQuartz extends LKTaskDBRunnerWit
 	 * 初始化任务
 	 * @param job 定时任务
 	 */
-	private void initJob(LKJobInfo job) {
+	private void initJob(LKDBJobInfo job) {
 		final Class<?> clazz = job.getClazz();
 		final String groupName = LKConfigStatics.SYSTEM_TAG;
 		final String jobName = clazz.getSimpleName();
@@ -121,6 +121,6 @@ public abstract class LKTaskRunner4InitSysConfigQuartz extends LKTaskDBRunnerWit
 	 * 获取任务列表
 	 * @return 任务列表
 	 */
-	protected abstract List<LKJobInfo> getJobs();
+	protected abstract List<LKDBJobInfo> getJobs();
 
 }

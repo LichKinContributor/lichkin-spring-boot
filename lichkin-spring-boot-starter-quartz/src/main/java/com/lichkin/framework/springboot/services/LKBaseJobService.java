@@ -11,7 +11,7 @@ import lombok.Getter;
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
 @Getter
-public abstract class LKBaseJobService extends LKBaseTaskDBService implements Job {
+public abstract class LKBaseJobService extends LKBaseTaskService implements Job {
 
 	/** 定时任务执行环境上下文 */
 	public JobExecutionContext context;
