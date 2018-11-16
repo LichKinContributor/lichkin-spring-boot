@@ -27,6 +27,7 @@ import com.lichkin.framework.utils.LKStringUtils;
 import com.lichkin.framework.web.annotations.LKApiType;
 import com.lichkin.framework.web.annotations.LKController4Api;
 import com.lichkin.springframework.services.CompService;
+import com.lichkin.springframework.services.EmployeeDeptService;
 import com.lichkin.springframework.services.LoginService;
 import com.lichkin.springframework.services.OperLogService;
 import com.lichkin.springframework.services.UserToEmployeeService;
@@ -111,6 +112,18 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 				initComp(datas, compToken);
 			}
 			break;
+			case DEPT_BUSINESS: {
+				if (StringUtils.isBlank(token) || StringUtils.isBlank(compToken)) {
+					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
+				}
+				@SuppressWarnings("rawtypes")
+				LoginService loginService = initUserLogin(datas, "Employee".equals(userType) ? true : ("Admin".equals(userType) ? false : null), token, compToken);
+				initComp(datas, compToken);
+				if ("Employee".equals(userType)) {
+					((EmployeeDeptService) loginService).findDeptByLoginIdAndCompId(true, datas.getLoginId(), datas.getCompId());
+				}
+			}
+			break;
 			case COMPANY_QUERY: {
 				if (StringUtils.isBlank(compToken)) {
 					throw new LKRuntimeException(LKErrorCodesEnum.PARAM_ERROR);
@@ -142,7 +155,7 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 	 * @param compToken 公司令牌
 	 */
 	@SuppressWarnings("rawtypes")
-	private void initUserLogin(Datas datas, Boolean userType, String token, String compToken) {
+	private LoginService initUserLogin(Datas datas, Boolean userType, String token, String compToken) {
 		LoginService loginService = null;
 		try {
 			loginService = (LoginService) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(Class.forName(String.format("com.lichkin.application.services.extend.impl.X%sLoginService", Boolean.FALSE.equals(userType) ? "Admin" : "User")));
@@ -171,6 +184,8 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 		}
 
 //		datas.setToken(token);
+
+		return loginService;
 	}
 
 
@@ -249,6 +264,10 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 				datas.setUserId(LKSession.getUserId(session));
 				datas.setComp(comp);
 				datas.setCompId(compId);
+				if ("Employee".equals(userType)) {
+					datas.setDept(LKSession.getDept(session));
+					datas.setDeptId(LKSession.getDept(session).getId());
+				}
 			}
 			case COMPANY_QUERY:
 			case COMPANY_ROOT_QUERY: {
