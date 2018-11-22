@@ -11,13 +11,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.lichkin.framework.defines.LKConfigStatics;
 import com.lichkin.framework.defines.LKFrameworkStatics;
+import com.lichkin.framework.defines.LKSessionStatics;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
 import com.lichkin.framework.utils.LKClassUtils;
 import com.lichkin.framework.web.annotations.WithoutLogin;
 import com.lichkin.springframework.controllers.LKPagesController;
-import com.lichkin.springframework.web.LKSession;
 import com.lichkin.springframework.web.beans.LKRequestInfo;
 import com.lichkin.springframework.web.beans.LKResponseInfo;
 
@@ -37,7 +37,7 @@ public class LKHandlerInterceptor implements HandlerInterceptor {
 		Class<?> controllerClass = handler.getBean().getClass();
 		Method method = handler.getMethod();
 
-		if (LKClassUtils.checkExtendsClass(controllerClass, LKPagesController.class) && (method.getAnnotation(WithoutLogin.class) == null) && (LKSession.getLogin(request.getSession()) == null)) {
+		if (LKClassUtils.checkExtendsClass(controllerClass, LKPagesController.class) && (method.getAnnotation(WithoutLogin.class) == null) && (request.getSession().getAttribute(LKSessionStatics.KEY_LOGIN) == null)) {
 			response.sendRedirect(LKConfigStatics.WEB_CONTEXT_PATH + "/index");
 		}
 

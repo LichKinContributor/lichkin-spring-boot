@@ -1,5 +1,11 @@
 package com.lichkin.springframework.web;
 
+import static com.lichkin.framework.defines.LKSessionStatics.KEY_COMP;
+import static com.lichkin.framework.defines.LKSessionStatics.KEY_LOGIN;
+import static com.lichkin.framework.defines.LKSessionStatics.KEY_MENUS;
+import static com.lichkin.framework.defines.LKSessionStatics.KEY_ROLES;
+import static com.lichkin.framework.defines.LKSessionStatics.KEY_USER;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +14,6 @@ import javax.servlet.http.HttpSession;
 
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.entities.I_Comp;
-import com.lichkin.framework.defines.entities.I_Dept;
 import com.lichkin.framework.defines.entities.I_Login;
 import com.lichkin.framework.defines.entities.I_Menu;
 import com.lichkin.framework.defines.entities.I_Role;
@@ -16,10 +21,10 @@ import com.lichkin.framework.defines.entities.I_User;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 /**
- * 会话信息
+ * 会话对象
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public class LKSession {
+class Session {
 
 	/**
 	 * 获取字符串
@@ -69,72 +74,18 @@ public class LKSession {
 	}
 
 
-	/** 键：公司信息 */
-	private static final String KEY_COMP = "KEY_COMP";
-
-
 	/**
-	 * 设置公司信息
+	 * 获取令牌
 	 * @param session HttpSession
-	 * @param comp 公司信息
+	 * @return 令牌
 	 */
-	public static void setComp(HttpSession session, I_Comp comp) {
-		session.setAttribute(KEY_COMP, comp);
-	}
-
-
-	/**
-	 * 获取公司信息
-	 * @param session HttpSession
-	 * @return 公司信息
-	 */
-	public static I_Comp getComp(HttpSession session) {
-		Object comp = session.getAttribute(KEY_COMP);
-		return comp == null ? null : (I_Comp) comp;
-	}
-
-
-	/** 键：部门信息 */
-	private static final String KEY_DEPT = "KEY_DEPT";
-
-
-	/**
-	 * 设置部门信息
-	 * @param session HttpSession
-	 * @param dept 公司信息
-	 */
-	public static void setDept(HttpSession session, I_Dept dept) {
-		session.setAttribute(KEY_DEPT, dept);
-	}
-
-
-	/**
-	 * 获取部门信息
-	 * @param session HttpSession
-	 * @return 部门信息
-	 */
-	public static I_Dept getDept(HttpSession session) {
-		Object dept = session.getAttribute(KEY_DEPT);
-		return dept == null ? null : (I_Dept) dept;
-	}
-
-
-	/**
-	 * 获取公司ID
-	 * @param session HttpSession
-	 * @return 公司ID
-	 */
-	public static String getCompId(HttpSession session) {
-		I_Comp comp = getComp(session);
-		if (comp == null) {
+	public static String getToken(HttpSession session) {
+		I_Login login = getLogin(session);
+		if (login == null) {
 			return null;
 		}
-		return comp.getId();
+		return login.getToken();
 	}
-
-
-	/** 键：登录信息 */
-	private static final String KEY_LOGIN = "KEY_LOGIN";
 
 
 	/**
@@ -159,47 +110,6 @@ public class LKSession {
 
 
 	/**
-	 * 获取登录ID
-	 * @param session HttpSession
-	 * @param isEmployee 是否为员工（如果为员工时，返回的是I_User的ID）
-	 * @return 登录ID
-	 */
-	public static String getLoginId(HttpSession session, boolean isEmployee) {
-		if (isEmployee) {
-			I_User user = getUser(session);
-			if (user == null) {
-				return null;
-			}
-			return user.getId();
-		} else {
-			I_Login login = getLogin(session);
-			if (login == null) {
-				return null;
-			}
-			return login.getId();
-		}
-	}
-
-
-	/**
-	 * 获取令牌
-	 * @param session HttpSession
-	 * @return 令牌
-	 */
-	public static String getToken(HttpSession session) {
-		I_Login login = getLogin(session);
-		if (login == null) {
-			return null;
-		}
-		return login.getToken();
-	}
-
-
-	/** 键：用户信息 */
-	private static final String KEY_USER = "KEY_USER";
-
-
-	/**
 	 * 设置用户信息
 	 * @param session HttpSession
 	 * @param user 用户信息
@@ -221,21 +131,24 @@ public class LKSession {
 
 
 	/**
-	 * 获取用户ID
+	 * 设置公司信息
 	 * @param session HttpSession
-	 * @return 登录ID
+	 * @param comp 公司信息
 	 */
-	public static String getUserId(HttpSession session) {
-		I_User user = getUser(session);
-		if (user == null) {
-			return null;
-		}
-		return user.getId();
+	public static void setComp(HttpSession session, I_Comp comp) {
+		session.setAttribute(KEY_COMP, comp);
 	}
 
 
-	/** 键：角色信息 */
-	private static final String KEY_ROLES = "KEY_ROLES";
+	/**
+	 * 获取公司信息
+	 * @param session HttpSession
+	 * @return 公司信息
+	 */
+	public static I_Comp getComp(HttpSession session) {
+		Object comp = session.getAttribute(KEY_COMP);
+		return comp == null ? null : (I_Comp) comp;
+	}
 
 
 	/**
@@ -258,10 +171,6 @@ public class LKSession {
 		Object roles = session.getAttribute(KEY_ROLES);
 		return roles == null ? null : new ArrayList<>((List<I_Role>) roles);
 	}
-
-
-	/** 键：菜单信息 */
-	private static final String KEY_MENUS = "KEY_MENUS";
 
 
 	/**

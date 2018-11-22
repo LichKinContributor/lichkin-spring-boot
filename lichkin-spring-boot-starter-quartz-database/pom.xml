@@ -8,9 +8,9 @@
   <artifactId>lichkin-spring-boot-starter-quartz-database</artifactId>
 
 
-  <name>lichkin-spring-boot-starter-quartz</name>
+  <name>lichkin-spring-boot-starter-quartz-database</name>
   <description>使用springboot基础封装</description>
-  <url>http://codes.lichkin.com/spring-boot-starter-quartz</url>
+  <url>http://codes.lichkin.com/spring-boot-starter-quartz-database</url>
   <organization>
     <name>SuZhou LichKin Information Technology Co., Ltd.</name>
     <url>http://www.lichkin.com</url>
