@@ -47,7 +47,6 @@
     <module>lichkin-spring-boot-starter-web</module>
     <module>lichkin-spring-boot-starter-web-api-defines</module>
     <module>lichkin-spring-boot-starter-web-api</module>
-    <module>lichkin-spring-boot-starter-web-api-generator</module>
   </modules>
 
   <dependencyManagement>
@@ -115,12 +114,6 @@
         <groupId>com.lichkin.springframework.boot</groupId>
         <artifactId>lichkin-spring-boot-starter-web-api</artifactId>
         <version>${com.lichkin.springframework.boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.lichkin.springframework.boot</groupId>
-        <artifactId>lichkin-spring-boot-starter-web-api-generator</artifactId>
-        <version>${com.lichkin.springframework.boot.version}</version>
-        <scope>test</scope>
       </dependency>
 
       <!-- springboot starter -->
