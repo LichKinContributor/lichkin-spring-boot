@@ -6,17 +6,19 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lichkin.framework.db.beans.QuerySQL;
-import com.lichkin.framework.defines.entities.I_UsingStatus;
+import com.lichkin.framework.defines.entities.I_ID;
+import com.lichkin.framework.defines.entities.I_UsingStatus_ID;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
+import com.lichkin.springframework.controllers.ApiKeyValues;
 
 /**
  * 修改在用状态接口服务类定义
- * @param <SI> 服务类入参类型
+ * @param <CI> 服务类入参类型
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus, E extends I_UsingStatus> extends LKApiBusService<SI, Void, E> implements LKApiVoidService<SI> {
+public abstract class LKApiBusUpdateUsingStatusService<CI extends I_ID, E extends I_UsingStatus_ID> extends LKApiBusService<CI, Void, E> implements LKApiVoidService<CI> {
 
 	/**
 	 * 构造方法
@@ -24,7 +26,7 @@ public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus,
 	@SuppressWarnings("unchecked")
 	public LKApiBusUpdateUsingStatusService() {
 		super();
-		classSI = (Class<SI>) types[0];
+		classCI = (Class<CI>) types[0];
 		classSO = Void.class;
 		classE = (Class<E>) types[1];
 	}
@@ -32,27 +34,27 @@ public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus,
 
 	@Transactional
 	@Override
-	public void handle(SI sin, String locale, String compId, String loginId) throws LKException {
+	public void handle(CI cin, ApiKeyValues<CI> params) throws LKException {
 		// 取业务字段值
-		String id = sin.getId();
-		LKUsingStatusEnum usingStatus = sin.getUsingStatus();
+		String id = params.getId();
+		LKUsingStatusEnum usingStatus = params.getObject("_usingStatus");
 
 		// 查询主表信息
 		List<E> listEntity = findListByIds(id);
 		if (CollectionUtils.isNotEmpty(listEntity)) {
-			beforeSaveMains(sin, locale, compId, loginId, listEntity);
+			beforeSaveMains(cin, params, listEntity);
 
 			// 修改主表状态
 			for (E entity : listEntity) {
-				beforeSaveMain(sin, locale, compId, loginId, entity, entity.getId());
+				beforeSaveMain(cin, params, entity, entity.getId());
 				entity.setUsingStatus(usingStatus);
 				dao.mergeOne(entity);
-				afterSaveMain(sin, locale, compId, loginId, entity, entity.getId());
+				afterSaveMain(cin, params, entity, entity.getId());
 			}
 
 		}
 
-		afterSaveMains(sin, locale, compId, loginId, listEntity);
+		afterSaveMains(cin, params, listEntity);
 	}
 
 
@@ -72,51 +74,43 @@ public abstract class LKApiBusUpdateUsingStatusService<SI extends I_UsingStatus,
 
 	/**
 	 * 保存主表数据前操作
-	 * @param sin 入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
+	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @param entity 实体类对象
 	 * @param id 主键
 	 */
-	protected void beforeSaveMain(SI sin, String locale, String compId, String loginId, E entity, String id) {
+	protected void beforeSaveMain(CI cin, ApiKeyValues<CI> params, E entity, String id) {
 	}
 
 
 	/**
 	 * 保存主表数据前操作
-	 * @param sin 入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
+	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @param listEntity 实体类列表对象
 	 */
-	protected void beforeSaveMains(SI sin, String locale, String compId, String loginId, List<E> listEntity) {
+	protected void beforeSaveMains(CI cin, ApiKeyValues<CI> params, List<E> listEntity) {
 	}
 
 
 	/**
 	 * 保存主表数据后操作
-	 * @param sin 入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
+	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @param entity 实体类对象
 	 * @param id 主键
 	 */
-	protected void afterSaveMain(SI sin, String locale, String compId, String loginId, E entity, String id) {
+	protected void afterSaveMain(CI cin, ApiKeyValues<CI> params, E entity, String id) {
 	}
 
 
 	/**
 	 * 保存主表数据后操作
-	 * @param sin 入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
+	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @param listEntity 实体类列表对象
 	 */
-	protected void afterSaveMains(SI sin, String locale, String compId, String loginId, List<E> listEntity) {
+	protected void afterSaveMains(CI cin, ApiKeyValues<CI> params, List<E> listEntity) {
 	}
 
 

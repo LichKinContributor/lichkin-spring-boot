@@ -2,15 +2,16 @@ package com.lichkin.springframework.services;
 
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.defines.entities.I_ID;
+import com.lichkin.springframework.controllers.ApiKeyValues;
 
 /**
  * 获取分页/列表数据接口服务类定义
- * @param <SI> 服务类入参类型
+ * @param <CI> 服务类入参类型
  * @param <SO> 服务类出参类型
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusGetPLService<SI, SO, E extends I_ID> extends LKApiBusService<SI, SO, E> {
+public abstract class LKApiBusGetPLService<CI, SO, E extends I_ID> extends LKApiBusService<CI, SO, E> {
 
 	/**
 	 * 是否去重
@@ -23,13 +24,11 @@ public abstract class LKApiBusGetPLService<SI, SO, E extends I_ID> extends LKApi
 
 	/**
 	 * 初始化SQL语句
-	 * @param sin 入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
+	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @param sql SQL语句对象
 	 */
-	protected void initSQL(SI sin, String locale, String compId, String loginId, QuerySQL sql) {
+	protected void initSQL(CI cin, ApiKeyValues<CI> params, QuerySQL sql) {
 	}
 
 }

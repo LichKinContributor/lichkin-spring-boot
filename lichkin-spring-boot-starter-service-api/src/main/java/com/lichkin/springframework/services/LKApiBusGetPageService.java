@@ -9,15 +9,16 @@ import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.defines.beans.LKPageable;
 import com.lichkin.framework.defines.entities.I_ID;
 import com.lichkin.framework.defines.exceptions.LKException;
+import com.lichkin.springframework.controllers.ApiKeyValues;
 
 /**
  * 获取分页数据接口服务类定义
- * @param <SI> 服务类入参类型
+ * @param <CI> 服务类入参类型
  * @param <SO> 服务类出参类型
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusGetPageService<SI extends LKPageable, SO, E extends I_ID> extends LKApiBusGetPLService<SI, SO, E> implements LKApiService<SI, Page<SO>> {
+public abstract class LKApiBusGetPageService<CI extends LKPageable, SO, E extends I_ID> extends LKApiBusGetPLService<CI, SO, E> implements LKApiService<CI, Page<SO>> {
 
 	/**
 	 * 构造方法
@@ -25,26 +26,26 @@ public abstract class LKApiBusGetPageService<SI extends LKPageable, SO, E extend
 	@SuppressWarnings("unchecked")
 	public LKApiBusGetPageService() {
 		super();
-		classSI = (Class<SI>) types[0];
+		classCI = (Class<CI>) types[0];
 		classSO = (Class<SO>) types[1];
 		classE = (Class<E>) types[2];
 	}
 
 
 	@Override
-	public Page<SO> handle(SI sin, String locale, String compId, String loginId) throws LKException {
-		Page<SO> page = beforeQuery(sin, locale, compId, loginId);
+	public Page<SO> handle(CI cin, ApiKeyValues<CI> params) throws LKException {
+		Page<SO> page = beforeQuery(cin, params);
 		if (page != null) {
 			return page;
 		}
 
 		QuerySQL sql = new QuerySQL(!classE.equals(classSO), classE, isDistinct());
 
-		initSQL(sin, locale, compId, loginId, sql);
+		initSQL(cin, params, sql);
 
-		sql.setPage(sin);
+		sql.setPage(params.getPageable());
 
-		return afterQuery(sin, locale, compId, loginId, dao.getPage(sql, classSO));
+		return afterQuery(cin, params, dao.getPage(sql, classSO));
 	}
 
 
@@ -60,27 +61,23 @@ public abstract class LKApiBusGetPageService<SI extends LKPageable, SO, E extend
 
 	/**
 	 * 返回结果
-	 * @param sin 入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
+	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @return 出参
 	 */
-	protected Page<SO> beforeQuery(SI sin, String locale, String compId, String loginId) {
+	protected Page<SO> beforeQuery(CI cin, ApiKeyValues<CI> params) {
 		return null;
 	}
 
 
 	/**
 	 * 查询语句执行后处理
-	 * @param sin 入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
+	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @param page 查询结果
 	 * @return 出参
 	 */
-	protected Page<SO> afterQuery(SI sin, String locale, String compId, String loginId, Page<SO> page) {
+	protected Page<SO> afterQuery(CI cin, ApiKeyValues<CI> params, Page<SO> page) {
 		return page;
 	}
 

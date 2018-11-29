@@ -1,7 +1,5 @@
 package com.lichkin.springframework.controllers;
 
-import javax.validation.Valid;
-
 import com.lichkin.framework.beans.impl.LKRequestBean;
 import com.lichkin.framework.defines.exceptions.LKException;
 
@@ -13,8 +11,8 @@ import com.lichkin.framework.defines.exceptions.LKException;
 public abstract class LKApiV0Controller<CI extends LKRequestBean> extends LKApiController<CI, Void> {
 
 	@Override
-	Void handleInvoke(@Valid CI cin, String locale, String compId, String loginId) throws LKException {
-		doInvoke(cin);
+	Void handleInvoke(CI cin, ApiKeyValues<CI> params) throws LKException {
+		doInvoke(cin, params);
 		return null;
 	}
 
@@ -23,9 +21,10 @@ public abstract class LKApiV0Controller<CI extends LKRequestBean> extends LKApiC
 	 * 执行请求处理方法
 	 * @deprecated 如框架约定的实现不能满足业务需要时才重写该方法
 	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @throws LKException 转换时可能抛出的异常
 	 */
 	@Deprecated
-	protected abstract void doInvoke(CI cin) throws LKException;
+	protected abstract void doInvoke(CI cin, ApiKeyValues<CI> params) throws LKException;
 
 }

@@ -2,6 +2,7 @@ package com.lichkin.springframework.controllers;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lichkin.framework.beans.impl.LKRequestBean;
@@ -25,6 +26,7 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 	 * @throws LKException 业务处理失败但不希望已处理数据回滚时抛出异常
 	 */
 	@Deprecated
+	@PostMapping
 	public LKResponseBean<CO> invoke(@Valid @RequestBody CI cin) throws LKException {
 		return null;
 	}
@@ -33,21 +35,20 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 	/**
 	 * 请求处理方法
 	 * @param cin 控制器类入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
+	 * @param params 解析值参数
 	 * @return 控制器类出参
 	 * @throws LKException 业务处理失败但不希望已处理数据回滚时抛出异常
 	 */
-	abstract CO handleInvoke(@Valid CI cin, String locale, String compId, String loginId) throws LKException;
+	abstract CO handleInvoke(CI cin, ApiKeyValues<CI> params) throws LKException;
 
 
 	/**
 	 * 是否记录日志
 	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @return true:记录日志;false:不记录日志;
 	 */
-	protected boolean saveLog(CI cin) {
+	protected boolean saveLog(CI cin, ApiKeyValues<CI> params) {
 		return true;
 	}
 
@@ -55,20 +56,11 @@ public abstract class LKApiController<CI extends LKRequestBean, CO> extends LKCo
 	/**
 	 * 获取操作类型
 	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @return 操作类型
 	 */
-	protected LKOperTypeEnum getOperType(@Valid CI cin) {
-		return null;
-	}
-
-
-	/**
-	 * 获取业务操作类型
-	 * @param cin 控制器类入参
-	 * @return 业务操作类型
-	 */
-	protected String getBusType(CI cin) {
-		return null;
+	protected LKOperTypeEnum getOperType(CI cin, ApiKeyValues<CI> params) {
+		return LKOperTypeEnum.OTHER;
 	}
 
 }

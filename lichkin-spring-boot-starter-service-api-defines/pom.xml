@@ -5,12 +5,12 @@
   <packaging>jar</packaging>
 
 
-  <artifactId>lichkin-spring-boot-starter-web-api</artifactId>
+  <artifactId>lichkin-spring-boot-starter-service-api-defines</artifactId>
 
 
-  <name>lichkin-spring-boot-starter-web-api</name>
+  <name>lichkin-spring-boot-starter-service-api-defines</name>
   <description>使用springboot基础封装</description>
-  <url>http://codes.lichkin.com/spring-boot-starter-web-api</url>
+  <url>http://codes.lichkin.com/spring-boot-starter-service-api-defines</url>
   <organization>
     <name>SuZhou LichKin Information Technology Co., Ltd.</name>
     <url>http://www.lichkin.com</url>
@@ -38,26 +38,6 @@
     <dependency>
       <groupId>com.lichkin.springframework.boot</groupId>
       <artifactId>lichkin-spring-boot-starter-database</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.lichkin.springframework.boot</groupId>
-      <artifactId>lichkin-spring-boot-starter-web-defines</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.lichkin.springframework.boot</groupId>
-      <artifactId>lichkin-spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.lichkin.springframework.boot</groupId>
-      <artifactId>lichkin-spring-boot-starter-service-api-defines</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.lichkin.springframework.boot</groupId>
-      <artifactId>lichkin-spring-boot-starter-service-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.lichkin.springframework.boot</groupId>
-      <artifactId>lichkin-spring-boot-starter-web-api-defines</artifactId>
     </dependency>
   </dependencies>
 

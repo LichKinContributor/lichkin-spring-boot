@@ -21,46 +21,48 @@ public abstract class LKDBService extends LKService {
 
 
 	/**
-	 * 获取公司ID
-	 * @param compId 公司ID
-	 * @param busCompId 入参中的公司ID
-	 * @return 公司ID
+	 * 添加ID过滤条件
+	 * @param sql SQL语句
+	 * @param idColumnResId ID资源ID
+	 * @param id ID
 	 */
-	protected String getCompId(String compId, String busCompId) {
-		return LKFrameworkStatics.LichKin.equals(compId) && StringUtils.isNotBlank(busCompId) ? busCompId : compId;
+	public void addConditionId(QuerySQL sql, int idColumnResId, String id) {
+		if (idColumnResId == 0) {
+			return;
+		}
+		if (StringUtils.isBlank(id)) {
+			return;
+		}
+		sql.neq(idColumnResId, id);
 	}
 
 
 	/**
-	 * 获取国际化
+	 * 添加国际化过滤条件
+	 * @param sql SQL语句
+	 * @param localeColumnResId 国际化资源ID
 	 * @param locale 国际化
-	 * @param busLocale 入参中的国际化
-	 * @return 国际化
 	 */
-	protected String getLocale(String locale, String busLocale) {
-		return StringUtils.isNotBlank(busLocale) ? busLocale : locale;
+	public void addConditionLocale(QuerySQL sql, int localeColumnResId, String locale) {
+		if (localeColumnResId == 0) {
+			return;
+		}
+		sql.eq(localeColumnResId, locale);
 	}
 
 
 	/**
 	 * 添加公司ID过滤条件
-	 * <pre>
-	 *   公司ID是ROOT权限时
-	 *     如果入参有值，则使用入参值匹配；
-	 *     如果入参无值
-	 *       rootCheck为true时，使用ROOT权限过滤；
-	 *       rootCheck为false时，不过滤；
-	 *
-	 *   公司ID是非ROOT权限时
-	 *     入参有值/无值都不使用该值，只使用登录人的公司ID；
-	 * </pre>
 	 * @param rootCheck true:过滤;false:不过滤;
 	 * @param sql SQL语句
 	 * @param compIdColumnResId 公司ID资源ID
 	 * @param compId 公司ID
-	 * @param busCompId 业务公司ID（入参输入的值）
+	 * @param busCompId 公司ID
 	 */
-	protected void addConditionCompId(boolean rootCheck, QuerySQL sql, int compIdColumnResId, String compId, String busCompId) {
+	public void addConditionCompId(boolean rootCheck, QuerySQL sql, int compIdColumnResId, String compId, String busCompId) {
+		if (compIdColumnResId == 0) {
+			return;
+		}
 		if (LKFrameworkStatics.LichKin.equals(compId)) {
 			if (StringUtils.isBlank(busCompId)) {
 				if (rootCheck) {
@@ -77,22 +79,16 @@ public abstract class LKDBService extends LKService {
 
 	/**
 	 * 添加在用状态过滤条件
-	 * <pre>
-	 *   公司ID是ROOT权限时
-	 *     如果入参有值，则使用入参值匹配；
-	 *     如果入参无值，则默认排除删除状态；
-	 *
-	 *   公司ID是非ROOT权限时
-	 *     如果入参有值，则使用入参值匹配；
-	 *     如果入参无值，则默认匹配默认值（如果默认值为null则匹配在用状态）；
-	 * </pre>
+	 * @param compId 公司ID
 	 * @param sql SQL语句
 	 * @param usingStatusColumnResId 在用状态字段资源ID
-	 * @param compId 公司ID
 	 * @param usingStatus 在用状态（入参输入的值）
 	 * @param defaultUsingStatus 默认值
 	 */
-	protected void addConditionUsingStatus(QuerySQL sql, int usingStatusColumnResId, String compId, LKUsingStatusEnum usingStatus, LKUsingStatusEnum... defaultUsingStatus) {
+	public void addConditionUsingStatus(String compId, QuerySQL sql, int usingStatusColumnResId, LKUsingStatusEnum usingStatus, LKUsingStatusEnum... defaultUsingStatus) {
+		if (usingStatusColumnResId == 0) {
+			return;
+		}
 		if (LKFrameworkStatics.LichKin.equals(compId)) {
 			if (usingStatus == null) {
 				sql.neq(usingStatusColumnResId, LKUsingStatusEnum.DEPRECATED);

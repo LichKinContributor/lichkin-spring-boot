@@ -7,6 +7,7 @@ import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
 import com.lichkin.framework.defines.annotations.FieldGenerator;
+import com.lichkin.framework.defines.entities.I_LoginId;
 import com.lichkin.framework.defines.enums.impl.LKOperTypeEnum;
 
 import lombok.Getter;
@@ -19,7 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class OperLogEntity extends CompIDEntity {
+public abstract class OperLogEntity extends CompIDEntity implements I_LoginId {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1L;
@@ -29,11 +30,6 @@ public abstract class OperLogEntity extends CompIDEntity {
 	@FieldGenerator(queryCondition = true, resultColumn = true)
 	@Column(length = 6, nullable = false)
 	private LKOperTypeEnum operType;
-
-	/** 业务操作类型（字典） */
-	@FieldGenerator(queryCondition = true, resultColumn = true, dictionary = true)
-	@Column(length = 64, nullable = false)
-	private String busType;
 
 	/** 操作人ID */
 	@Column(length = 64)

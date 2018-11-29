@@ -6,15 +6,16 @@ import java.util.List;
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.defines.entities.I_ID;
 import com.lichkin.framework.defines.exceptions.LKException;
+import com.lichkin.springframework.controllers.ApiKeyValues;
 
 /**
  * 获取列表数据接口服务类定义
- * @param <SI> 服务类入参类型
+ * @param <CI> 服务类入参类型
  * @param <SO> 服务类出参类型
  * @param <E> 实体类类型
  * @author SuZhou LichKin Information Technology Co., Ltd.
  */
-public abstract class LKApiBusGetListService<SI, SO, E extends I_ID> extends LKApiBusGetPLService<SI, SO, E> implements LKApiService<SI, List<SO>> {
+public abstract class LKApiBusGetListService<CI, SO, E extends I_ID> extends LKApiBusGetPLService<CI, SO, E> implements LKApiService<CI, List<SO>> {
 
 	/**
 	 * 构造方法
@@ -22,24 +23,24 @@ public abstract class LKApiBusGetListService<SI, SO, E extends I_ID> extends LKA
 	@SuppressWarnings("unchecked")
 	public LKApiBusGetListService() {
 		super();
-		classSI = (Class<SI>) types[0];
+		classCI = (Class<CI>) types[0];
 		classSO = (Class<SO>) types[1];
 		classE = (Class<E>) types[2];
 	}
 
 
 	@Override
-	public List<SO> handle(SI sin, String locale, String compId, String loginId) throws LKException {
-		List<SO> list = beforeQuery(sin, locale, compId, loginId);
+	public List<SO> handle(CI cin, ApiKeyValues<CI> params) throws LKException {
+		List<SO> list = beforeQuery(cin, params);
 		if (list != null) {
 			return list;
 		}
 
 		QuerySQL sql = new QuerySQL(!classE.equals(classSO), classE, isDistinct());
 
-		initSQL(sin, locale, compId, loginId, sql);
+		initSQL(cin, params, sql);
 
-		return afterQuery(sin, locale, compId, loginId, dao.getList(sql, classSO));
+		return afterQuery(cin, params, dao.getList(sql, classSO));
 	}
 
 
@@ -55,27 +56,23 @@ public abstract class LKApiBusGetListService<SI, SO, E extends I_ID> extends LKA
 
 	/**
 	 * 查询语句执行前处理，如返回值不为null，则直接返回该结果。
-	 * @param sin 入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
+	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @return 出参
 	 */
-	protected List<SO> beforeQuery(SI sin, String locale, String compId, String loginId) {
+	protected List<SO> beforeQuery(CI cin, ApiKeyValues<CI> params) {
 		return null;
 	}
 
 
 	/**
 	 * 查询语句执行后处理
-	 * @param sin 入参
-	 * @param locale 国际化
-	 * @param compId 公司ID
-	 * @param loginId 登录ID
+	 * @param cin 控制器类入参
+	 * @param params 解析值参数
 	 * @param list 查询结果
 	 * @return 出参
 	 */
-	protected List<SO> afterQuery(SI sin, String locale, String compId, String loginId, List<SO> list) {
+	protected List<SO> afterQuery(CI cin, ApiKeyValues<CI> params, List<SO> list) {
 		return list;
 	}
 
