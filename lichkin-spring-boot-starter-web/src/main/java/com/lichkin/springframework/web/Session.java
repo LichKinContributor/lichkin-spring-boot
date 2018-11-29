@@ -205,7 +205,8 @@ class Session {
 		String url = LKRequestUtils.getRequestURI(request).replace(pageName + LKFrameworkStatics.WEB_MAPPING_PAGES, "");
 		List<I_Menu> menus = getMenus(request.getSession());
 		for (I_Menu menu : menus) {
-			if (menu.getUrl().equals(url)) {
+			String realUrl = menu.getUrl().replace(url, "");
+			if (realUrl.isEmpty() || (realUrl.startsWith("{") && realUrl.endsWith("}"))) {
 				return true;
 			}
 		}
