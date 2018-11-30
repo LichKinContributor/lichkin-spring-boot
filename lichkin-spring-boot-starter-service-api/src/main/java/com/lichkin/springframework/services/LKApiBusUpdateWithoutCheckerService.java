@@ -48,7 +48,7 @@ public abstract class LKApiBusUpdateWithoutCheckerService<CI extends I_ID, E ext
 		beforeCopyProperties(cin, params, entity);
 
 		// 修改数据
-		LKBeanUtils.copyProperties(false, cin, entity, "id", "insertTime", "locale", "compId", "loginId");
+		LKBeanUtils.copyProperties(false, cin, entity, "id", "insertTime", "locale", "compId", "loginId", "usingStatus");
 
 		// 保存主表数据前操作
 		beforeSaveMain(cin, params, entity);
