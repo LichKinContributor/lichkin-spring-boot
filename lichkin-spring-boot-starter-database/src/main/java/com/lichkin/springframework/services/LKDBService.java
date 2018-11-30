@@ -79,19 +79,22 @@ public abstract class LKDBService extends LKService {
 
 	/**
 	 * 添加在用状态过滤条件
+	 * @param rootCheck true:过滤;false:不过滤;
 	 * @param compId 公司ID
 	 * @param sql SQL语句
 	 * @param usingStatusColumnResId 在用状态字段资源ID
 	 * @param usingStatus 在用状态（入参输入的值）
 	 * @param defaultUsingStatus 默认值
 	 */
-	public void addConditionUsingStatus(String compId, QuerySQL sql, int usingStatusColumnResId, LKUsingStatusEnum usingStatus, LKUsingStatusEnum... defaultUsingStatus) {
+	public void addConditionUsingStatus(boolean rootCheck, String compId, QuerySQL sql, int usingStatusColumnResId, LKUsingStatusEnum usingStatus, LKUsingStatusEnum... defaultUsingStatus) {
 		if (usingStatusColumnResId == 0) {
 			return;
 		}
 		if (LKFrameworkStatics.LichKin.equals(compId)) {
 			if (usingStatus == null) {
-				sql.neq(usingStatusColumnResId, LKUsingStatusEnum.DEPRECATED);
+				if (rootCheck) {
+					sql.neq(usingStatusColumnResId, LKUsingStatusEnum.DEPRECATED);
+				}
 			} else {
 				sql.eq(usingStatusColumnResId, usingStatus);
 			}
