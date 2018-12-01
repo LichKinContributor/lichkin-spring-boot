@@ -6,10 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.defines.entities.I_ID;
-import com.lichkin.framework.defines.entities.I_UsingStatus;
-import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
-import com.lichkin.framework.utils.LKClassUtils;
 import com.lichkin.springframework.controllers.ApiKeyValues;
 
 /**
@@ -41,18 +38,10 @@ public abstract class LKApiBusDeleteService<CI extends I_ID, E extends I_ID> ext
 		List<E> listEntity = dao.getList(sql, classE);
 
 		// 判断在用状态实现情况
-		if (LKClassUtils.checkImplementsInterface(classE, I_UsingStatus.class) && !realDelete(cin, params)) {
-			for (E entity : listEntity) {
-				((I_UsingStatus) entity).setUsingStatus(LKUsingStatusEnum.DEPRECATED);
-				beforeLogicDelete(cin, params, entity, entity.getId());
-			}
-			dao.mergeList(listEntity);
-		} else {
-			for (E entity : listEntity) {
-				beforeRealDelete(cin, params, entity, entity.getId());
-			}
-			dao.removeList(listEntity);
+		for (E entity : listEntity) {
+			beforeRealDelete(cin, params, entity, entity.getId());
 		}
+		dao.removeList(listEntity);
 	}
 
 
@@ -64,17 +53,6 @@ public abstract class LKApiBusDeleteService<CI extends I_ID, E extends I_ID> ext
 
 
 	/**
-	 * 是否实际删除数据（当实体类实现了I_UsingStatus时起作用）
-	 * @param cin 控制器类入参
-	 * @param params 解析值参数
-	 * @return true:实际删除;false:逻辑删除;
-	 */
-	protected boolean realDelete(CI cin, ApiKeyValues<CI> params) {
-		return false;
-	}
-
-
-	/**
 	 * 实际删除数据前操作
 	 * @param cin 控制器类入参
 	 * @param params 解析值参数
@@ -82,17 +60,6 @@ public abstract class LKApiBusDeleteService<CI extends I_ID, E extends I_ID> ext
 	 * @param id 主键
 	 */
 	protected void beforeRealDelete(CI cin, ApiKeyValues<CI> params, E entity, String id) {
-	}
-
-
-	/**
-	 * 逻辑删除数据前操作
-	 * @param cin 控制器类入参
-	 * @param params 解析值参数
-	 * @param entity 待删除数据
-	 * @param id 主键
-	 */
-	protected void beforeLogicDelete(CI cin, ApiKeyValues<CI> params, E entity, String id) {
 	}
 
 }
