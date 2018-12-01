@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -83,6 +84,9 @@ public class LKHandlerMethodReturnValueHandler4Pages implements HandlerMethodRet
 		// 存入mapping信息
 		mavContainer.addAttribute("mappingPages", LKFrameworkStatics.WEB_MAPPING_PAGES);
 		mavContainer.addAttribute("mappingApi", LKFrameworkStatics.WEB_MAPPING_API);
+
+		// 存入backUrl信息
+		mavContainer.addAttribute("backUrl", StringUtils.trimToEmpty(request.getParameter("backUrl")));
 	}
 
 }

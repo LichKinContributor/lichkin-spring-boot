@@ -4,6 +4,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,10 +58,18 @@ public class LKErrorControllerAdvice4Pages {
 			mv.addObject(parameterName, request.getParameter(parameterName));
 		}
 
+		mv.addObject("serverDatas", new HashedMap());
+		mv.addObject("serverDatasJson", "{}");
+
 		// 存入mapping信息
 		mv.addObject("mappingPages", LKFrameworkStatics.WEB_MAPPING_PAGES);
 		mv.addObject("mappingApi", LKFrameworkStatics.WEB_MAPPING_API);
+
+		// 存入backUrl信息
+		mv.addObject("backUrl", "");
+
 		mv.addObject("provider", provider);
+
 		return mv;
 	}
 
