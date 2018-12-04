@@ -47,16 +47,16 @@ public abstract class LKFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		// 包装请求对象
-		LKHttpServletRequestWrapper req = new LKHttpServletRequestWrapper((HttpServletRequest) request);
+//		LKHttpServletRequestWrapper req = new LKHttpServletRequestWrapper((HttpServletRequest) request);
 
 		// 调用链前处理
-		beforeChain(req, response, chain);
+		beforeChain(request, response, chain);
 
 		// 调用链
-		chain.doFilter(req, response);
+		chain.doFilter(request, response);
 
 		// 调用链后处理
-		afterChain(req, response, chain);
+		afterChain(request, response, chain);
 	}
 
 
@@ -66,20 +66,19 @@ public abstract class LKFilter implements Filter {
 	 * @param response ServletResponse
 	 * @param chain FilterChain
 	 */
-	protected void beforeChain(LKHttpServletRequestWrapper request, ServletResponse response, FilterChain chain) {
+	protected void beforeChain(ServletRequest request, ServletResponse response, FilterChain chain) {
 		// 所有约定的请求都会访问到过滤器
 		LKRequestInfo requestInfo = new LKRequestInfo();
 
 		if (request instanceof HttpServletRequest) {
-			HttpServletRequest req = request;
+			HttpServletRequest req = (HttpServletRequest) request;
 			requestInfo.setRequestUri(LKRequestUtils.getRequestURI(req));
 			requestInfo.setRequestIp(LKIpUtils.getIp(req));
-			requestInfo.setRequestDatas(request.readRequestDatasFromInputStream());
 			if (logger.isDebugEnabled()) {
-				logger.debug(LKJsonUtils.toJsonWithIncludes(requestInfo, "requestId", "requestTime", "requestUri", "requestIp", "requestDatas"));
+				logger.debug(LKJsonUtils.toJsonWithIncludes(requestInfo, "requestId", "requestTime", "requestUri", "requestIp"));
 			}
 
-			request.setAttribute("locale", LKRequestUtils.getLocale(request));
+			request.setAttribute("locale", LKRequestUtils.getLocale(req));
 			request.setAttribute("requestInfo", requestInfo);
 			request.setAttribute("errorOccurs", false);
 		} else {
@@ -96,7 +95,7 @@ public abstract class LKFilter implements Filter {
 	 * @param response ServletResponse
 	 * @param chain FilterChain
 	 */
-	protected void afterChain(LKHttpServletRequestWrapper request, ServletResponse response, FilterChain chain) {
+	protected void afterChain(ServletRequest request, ServletResponse response, FilterChain chain) {
 	}
 
 

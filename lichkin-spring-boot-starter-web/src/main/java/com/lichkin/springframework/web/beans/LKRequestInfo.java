@@ -12,13 +12,11 @@ import com.lichkin.framework.utils.LKRandomUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-@JsonPropertyOrder({ "requestId", "requestTime", "requestUri", "requestIp", "requestDatas", "handlerClassName", "handlerMethod", "exceptionClassName", "exceptionMessage" })
+@JsonPropertyOrder({ "requestId", "requestTime", "requestUri", "requestIp", "handlerClassName", "handlerMethod", "exceptionClassName", "exceptionMessage" })
 public class LKRequestInfo {
 
 	/** 请求ID */
@@ -34,9 +32,6 @@ public class LKRequestInfo {
 
 	/** 请求IP */
 	protected String requestIp;
-
-	/** 请求数据 */
-	protected String requestDatas;
 
 	/** 处理类 */
 	protected String handlerClassName;

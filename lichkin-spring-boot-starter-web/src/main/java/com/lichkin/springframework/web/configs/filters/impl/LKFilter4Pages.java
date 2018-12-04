@@ -1,6 +1,7 @@
 package com.lichkin.springframework.web.configs.filters.impl;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
@@ -27,7 +28,7 @@ public class LKFilter4Pages extends LKFilter {
 
 
 	@Override
-	protected void beforeChain(LKHttpServletRequestWrapper request, ServletResponse response, FilterChain chain) {
+	protected void beforeChain(ServletRequest request, ServletResponse response, FilterChain chain) {
 		super.beforeChain(request, response, chain);
 
 		request.setAttribute("compressSuffix", LKConfigStatics.WEB_COMPRESS ? ".min" : "");
