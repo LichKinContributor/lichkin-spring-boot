@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.lichkin.framework.defines.LKConfigStatics;
 import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.LKSessionStatics;
+import com.lichkin.framework.defines.annotations.IgnoreLog;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
@@ -44,7 +45,7 @@ public class LKHandlerInterceptor implements HandlerInterceptor {
 		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
 		requestInfo.setHandlerClassName(controllerClass.getName());
 		requestInfo.setHandlerMethod(method.getName());
-		String requestInfoJson = LKJsonUtils.toJsonWithExcludes(requestInfo, "exceptionClassName", "exceptionMessage");
+		String requestInfoJson = LKJsonUtils.toJsonWithExcludes(requestInfo, new Class<?>[] { IgnoreLog.class }, "exceptionClassName", "exceptionMessage");
 		request.setAttribute("requestInfoJson", requestInfoJson);
 		LOGGER.info(requestInfoJson);
 		return true;
@@ -60,7 +61,7 @@ public class LKHandlerInterceptor implements HandlerInterceptor {
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
 		if (requestInfo.getRequestUri().endsWith(LKFrameworkStatics.WEB_MAPPING_PAGES) && !(boolean) request.getAttribute("errorOccurs")) {
-			LOGGER.info(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, null), "exceptionClassName", "exceptionMessage", "responseBean"));
+			LOGGER.info(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, null), new Class<?>[] { IgnoreLog.class }, "exceptionClassName", "exceptionMessage", "responseBean"));
 		}
 	}
 

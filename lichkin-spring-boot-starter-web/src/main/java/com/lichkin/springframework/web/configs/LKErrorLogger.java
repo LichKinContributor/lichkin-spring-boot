@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.lichkin.framework.beans.impl.LKResponseBean;
 import com.lichkin.framework.defines.LKFrameworkStatics;
+import com.lichkin.framework.defines.annotations.IgnoreLog;
 import com.lichkin.framework.defines.enums.LKCodeEnum;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
@@ -113,9 +114,9 @@ class LKErrorLogger {
 			// 页面请求无需处理响应对象
 			// 记录日志
 			if (excludeLogExceptions) {
-				logger.error(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, null), "responseBean"));
+				logger.error(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, null), new Class<?>[] { IgnoreLog.class }, "responseBean"));
 			} else {
-				logger.error(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, null), "responseBean"), ex);
+				logger.error(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, null), new Class<?>[] { IgnoreLog.class }, "responseBean"), ex);
 			}
 		} else {
 			// 数据请求需处理响应对象
@@ -124,9 +125,9 @@ class LKErrorLogger {
 
 			// 记录日志
 			if (excludeLogExceptions) {
-				logger.error(LKJsonUtils.toJson(new LKResponseInfo(requestInfo, responseBean)));
+				logger.error(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, responseBean), new Class<?>[] { IgnoreLog.class }));
 			} else {
-				logger.error(LKJsonUtils.toJson(new LKResponseInfo(requestInfo, responseBean)), ex);
+				logger.error(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, responseBean), new Class<?>[] { IgnoreLog.class }), ex);
 			}
 		}
 

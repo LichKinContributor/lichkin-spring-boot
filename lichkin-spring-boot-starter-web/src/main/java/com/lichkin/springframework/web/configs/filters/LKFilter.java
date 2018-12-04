@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.springframework.util.StreamUtils;
 
+import com.lichkin.framework.defines.annotations.IgnoreLog;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.exceptions.LKRuntimeException;
 import com.lichkin.framework.json.LKJsonUtils;
@@ -75,7 +76,7 @@ public abstract class LKFilter implements Filter {
 			requestInfo.setRequestUri(LKRequestUtils.getRequestURI(req));
 			requestInfo.setRequestIp(LKIpUtils.getIp(req));
 			if (logger.isDebugEnabled()) {
-				logger.debug(LKJsonUtils.toJsonWithIncludes(requestInfo, "requestId", "requestTime", "requestUri", "requestIp"));
+				logger.debug(LKJsonUtils.toJsonWithIncludes(requestInfo, new Class<?>[] { IgnoreLog.class }, "requestId", "requestTime", "requestUri", "requestIp"));
 			}
 
 			request.setAttribute("locale", LKRequestUtils.getLocale(req));
@@ -83,7 +84,7 @@ public abstract class LKFilter implements Filter {
 			request.setAttribute("errorOccurs", false);
 		} else {
 			// 框架没有约定的情况
-			logger.error(LKJsonUtils.toJsonWithIncludes(requestInfo, "requestId", "requestTime"));
+			logger.error(LKJsonUtils.toJsonWithIncludes(requestInfo, new Class<?>[] { IgnoreLog.class }, "requestId", "requestTime"));
 			throw new LKRuntimeException(LKErrorCodesEnum.CONFIG_ERROR);
 		}
 	}

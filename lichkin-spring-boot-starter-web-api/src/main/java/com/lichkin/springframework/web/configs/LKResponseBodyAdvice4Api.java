@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import com.lichkin.framework.beans.impl.LKResponseBean;
+import com.lichkin.framework.defines.annotations.IgnoreLog;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
@@ -69,7 +70,7 @@ public class LKResponseBodyAdvice4Api implements ResponseBodyAdvice<Object> {
 		}
 
 		// 记录日志
-		logger.info(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo((LKRequestInfo) req.getAttribute("requestInfo"), responseBean), "exceptionClassName", "exceptionMessage"));
+		logger.info(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo((LKRequestInfo) req.getAttribute("requestInfo"), responseBean), new Class<?>[] { IgnoreLog.class }, "exceptionClassName", "exceptionMessage"));
 
 		// 返回结果
 		return responseBean;
