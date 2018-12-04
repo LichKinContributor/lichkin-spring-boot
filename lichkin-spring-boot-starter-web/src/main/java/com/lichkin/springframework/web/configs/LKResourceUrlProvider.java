@@ -31,8 +31,8 @@ public class LKResourceUrlProvider {
 				url = url.substring(0, url.lastIndexOf("-")) + ".css";
 			}
 		}
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug(url);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(url);
 		}
 		return url;
 	}
