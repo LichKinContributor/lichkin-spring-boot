@@ -1,5 +1,7 @@
 package com.lichkin.springframework.web.configs;
 
+import static com.lichkin.springframework.web.LKRequestStatics.REQUEST_ID;
+
 import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,20 +9,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.lichkin.framework.defines.LKConfigStatics;
-import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.defines.LKSessionStatics;
-import com.lichkin.framework.defines.annotations.IgnoreLog;
-import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
 import com.lichkin.framework.utils.LKClassUtils;
 import com.lichkin.framework.web.annotations.WithoutLogin;
 import com.lichkin.springframework.controllers.LKPagesController;
-import com.lichkin.springframework.web.beans.LKRequestInfo;
-import com.lichkin.springframework.web.beans.LKResponseInfo;
 
 /**
  * 拦截器
@@ -42,27 +38,11 @@ public class LKHandlerInterceptor implements HandlerInterceptor {
 			response.sendRedirect(LKConfigStatics.WEB_CONTEXT_PATH + "/index");
 		}
 
-		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
-		requestInfo.setHandlerClassName(controllerClass.getName());
-		requestInfo.setHandlerMethod(method.getName());
-		String requestInfoJson = LKJsonUtils.toJsonWithExcludes(requestInfo, new Class<?>[] { IgnoreLog.class }, "exceptionClassName", "exceptionMessage");
-		request.setAttribute("requestInfoJson", requestInfoJson);
-		LOGGER.info(requestInfoJson);
-		return true;
-	}
-
-
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-	}
-
-
-	@Override
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
-		if (requestInfo.getRequestUri().endsWith(LKFrameworkStatics.WEB_MAPPING_PAGES) && !(boolean) request.getAttribute("errorOccurs")) {
-			LOGGER.info(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, null), new Class<?>[] { IgnoreLog.class }, "exceptionClassName", "exceptionMessage", "responseBean"));
+		if (LOGGER.isDebugEnabled()) {
+			String requestId = (String) request.getAttribute(REQUEST_ID);
+			LOGGER.debug(String.format("preHandle -> {\"requestId\":\"%s\",\"handlerClassName\":\"%s\",\"handlerMethodName\":\"%s\"}", requestId, controllerClass.getName(), method.getName()));
 		}
+		return true;
 	}
 
 }

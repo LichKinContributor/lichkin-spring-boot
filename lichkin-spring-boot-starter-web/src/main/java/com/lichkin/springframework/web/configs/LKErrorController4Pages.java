@@ -1,5 +1,7 @@
 package com.lichkin.springframework.web.configs;
 
+import static com.lichkin.springframework.web.LKRequestStatics.REQUEST_URI;
+
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +17,6 @@ import com.lichkin.framework.defines.exceptions.LKRuntimeException;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
 import com.lichkin.framework.web.annotations.LKController4Pages;
-import com.lichkin.springframework.web.beans.LKRequestInfo;
 
 /**
  * 页面请求无映射错误处理
@@ -36,8 +37,7 @@ public class LKErrorController4Pages extends LKErrorController {
 		// 使用404页面响应
 		ModelAndView mv = new ModelAndView("/error/404");
 
-		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
-		String requestUri = requestInfo.getRequestUri();
+		String requestUri = (String) request.getAttribute(REQUEST_URI);
 
 		String viewName = requestUri.substring(0, requestUri.lastIndexOf(LKFrameworkStatics.WEB_MAPPING_PAGES));
 		mv.addObject("mappingUri", viewName);

@@ -1,6 +1,9 @@
 package com.lichkin.springframework.web.configs;
 
+import static com.lichkin.springframework.web.LKRequestStatics.REQUEST_ID;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +23,6 @@ import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
 import com.lichkin.framework.web.annotations.LKController4Api;
-import com.lichkin.springframework.web.beans.LKRequestInfo;
-import com.lichkin.springframework.web.beans.LKResponseInfo;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 /**
@@ -56,21 +57,54 @@ public class LKResponseBodyAdvice4Api implements ResponseBodyAdvice<Object> {
 
 		// 分页数据特殊处理
 		Object datas = responseBean.getDatas();
-		if (datas instanceof Page) {
-			Map<String, Object> map = new HashMap<>();
-			map.put("content", ((Page<?>) datas).getContent());
-			map.put("number", ((Page<?>) datas).getNumber());
-			map.put("numberOfElements", ((Page<?>) datas).getNumberOfElements());
-			map.put("size", ((Page<?>) datas).getSize());
-			map.put("totalElements", ((Page<?>) datas).getTotalElements());
-			map.put("totalPages", ((Page<?>) datas).getTotalPages());
-			map.put("first", ((Page<?>) datas).isFirst());
-			map.put("last", ((Page<?>) datas).isLast());
-			responseBean = new LKResponseBean<>(map);
-		}
+		if (datas == null) {
+			logger.info(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":null}", req.getAttribute(REQUEST_ID)));
+		} else {
+			if (datas instanceof Page) {
+				int totalPages = ((Page<?>) datas).getTotalPages();
+				long totalElements = ((Page<?>) datas).getTotalElements();
+				int size = ((Page<?>) datas).getSize();
+				int number = ((Page<?>) datas).getNumber();
+				int numberOfElements = ((Page<?>) datas).getNumberOfElements();
+				boolean first = ((Page<?>) datas).isFirst();
+				boolean last = ((Page<?>) datas).isLast();
+				List<?> content = ((Page<?>) datas).getContent();
 
-		// 记录日志
-		logger.info(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo((LKRequestInfo) req.getAttribute("requestInfo"), responseBean), new Class<?>[] { IgnoreLog.class }, "exceptionClassName", "exceptionMessage"));
+				Map<String, Object> map = new HashMap<>();
+				map.put("totalPages", totalPages);
+				map.put("totalElements", totalElements);
+				map.put("size", size);
+				map.put("number", number);
+				map.put("numberOfElements", numberOfElements);
+				map.put("first", first);
+				map.put("last", last);
+				map.put("content", content);
+				responseBean = new LKResponseBean<>(map);
+
+				String result = "[]";
+				if (!content.isEmpty()) {
+					result = "[...]";
+					if (logger.isDebugEnabled()) {
+						logger.debug(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"pageContentResult\":%s}", req.getAttribute(REQUEST_ID), LKJsonUtils.toJson(content)));
+					}
+				}
+
+				logger.info(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":{\"totalPages\":%s,\"totalElements\":%s,\"size\":%s,\"number\":%s,\"numberOfElements\":%s,\"first\":%s,\"last\":%s,\"content\":%s}}", req.getAttribute(REQUEST_ID), totalPages, totalElements, size, number, numberOfElements, first, last, result));
+			} else if (datas instanceof Map) {
+				logger.info(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":\"%s\"}", req.getAttribute(REQUEST_ID), LKJsonUtils.toJsonWithExcludes(datas, new Class<?>[] { IgnoreLog.class }, "photo", "content", "img", "image", "requestDatas", "base64")));
+			} else if (datas instanceof List) {
+				String result = "[]";
+				if (!((List<?>) datas).isEmpty()) {
+					result = "[...]";
+					if (logger.isDebugEnabled()) {
+						logger.debug(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"listResult\":%s}", req.getAttribute(REQUEST_ID), LKJsonUtils.toJson(datas)));
+					}
+				}
+				logger.info(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":%s}", req.getAttribute(REQUEST_ID), result));
+			} else {
+				logger.info(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":\"%s\"}", req.getAttribute(REQUEST_ID), LKJsonUtils.toJsonWithExcludes(datas, new Class<?>[] { IgnoreLog.class })));
+			}
+		}
 
 		// 返回结果
 		return responseBean;

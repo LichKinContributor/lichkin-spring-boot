@@ -1,6 +1,8 @@
 package com.lichkin.springframework.web.configs;
 
 import static com.lichkin.framework.defines.LKFrameworkStatics.SPLITOR_FIELDS;
+import static com.lichkin.springframework.web.LKRequestStatics.REQUEST_ID;
+import static com.lichkin.springframework.web.LKRequestStatics.REQUEST_URI;
 
 import java.util.List;
 import java.util.Map;
@@ -12,17 +14,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.lichkin.framework.beans.impl.LKResponseBean;
 import com.lichkin.framework.defines.LKFrameworkStatics;
-import com.lichkin.framework.defines.annotations.IgnoreLog;
 import com.lichkin.framework.defines.enums.LKCodeEnum;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.exceptions.LKException;
 import com.lichkin.framework.defines.exceptions.LKFrameworkException;
 import com.lichkin.framework.defines.exceptions.LKRuntimeException;
-import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.utils.i18n.LKI18NReader4ErrorCodes;
-import com.lichkin.springframework.web.beans.LKRequestInfo;
-import com.lichkin.springframework.web.beans.LKResponseInfo;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 /**
@@ -49,11 +47,6 @@ class LKErrorLogger {
 		String errorMessage = null;
 		Map<String, Object> params = null;
 		String exClassName = ex.getClass().getName();
-
-		// 取请求对象并设置值
-		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
-		requestInfo.setExceptionClassName(exClassName);
-		requestInfo.setExceptionMessage(ex.getMessage());
 
 		// 根据不通异常进行响应内容预处理
 		boolean excludeLogExceptions = false;
@@ -108,27 +101,22 @@ class LKErrorLogger {
 
 		// 设置属性
 		request.setAttribute("errorOccurs", true);
-		request.setAttribute("requestInfoJson", LKJsonUtils.toJson(requestInfo));
 
-		if (requestInfo.getRequestUri().endsWith(LKFrameworkStatics.WEB_MAPPING_PAGES)) {
+		String requestId = (String) request.getAttribute(REQUEST_ID);
+		String requestUri = (String) request.getAttribute(REQUEST_URI);
+		if (requestUri.endsWith(LKFrameworkStatics.WEB_MAPPING_PAGES)) {
 			// 页面请求无需处理响应对象
-			// 记录日志
-			if (excludeLogExceptions) {
-				logger.error(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, null), new Class<?>[] { IgnoreLog.class }, "responseBean"));
-			} else {
-				logger.error(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, null), new Class<?>[] { IgnoreLog.class }, "responseBean"), ex);
-			}
 		} else {
 			// 数据请求需处理响应对象
 			// 解析响应对象
 			responseBean = new LKResponseBean<>(code, (errorMessage == null) ? LKI18NReader4ErrorCodes.read(LKRequestUtils.getLocale(request), errorCode, params) : errorMessage);
+		}
 
-			// 记录日志
-			if (excludeLogExceptions) {
-				logger.error(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, responseBean), new Class<?>[] { IgnoreLog.class }));
-			} else {
-				logger.error(LKJsonUtils.toJsonWithExcludes(new LKResponseInfo(requestInfo, responseBean), new Class<?>[] { IgnoreLog.class }), ex);
-			}
+		// 记录日志
+		if (excludeLogExceptions) {
+			logger.error(String.format("logError -> {\"requestId\":\"%s\",\"exceptionClassName\":\"%s\",\"exceptionMessage\":\"%s\"}", requestId, exClassName, ex.getMessage()));
+		} else {
+			logger.error(String.format("logError -> {\"requestId\":\"%s\",\"exceptionClassName\":\"%s\",\"exceptionMessage\":\"%s\"}", requestId, exClassName, ex.getMessage()), ex);
 		}
 
 		// 返回统一响应格式

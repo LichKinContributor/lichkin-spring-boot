@@ -1,9 +1,15 @@
 package com.lichkin.springframework.web.configs.filters;
 
+import static com.lichkin.springframework.web.LKRequestStatics.REQUEST_ID;
+import static com.lichkin.springframework.web.LKRequestStatics.REQUEST_IP;
+import static com.lichkin.springframework.web.LKRequestStatics.REQUEST_TIME;
+import static com.lichkin.springframework.web.LKRequestStatics.REQUEST_URI;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Locale;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,16 +22,16 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.joda.time.DateTime;
 import org.springframework.util.StreamUtils;
 
-import com.lichkin.framework.defines.annotations.IgnoreLog;
 import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
 import com.lichkin.framework.defines.exceptions.LKRuntimeException;
-import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
+import com.lichkin.framework.utils.LKDateTimeUtils;
 import com.lichkin.framework.utils.LKIpUtils;
-import com.lichkin.springframework.web.beans.LKRequestInfo;
+import com.lichkin.framework.utils.LKRandomUtils;
 import com.lichkin.springframework.web.utils.LKRequestUtils;
 
 import lombok.Cleanup;
@@ -68,23 +74,30 @@ public abstract class LKFilter implements Filter {
 	 * @param chain FilterChain
 	 */
 	protected void beforeChain(ServletRequest request, ServletResponse response, FilterChain chain) {
-		// 所有约定的请求都会访问到过滤器
-		LKRequestInfo requestInfo = new LKRequestInfo();
+		String requestId = LKRandomUtils.create(32);
+		DateTime requestTime = DateTime.now();
 
+		// 所有约定的请求都会访问到过滤器
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest req = (HttpServletRequest) request;
-			requestInfo.setRequestUri(LKRequestUtils.getRequestURI(req));
-			requestInfo.setRequestIp(LKIpUtils.getIp(req));
+			String requestUri = LKRequestUtils.getRequestURI(req);
+			String requestIp = LKIpUtils.getIp(req);
+			Locale locale = LKRequestUtils.getLocale(req);
+
+			req.setAttribute(REQUEST_ID, requestId);
+			req.setAttribute(REQUEST_TIME, requestTime);
+			req.setAttribute(REQUEST_URI, requestUri);
+			req.setAttribute(REQUEST_IP, requestIp);
+
 			if (logger.isDebugEnabled()) {
-				logger.debug(LKJsonUtils.toJsonWithIncludes(requestInfo, new Class<?>[] { IgnoreLog.class }, "requestId", "requestTime", "requestUri", "requestIp"));
+				logger.debug(String.format("beforeChain -> {\"requestId\":\"%s\",\"requestTime\":\"%s\",\"requestUri\":\"%s\",\"requestIp\":\"%s\",\"locale\":\"%s\"}", requestId, LKDateTimeUtils.toString(requestTime), requestUri, requestIp, locale.toString()));
 			}
 
-			request.setAttribute("locale", LKRequestUtils.getLocale(req));
-			request.setAttribute("requestInfo", requestInfo);
+			request.setAttribute("locale", locale);
 			request.setAttribute("errorOccurs", false);
 		} else {
 			// 框架没有约定的情况
-			logger.error(LKJsonUtils.toJsonWithIncludes(requestInfo, new Class<?>[] { IgnoreLog.class }, "requestId", "requestTime"));
+			logger.error(String.format("beforeChain -> {\"requestId\":\"%s\",\"requestTime\":\"%s\"}", requestId, requestTime));
 			throw new LKRuntimeException(LKErrorCodesEnum.CONFIG_ERROR);
 		}
 	}
@@ -97,6 +110,11 @@ public abstract class LKFilter implements Filter {
 	 * @param chain FilterChain
 	 */
 	protected void afterChain(ServletRequest request, ServletResponse response, FilterChain chain) {
+		if (logger.isDebugEnabled()) {
+			String requestId = (String) request.getAttribute(REQUEST_ID);
+			DateTime responseTime = DateTime.now();
+			logger.debug(String.format("afterChain -> {\"requestId\":\"%s\",\"responseTime\":\"%s\",elapsedTime:%s}", requestId, LKDateTimeUtils.toString(responseTime), responseTime.compareTo((DateTime) request.getAttribute(REQUEST_TIME))));
+		}
 	}
 
 

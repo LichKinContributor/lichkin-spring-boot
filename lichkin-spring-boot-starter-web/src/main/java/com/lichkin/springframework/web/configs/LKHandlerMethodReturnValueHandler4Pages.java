@@ -1,5 +1,7 @@
 package com.lichkin.springframework.web.configs;
 
+import static com.lichkin.springframework.web.LKRequestStatics.REQUEST_URI;
+
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -16,7 +18,6 @@ import com.lichkin.framework.defines.LKFrameworkStatics;
 import com.lichkin.framework.json.LKJsonUtils;
 import com.lichkin.framework.utils.LKStringUtils;
 import com.lichkin.springframework.web.beans.LKPage;
-import com.lichkin.springframework.web.beans.LKRequestInfo;
 
 /**
  * 页面请求响应数据处理
@@ -34,8 +35,7 @@ public class LKHandlerMethodReturnValueHandler4Pages implements HandlerMethodRet
 	public void handleReturnValue(Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 		HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-		LKRequestInfo requestInfo = (LKRequestInfo) request.getAttribute("requestInfo");
-		String requestUri = requestInfo.getRequestUri();
+		String requestUri = (String) request.getAttribute(REQUEST_URI);
 
 		// 根据requestUri动态设定视图名，视图名为请求对应的目录的模板。
 		String viewName = requestUri.substring(0, requestUri.lastIndexOf(LKFrameworkStatics.WEB_MAPPING_PAGES));
