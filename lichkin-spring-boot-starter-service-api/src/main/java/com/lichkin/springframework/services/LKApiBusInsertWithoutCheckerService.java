@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lichkin.framework.defines.beans.LKInvokeBean;
 import com.lichkin.framework.defines.beans.LKInvokeDatas;
+import com.lichkin.framework.defines.entities.I_AppKey;
 import com.lichkin.framework.defines.entities.I_CompId;
 import com.lichkin.framework.defines.entities.I_ID;
 import com.lichkin.framework.defines.entities.I_Locale;
@@ -74,7 +75,18 @@ public abstract class LKApiBusInsertWithoutCheckerService<CI extends LKInvokeBea
 	E newInstance(ApiKeyValues<CI> params, E exist) {
 		CI originalObject = params.getOriginalObject();
 		// 先从统一参数创建新实体类
-		E entity = LKBeanUtils.newInstance(true, originalObject.getDatas(), classE);
+		LKInvokeDatas datas = originalObject.getDatas();
+		E entity = LKBeanUtils.newInstance(true, datas, classE);
+
+		// 客户端唯一标识处理
+		if (entity instanceof I_AppKey) {
+			if (exist == null) {
+				((I_AppKey) entity).setAppKey(datas.getAppKey());
+			} else {
+				((I_AppKey) entity).setAppKey(((I_AppKey) exist).getAppKey());
+			}
+		}
+
 		// 再将业务参数复制到实体类
 		LKBeanUtils.copyProperties(originalObject, entity, "id");
 
