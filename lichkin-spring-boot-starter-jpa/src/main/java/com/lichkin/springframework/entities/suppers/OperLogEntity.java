@@ -20,7 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class OperLogEntity extends CompIDEntity implements I_LoginId {
+public abstract class OperLogEntity extends IDEntity implements I_LoginId {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1L;
