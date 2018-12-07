@@ -30,6 +30,20 @@ public class LKPage {
 	/** 空白页 */
 	public static final String BLANK = "/blank";
 
+	/** 是否使用实际视图名 */
+	private boolean realViewName = false;
+
+
+	/**
+	 * 设置使用实际视图名
+	 * @param realViewName 是否使用实际视图名
+	 * @return 本对象
+	 */
+	public LKPage setRealViewName(boolean realViewName) {
+		this.realViewName = realViewName;
+		return this;
+	}
+
 
 	/**
 	 * 添加属性

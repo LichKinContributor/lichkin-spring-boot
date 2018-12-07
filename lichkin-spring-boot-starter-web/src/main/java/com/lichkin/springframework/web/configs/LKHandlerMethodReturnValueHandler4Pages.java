@@ -52,9 +52,14 @@ public class LKHandlerMethodReturnValueHandler4Pages implements HandlerMethodRet
 					mavContainer.addAttribute("mappingUri", viewName);
 					mavContainer.setViewName(LKPage.BLANK);
 				} else {
-					viewName += LKStringUtils.toStandardPath(subViewName);
-					mavContainer.addAttribute("mappingUri", viewName);
-					mavContainer.setViewName(viewName);
+					if (((LKPage) returnValue).isRealViewName()) {
+						mavContainer.addAttribute("mappingUri", viewName);
+						mavContainer.setViewName(subViewName);
+					} else {
+						viewName += LKStringUtils.toStandardPath(subViewName);
+						mavContainer.addAttribute("mappingUri", viewName);
+						mavContainer.setViewName(viewName);
+					}
 				}
 			}
 		}
