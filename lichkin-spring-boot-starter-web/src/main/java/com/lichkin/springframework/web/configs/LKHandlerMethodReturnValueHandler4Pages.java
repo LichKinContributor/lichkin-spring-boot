@@ -92,6 +92,7 @@ public class LKHandlerMethodReturnValueHandler4Pages implements HandlerMethodRet
 
 		// 存入backUrl信息
 		mavContainer.addAttribute("backUrl", StringUtils.trimToEmpty(request.getParameter("backUrl")));
+		mavContainer.addAttribute("fromBack", StringUtils.trimToEmpty(request.getParameter("fromBack")));
 	}
 
 }
