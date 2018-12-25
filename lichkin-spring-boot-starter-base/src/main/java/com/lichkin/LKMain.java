@@ -16,6 +16,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.util.ClassUtils;
 
 import com.lichkin.framework.defines.LKConfigStatics;
 import com.lichkin.framework.log.LKLog;
@@ -187,10 +188,14 @@ public class LKMain {
 		args = ArrayUtils.add(args, SYSTEM_TAG + systemTag);
 		args = ArrayUtils.add(args, SYSTEM_NAME + systemName);
 		args = ArrayUtils.add(args, SYSTEM_DEBUG + systemDebug);
-		args = ArrayUtils.add(args, WEB_DEBUG + webDebug);
-		args = ArrayUtils.add(args, WEB_COMPRESS + webCompress);
-		args = ArrayUtils.add(args, WEB_CONTEXT_PATH + webContextPath);
-		args = ArrayUtils.add(args, WEB_ADMIN_DEBUG + webAdminDebug);
+
+		// WEB项目特有参数
+		if (ClassUtils.isPresent("org.springframework.web.context.ConfigurableWebApplicationContext", null)) {
+			args = ArrayUtils.add(args, WEB_DEBUG + webDebug);
+			args = ArrayUtils.add(args, WEB_COMPRESS + webCompress);
+			args = ArrayUtils.add(args, WEB_CONTEXT_PATH + webContextPath);
+			args = ArrayUtils.add(args, WEB_ADMIN_DEBUG + webAdminDebug);
+		}
 
 		LOGGER.warn("systemId[%s] -> main args after analyzed. %s", SYSTEM_ID, ArrayUtils.toString(args));
 
