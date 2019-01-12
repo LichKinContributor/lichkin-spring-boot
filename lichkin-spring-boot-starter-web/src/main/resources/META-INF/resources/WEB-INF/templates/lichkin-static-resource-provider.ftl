@@ -19,8 +19,7 @@
 			</#if>
 
 			<#if result?starts_with("http")>
-				<#-- http开头表示引入站外脚本，不予引入。 -->
-				<#assign result="">
+				<#-- http开头表示引入站外脚本，直接引入。 -->
 			<#elseif result?starts_with("/res/${type}")>
 				<#-- 符合框架约定的，按照约定引入。 -->
 				<#assign result = "${ctx}${provider.getForLookupPath('${result}')}"/>
