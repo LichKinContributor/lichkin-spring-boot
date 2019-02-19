@@ -1,9 +1,11 @@
 package com.lichkin;
 
+import static com.lichkin.framework.log.log4j2.LKLog4j2Log.MAIN_ARG_LOG_LEVEL_IO;
 import static com.lichkin.framework.log.log4j2.LKLog4j2Log.MAIN_ARG_LOG_LEVEL_NET;
 import static com.lichkin.framework.log.log4j2.LKLog4j2Log.MAIN_ARG_LOG_LEVEL_ORG;
 import static com.lichkin.framework.log.log4j2.LKLog4j2Log.MAIN_ARG_LOG_LEVEL_SYSTEM;
 import static com.lichkin.framework.log.log4j2.LKLog4j2Log.MAIN_ARG_LOG_TAG;
+import static com.lichkin.framework.log.log4j2.LKLog4j2Log.VALUE_LOG_LEVEL_IO;
 import static com.lichkin.framework.log.log4j2.LKLog4j2Log.VALUE_LOG_LEVEL_NET;
 import static com.lichkin.framework.log.log4j2.LKLog4j2Log.VALUE_LOG_LEVEL_ORG;
 import static com.lichkin.framework.log.log4j2.LKLog4j2Log.VALUE_LOG_LEVEL_SYSTEM;
@@ -75,6 +77,7 @@ public class LKMain {
 		String logLevelSystem = VALUE_LOG_LEVEL_SYSTEM;
 		String logLevelOrg = VALUE_LOG_LEVEL_ORG;
 		String logLevelNet = VALUE_LOG_LEVEL_NET;
+		String logLevelIo = VALUE_LOG_LEVEL_IO;
 		String defaultLocale = LKConfigStatics.DEFAULT_LOCALE.toString();
 		String implementedLocaleArr = LKArrayUtils.toString(LKConfigStatics.IMPLEMENTED_LOCALE_ARR);
 		String systemTag = LKConfigStatics.SYSTEM_TAG;
@@ -103,6 +106,10 @@ public class LKMain {
 					args = ArrayUtils.remove(args, i);
 				} else if (StringUtils.startsWith(arg, MAIN_ARG_LOG_LEVEL_NET)) {
 					logLevelNet = arg.substring(MAIN_ARG_LOG_LEVEL_NET.length());
+
+					args = ArrayUtils.remove(args, i);
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_LOG_LEVEL_IO)) {
+					logLevelIo = arg.substring(MAIN_ARG_LOG_LEVEL_IO.length());
 
 					args = ArrayUtils.remove(args, i);
 				} else if (StringUtils.startsWith(arg, DEFAULT_LOCALE)) {
@@ -183,6 +190,7 @@ public class LKMain {
 		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_SYSTEM + logLevelSystem);
 		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_ORG + logLevelOrg);
 		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_NET + logLevelNet);
+		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_IO + logLevelNet);
 		args = ArrayUtils.add(args, DEFAULT_LOCALE + defaultLocale);
 		args = ArrayUtils.add(args, IMPLEMENTED_LOCALE_ARR + implementedLocaleArr);
 		args = ArrayUtils.add(args, SYSTEM_TAG + systemTag);
@@ -200,7 +208,7 @@ public class LKMain {
 		LOGGER.warn("systemId[%s] -> main args after analyzed. %s", SYSTEM_ID, ArrayUtils.toString(args));
 
 		// 配置log4j2的参数
-		LKLog4j2Initializer.setMainArguments(logTag, logLevelSystem, logLevelOrg, logLevelNet);
+		LKLog4j2Initializer.setMainArguments(logTag, logLevelSystem, logLevelOrg, logLevelNet, logLevelIo);
 
 		// 创建应用
 		final SpringApplication app = new SpringApplication(LKMain.class);
