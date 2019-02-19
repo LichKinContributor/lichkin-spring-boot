@@ -48,6 +48,7 @@
     <module>lichkin-spring-boot-starter-web-api-defines</module>
     <module>lichkin-spring-boot-starter-web-api</module>
     <module>lichkin-spring-boot-starter-socket-server</module>
+    <module>lichkin-spring-boot-starter-redis</module>
   </modules>
 
   <dependencyManagement>
@@ -119,6 +120,11 @@
       <dependency>
         <groupId>com.lichkin.springframework.boot</groupId>
         <artifactId>lichkin-spring-boot-starter-socket-server</artifactId>
+        <version>${com.lichkin.springframework.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lichkin.springframework.boot</groupId>
+        <artifactId>lichkin-spring-boot-starter-redis</artifactId>
         <version>${com.lichkin.springframework.boot.version}</version>
       </dependency>
 
