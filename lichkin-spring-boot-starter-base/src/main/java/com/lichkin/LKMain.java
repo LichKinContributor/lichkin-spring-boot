@@ -53,6 +53,8 @@ public class LKMain {
 
 	private static final String WEB_CONTEXT_PATH = "--server.servlet.context-path=";
 
+	private static final String SOCKET_SERVER_CONFIG_IDX = "--socket.server.config.idx=";
+
 	static {
 		LKLog4j2Initializer.init();
 	}
@@ -87,6 +89,7 @@ public class LKMain {
 		String webCompress = String.valueOf(LKConfigStatics.WEB_COMPRESS);
 		String webContextPath = String.valueOf(LKConfigStatics.WEB_CONTEXT_PATH);
 		String webAdminDebug = String.valueOf(LKConfigStatics.WEB_ADMIN_DEBUG);
+		String socketServerConfigIdx = String.valueOf(LKConfigStatics.SOCKET_SERVER_CONFIG_IDX);
 
 		if (ArrayUtils.isNotEmpty(args)) {
 			// 遍历主参数
@@ -181,6 +184,12 @@ public class LKMain {
 					webAdminDebug = String.valueOf(LKConfigStatics.WEB_ADMIN_DEBUG);
 
 					args = ArrayUtils.remove(args, i);
+				} else if (StringUtils.startsWith(arg, SOCKET_SERVER_CONFIG_IDX)) {
+					LKConfigStatics.SOCKET_SERVER_CONFIG_IDX = Integer.parseInt(arg.substring(SOCKET_SERVER_CONFIG_IDX.length()));
+
+					socketServerConfigIdx = String.valueOf(LKConfigStatics.SOCKET_SERVER_CONFIG_IDX);
+
+					args = ArrayUtils.remove(args, i);
 				}
 			}
 		}
@@ -203,6 +212,11 @@ public class LKMain {
 			args = ArrayUtils.add(args, WEB_COMPRESS + webCompress);
 			args = ArrayUtils.add(args, WEB_CONTEXT_PATH + webContextPath);
 			args = ArrayUtils.add(args, WEB_ADMIN_DEBUG + webAdminDebug);
+		}
+
+		// Socket服务端项目特有参数
+		if (ClassUtils.isPresent("com.lichkin.framework.socket.LKSocketServer", null)) {
+			args = ArrayUtils.add(args, SOCKET_SERVER_CONFIG_IDX + socketServerConfigIdx);
 		}
 
 		LOGGER.warn("systemId[%s] -> main args after analyzed. %s", SYSTEM_ID, ArrayUtils.toString(args));

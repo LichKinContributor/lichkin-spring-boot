@@ -2,6 +2,7 @@ package com.lichkin.framework.socket;
 
 import java.util.Properties;
 
+import com.lichkin.framework.defines.LKConfigStatics;
 import com.lichkin.framework.utils.security.properties.LKPropertiesReader;
 
 /**
@@ -16,7 +17,7 @@ public class LKSocketServerConfigProperties {
 
 	static {
 		try {
-			Properties properties = LKPropertiesReader.read("/opt/socket/server.properties");
+			Properties properties = LKPropertiesReader.read("/opt/socket/server" + LKConfigStatics.SOCKET_SERVER_CONFIG_IDX + ".properties");
 			SOCKET_SERVER_PORT = Integer.parseInt(properties.getProperty("socket.server.port"));
 			SOCKET_SERVER_READER_BUFFER_SIZE = Integer.parseInt(properties.getProperty("socket.server.reader.bufferSize"));
 		} catch (Exception e) {
