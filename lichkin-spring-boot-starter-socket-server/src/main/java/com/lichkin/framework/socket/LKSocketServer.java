@@ -27,12 +27,13 @@ public class LKSocketServer {
 	 * 启动服务端
 	 */
 	public void start() {
-		LOGGER.info("服务端启动，监听端口号【" + LKSocketServerConfigProperties.SOCKET_SERVER_PORT + "】");
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("服务端启动，监听端口号【" + LKSocketServerConfigProperties.SOCKET_SERVER_PORT + "】");
+		}
 		ServerSocket serverSocket = null;
 		try {
 			serverSocket = new ServerSocket(LKSocketServerConfigProperties.SOCKET_SERVER_PORT);
 		} catch (Exception e) {
-			e.printStackTrace();
 			LOGGER.error("服务端关闭", e);
 			if (serverSocket != null) {
 				try {
@@ -50,8 +51,7 @@ public class LKSocketServer {
 			try {
 				socket = serverSocket.accept();// accept方法将在有客户端连接前一直处于阻断状态。
 			} catch (IOException e) {
-				e.printStackTrace();
-				LOGGER.error(e);
+				LOGGER.error(e);// 连接出错，不停服务。
 				continue;
 			}
 

@@ -6,8 +6,6 @@ import java.net.Socket;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import com.lichkin.framework.defines.enums.impl.LKErrorCodesEnum;
-import com.lichkin.framework.defines.exceptions.LKRuntimeException;
 import com.lichkin.framework.log.LKLog;
 import com.lichkin.framework.log.LKLogFactory;
 import com.lichkin.framework.utils.LKRandomUtils;
@@ -68,18 +66,16 @@ public abstract class LKSocketClient extends LKService implements Runnable {
 						break;
 					} else {
 						byte[] bytes = ArrayUtils.subarray(buffer, 0, length);
-						if (logger.isInfoEnabled()) {
-							logger.info("客户端【" + id + "】【" + socket.getRemoteSocketAddress() + "】。 " + "接收到数据 => " + ArrayUtils.toString(bytes));
+						if (logger.isDebugEnabled()) {
+							logger.debug("客户端【" + id + "】【" + socket.getRemoteSocketAddress() + "】。 " + "接收到数据 => " + ArrayUtils.toString(bytes));
 						}
 						try {
 							afterSocketClientReceiveData(bytes);
 						} catch (Exception e) {
-							logger.error(e);
+							logger.error(e);// 处理出错，不停程序。
 						}
 					}
 				}
-			} catch (IOException e) {
-				throw new LKRuntimeException(LKErrorCodesEnum.INTERNAL_SERVER_ERROR, e);
 			} finally {
 				if (dis != null) {
 					try {
@@ -90,7 +86,7 @@ public abstract class LKSocketClient extends LKService implements Runnable {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e);// 读取出错，记录日志，走finally停程序。
 		} finally {
 			if (logger.isInfoEnabled()) {
 				logger.info("客户端【" + id + "】【" + socket.getRemoteSocketAddress() + "】。 " + "关闭");
