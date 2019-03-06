@@ -26,13 +26,17 @@ public abstract class LKBaseTaskService extends LKService {
 
 		taskId = new StringBuilder().append(LKDateTimeUtils.now()).append(LKRandomUtils.create(15)).toString();
 
-		logger.info(toUnifyLog(new StringBuilder().append("starting at ").append(LKDateTimeUtils.now()).append(".").toString()));
+		if (logger.isDebugEnabled()) {
+			logger.debug(toUnifyLog(new StringBuilder().append("starting at ").append(LKDateTimeUtils.now()).append(".").toString()));
+		}
 
 		doTask();
 
 		DateTime endTime = DateTime.now();
 		busId = "";
-		logger.info(toUnifyLog(new StringBuilder().append("ended at ").append(LKDateTimeUtils.now()).append(". consuming ").append(endTime.getMillis() - startTime.getMillis()).append(" millisecond.").toString()));
+		if (logger.isDebugEnabled()) {
+			logger.debug(toUnifyLog(new StringBuilder().append("ended at ").append(LKDateTimeUtils.now()).append(". consuming ").append(endTime.getMillis() - startTime.getMillis()).append(" millisecond.").toString()));
+		}
 	}
 
 
