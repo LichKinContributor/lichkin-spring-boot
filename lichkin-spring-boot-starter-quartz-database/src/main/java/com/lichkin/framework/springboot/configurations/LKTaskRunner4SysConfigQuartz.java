@@ -25,7 +25,7 @@ public class LKTaskRunner4SysConfigQuartz extends LKTaskDBRunner {
 
 	@Override
 	protected void doTask() {
-		logger.debug("►►►►►►►►►►►►►►►►►►LKTaskRunner4SysConfigQuartz◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄");
+		logger.info("►►►►►►►►►►►►►►►►►►LKTaskRunner4SysConfigQuartz◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄");
 		LKQuartzManager.getInstance().initScheduler(scheduler);
 
 		// 加载配置信息
