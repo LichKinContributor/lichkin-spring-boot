@@ -35,13 +35,18 @@ public abstract class LKBaseTaskService extends LKService {
 		startTime = DateTime.now();
 		taskId = LKDateTimeUtils.toString(startTime) + LKRandomUtils.create(15);
 
-		logger.info(toUnifyLog(String.format("starting at %s.", LKDateTimeUtils.toString(startTime))));
+		if (logger.isDebugEnabled()) {
+			logger.debug(toUnifyLog(String.format("starting at %s.", LKDateTimeUtils.toString(startTime))));
+		}
 
 		doTask();
 
 		final DateTime endTime = DateTime.now();// 当前任务结束时间
 		busId = "";
-		logger.info(toUnifyLog(String.format("ended at %s. consuming %s millisecond.", LKDateTimeUtils.toString(endTime), String.valueOf((endTime.getMillis() - startTime.getMillis())))));
+		if (logger.isDebugEnabled()) {
+			logger.debug(toUnifyLog(String.format("ended at %s. consuming %s millisecond.", LKDateTimeUtils.toString(endTime), String.valueOf((endTime.getMillis() - startTime.getMillis())))));
+
+		}
 	}
 
 

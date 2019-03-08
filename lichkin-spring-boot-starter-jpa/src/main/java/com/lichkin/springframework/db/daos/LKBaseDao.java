@@ -52,7 +52,9 @@ public abstract class LKBaseDao extends LKDao {
 	 * @param params 参数
 	 */
 	private void logBeforeQuery(boolean useSQL, String sqlId, String sql, Object[] params) {
-		logger.info("%s[%s] -> %s [params:%s]", useSQL ? "SQL" : "HQL", sqlId, sql, LKJsonUtils.toJson(params));
+		if (logger.isDebugEnabled()) {
+			logger.debug("%s[%s] -> %s [params:%s]", useSQL ? "SQL" : "HQL", sqlId, sql, LKJsonUtils.toJson(params));
+		}
 	}
 
 
@@ -64,7 +66,9 @@ public abstract class LKBaseDao extends LKDao {
 	 */
 	private DateTime logAfterQuery(boolean useSQL, String sqlId, DateTime startTime) {
 		DateTime endTime = DateTime.now();
-		logger.info("%s[%s] -> %s execution time is %sms, from %s to %s.", useSQL ? "SQL" : "HQL", sqlId, useSQL ? "query" : "find", String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
+		if (logger.isDebugEnabled()) {
+			logger.debug("%s[%s] -> %s execution time is %sms, from %s to %s.", useSQL ? "SQL" : "HQL", sqlId, useSQL ? "query" : "find", String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
+		}
 		return endTime;
 	}
 
@@ -79,7 +83,9 @@ public abstract class LKBaseDao extends LKDao {
 	 */
 	private DateTime logAfterModify(String sqlId, String type, DateTime startTime, Class<?> clazz, String id) {
 		DateTime endTime = DateTime.now();
-		logger.info("HQL[%s] -> %s execution time is %sms, from %s to %s, %s(id=%s).", sqlId, type, String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime), clazz.getName(), id);
+		if (logger.isInfoEnabled()) {
+			logger.info("HQL[%s] -> %s execution time is %sms, from %s to %s, %s(id=%s).", sqlId, type, String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime), clazz.getName(), id);
+		}
 		return endTime;
 	}
 
@@ -91,7 +97,9 @@ public abstract class LKBaseDao extends LKDao {
 	 */
 	private void logAfterConvert(String sqlId, DateTime startTime) {
 		DateTime endTime = DateTime.now();
-		logger.info("SQL[%s] -> convert execution time is %sms, from %s to %s.", sqlId, String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
+		if (logger.isDebugEnabled()) {
+			logger.debug("SQL[%s] -> convert execution time is %sms, from %s to %s.", sqlId, String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
+		}
 	}
 
 
@@ -1011,7 +1019,9 @@ public abstract class LKBaseDao extends LKDao {
 		// 记录开始日志
 		DateTime startTime = DateTime.now();
 		String sqlId = LKRandomUtils.create(32);
-		logger.warn("SQL[%s] -> %s [params:%s]", sqlId, sql, LKJsonUtils.toJson(params));
+		if (logger.isInfoEnabled()) {
+			logger.info("SQL[%s] -> %s [params:%s]", sqlId, sql, LKJsonUtils.toJson(params));
+		}
 
 		// 创建查询对象
 		Query query = createSQLQuery(sql, params, Long.class);
@@ -1021,7 +1031,9 @@ public abstract class LKBaseDao extends LKDao {
 
 		// 记录结束日志
 		DateTime endTime = DateTime.now();
-		logger.warn("SQL[%s] -> change execution time is %sms, from %s to %s.", sqlId, String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
+		if (logger.isInfoEnabled()) {
+			logger.info("SQL[%s] -> change execution time is %sms, from %s to %s.", sqlId, String.valueOf(endTime.compareTo(startTime)), LKDateTimeUtils.toString(startTime), LKDateTimeUtils.toString(endTime));
+		}
 
 		// 返回结果
 		return result;

@@ -20,7 +20,9 @@ public abstract class LKTaskRunner4InitSysConfigQuartz extends LKTaskDBRunnerWit
 
 	@Override
 	protected void doTask() {
-		logger.info("==============================初始化定时任务表==============================");
+		if (logger.isInfoEnabled()) {
+			logger.info("==============================初始化定时任务表==============================");
+		}
 		final List<LKDBJobInfo> listJob = getJobs();
 		if (CollectionUtils.isEmpty(listJob)) {
 			throw new LKRuntimeException(LKErrorCodesEnum.CONFIG_ERROR);
@@ -44,7 +46,9 @@ public abstract class LKTaskRunner4InitSysConfigQuartz extends LKTaskDBRunnerWit
 		final String className = clazz.getName();
 		final String methodName = METHOD_NAME;
 		final String cronExpression = job.getCronExpression();
-		logger.info("===============初始化定时任务【%s -> %s -> [%s]】===============", groupName, jobName, cronExpression);
+		if (logger.isInfoEnabled()) {
+			logger.info("===============初始化定时任务【%s -> %s -> [%s]】===============", groupName, jobName, cronExpression);
+		}
 
 		QuerySQL sql = new QuerySQL(SysConfigQuartzEntity.class);
 		sql.eq(SysConfigQuartzR.groupName, groupName);
@@ -85,7 +89,9 @@ public abstract class LKTaskRunner4InitSysConfigQuartz extends LKTaskDBRunnerWit
 		final String className = clazz.getName();
 		final String methodName = METHOD_NAME;
 		final String cronExpression = job.getCronExpression();
-		logger.info("===============初始化定时任务【%s -> %s -> [%s]】===============", groupName, jobName, cronExpression);
+		if (logger.isInfoEnabled()) {
+			logger.info("===============初始化定时任务【%s -> %s -> [%s]】===============", groupName, jobName, cronExpression);
+		}
 
 		QuerySQL sql = new QuerySQL(SysConfigQuartzEntity.class);
 		sql.eq(SysConfigQuartzR.groupName, groupName);

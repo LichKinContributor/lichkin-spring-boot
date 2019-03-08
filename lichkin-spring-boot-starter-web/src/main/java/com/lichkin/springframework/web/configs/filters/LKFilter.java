@@ -113,7 +113,9 @@ public abstract class LKFilter implements Filter {
 		if (logger.isDebugEnabled()) {
 			String requestId = (String) request.getAttribute(REQUEST_ID);
 			DateTime responseTime = DateTime.now();
-			logger.debug(String.format("afterChain -> {\"requestId\":\"%s\",\"responseTime\":\"%s\",elapsedTime:%s}", requestId, LKDateTimeUtils.toString(responseTime), responseTime.compareTo((DateTime) request.getAttribute(REQUEST_TIME))));
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("afterChain -> {\"requestId\":\"%s\",\"responseTime\":\"%s\",elapsedTime:%s}", requestId, LKDateTimeUtils.toString(responseTime), responseTime.compareTo((DateTime) request.getAttribute(REQUEST_TIME))));
+			}
 		}
 	}
 

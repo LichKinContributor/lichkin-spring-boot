@@ -25,11 +25,15 @@ public class LKTaskRunner4SysConfigQuartz extends LKTaskDBRunner {
 
 	@Override
 	protected void doTask() {
-		logger.info("►►►►►►►►►►►►►►►►►►LKTaskRunner4SysConfigQuartz◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄");
+		if (logger.isInfoEnabled()) {
+			logger.info("►►►►►►►►►►►►►►►►►►LKTaskRunner4SysConfigQuartz◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄");
+		}
 		LKQuartzManager.getInstance().initScheduler(scheduler);
 
 		// 加载配置信息
-		logger.info("load configs from T_SYS_CONFIG_QUARTZ.");
+		if (logger.isInfoEnabled()) {
+			logger.info("load configs from T_SYS_CONFIG_QUARTZ.");
+		}
 
 		QuerySQL sql = new QuerySQL(SysConfigQuartzEntity.class);
 		sql.eq(SysConfigQuartzR.usingStatus, LKUsingStatusEnum.USING);
@@ -44,7 +48,9 @@ public class LKTaskRunner4SysConfigQuartz extends LKTaskDBRunner {
 		if (CollectionUtils.isEmpty(list)) {
 			logger.warn("no configs configed in T_SYS_CONFIG_QUARTZ.");
 		} else {
-			logger.info("loaded configs from T_SYS_CONFIG_QUARTZ.");
+			if (logger.isInfoEnabled()) {
+				logger.info("loaded configs from T_SYS_CONFIG_QUARTZ.");
+			}
 			for (final SysConfigQuartzEntity quartz : list) {
 				boolean simple = false;
 				if (LKConfigStatics.SYSTEM_DEBUG || quartz.getCronExpression().endsWith("once")) {
@@ -55,7 +61,9 @@ public class LKTaskRunner4SysConfigQuartz extends LKTaskDBRunner {
 		}
 
 		LKQuartzManager.getInstance().start();
-		logger.info("load configs from T_SYS_CONFIG_QUARTZ finished.");
+		if (logger.isInfoEnabled()) {
+			logger.info("load configs from T_SYS_CONFIG_QUARTZ finished.");
+		}
 	}
 
 }

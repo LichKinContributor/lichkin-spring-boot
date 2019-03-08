@@ -58,7 +58,9 @@ public class LKResponseBodyAdvice4Api implements ResponseBodyAdvice<Object> {
 		// 分页数据特殊处理
 		Object datas = responseBean.getDatas();
 		if (datas == null) {
-			logger.info(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":null}", req.getAttribute(REQUEST_ID)));
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":null}", req.getAttribute(REQUEST_ID)));
+			}
 		} else {
 			if (datas instanceof Page) {
 				int totalPages = ((Page<?>) datas).getTotalPages();
@@ -89,9 +91,13 @@ public class LKResponseBodyAdvice4Api implements ResponseBodyAdvice<Object> {
 					}
 				}
 
-				logger.info(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":{\"totalPages\":%s,\"totalElements\":%s,\"size\":%s,\"number\":%s,\"numberOfElements\":%s,\"first\":%s,\"last\":%s,\"content\":%s}}", req.getAttribute(REQUEST_ID), totalPages, totalElements, size, number, numberOfElements, first, last, result));
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":{\"totalPages\":%s,\"totalElements\":%s,\"size\":%s,\"number\":%s,\"numberOfElements\":%s,\"first\":%s,\"last\":%s,\"content\":%s}}", req.getAttribute(REQUEST_ID), totalPages, totalElements, size, number, numberOfElements, first, last, result));
+				}
 			} else if (datas instanceof Map) {
-				logger.info(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":\"%s\"}", req.getAttribute(REQUEST_ID), LKJsonUtils.toJsonWithExcludes(datas, new Class<?>[] { IgnoreLog.class }, "photo", "content", "img", "image", "requestDatas", "base64")));
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":\"%s\"}", req.getAttribute(REQUEST_ID), LKJsonUtils.toJsonWithExcludes(datas, new Class<?>[] { IgnoreLog.class }, "photo", "content", "img", "image", "requestDatas", "base64")));
+				}
 			} else if (datas instanceof List) {
 				String result = "[]";
 				if (!((List<?>) datas).isEmpty()) {
@@ -100,9 +106,13 @@ public class LKResponseBodyAdvice4Api implements ResponseBodyAdvice<Object> {
 						logger.debug(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"listResult\":%s}", req.getAttribute(REQUEST_ID), LKJsonUtils.toJson(datas)));
 					}
 				}
-				logger.info(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":%s}", req.getAttribute(REQUEST_ID), result));
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":%s}", req.getAttribute(REQUEST_ID), result));
+				}
 			} else {
-				logger.info(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":\"%s\"}", req.getAttribute(REQUEST_ID), LKJsonUtils.toJsonWithExcludes(datas, new Class<?>[] { IgnoreLog.class })));
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("beforeBodyWrite -> {\"requestId\":\"%s\",\"responseDatas\":\"%s\"}", req.getAttribute(REQUEST_ID), LKJsonUtils.toJsonWithExcludes(datas, new Class<?>[] { IgnoreLog.class })));
+				}
 			}
 		}
 
