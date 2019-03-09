@@ -14,6 +14,7 @@ public class LKRedisUtils {
 
 	/**
 	 * 设置值
+	 * @param <T> 值对象泛型
 	 * @param redisTemplate RedisTemplate
 	 * @param key 键
 	 * @param value 值
@@ -27,6 +28,7 @@ public class LKRedisUtils {
 
 	/**
 	 * 获取值
+	 * @param <T> 值对象泛型
 	 * @param redisTemplate RedisTemplate
 	 * @param key 键
 	 * @param defaultValue 未取到值时，返回的默认值。
@@ -44,6 +46,7 @@ public class LKRedisUtils {
 
 	/**
 	 * 设置值
+	 * @param <T> 值对象泛型
 	 * @param redisTemplate RedisTemplate
 	 * @param redisKey 键
 	 * @param mapKey 键
@@ -58,6 +61,7 @@ public class LKRedisUtils {
 
 	/**
 	 * 获取值
+	 * @param <T> 值对象泛型
 	 * @param redisTemplate RedisTemplate
 	 * @param redisKey 键
 	 * @param mapKey 键
