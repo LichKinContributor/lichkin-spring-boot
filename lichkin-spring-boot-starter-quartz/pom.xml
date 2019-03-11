@@ -39,21 +39,16 @@
     <dependency>
       <groupId>org.quartz-scheduler</groupId>
       <artifactId>quartz</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>com.zaxxer</groupId>
-          <artifactId>HikariCP-java6</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.mchange</groupId>
-          <artifactId>c3p0</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context-support</artifactId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
     </dependency>
     <!-- https://mvnrepository.com/artifact/javax.el/javax.el-api -->
     <dependency>

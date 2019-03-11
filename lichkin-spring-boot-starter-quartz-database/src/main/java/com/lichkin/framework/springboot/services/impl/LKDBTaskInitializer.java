@@ -1,35 +1,28 @@
-package com.lichkin.framework.springboot.configurations;
+package com.lichkin.framework.springboot.services.impl;
 
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.quartz.Scheduler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Service;
 
 import com.lichkin.framework.db.beans.QuerySQL;
 import com.lichkin.framework.db.beans.SysConfigQuartzR;
 import com.lichkin.framework.defines.LKConfigStatics;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
-import com.lichkin.framework.springboot.applications.LKTaskDBRunner;
+import com.lichkin.framework.springboot.beans.LKJob;
+import com.lichkin.framework.springboot.services.LKTaskInitializer;
 import com.lichkin.springframework.entities.impl.SysConfigQuartzEntity;
+import com.lichkin.springframework.services.LKDBService;
 
-@Configuration
-@Order(value = 1000)
-public class LKTaskRunner4SysConfigQuartz extends LKTaskDBRunner {
-
-	@Autowired
-	private Scheduler scheduler;
-
+/**
+ * 定时任务初始化器
+ * @author SuZhou LichKin Information Technology Co., Ltd.
+ */
+@Service
+public class LKDBTaskInitializer extends LKDBService implements LKTaskInitializer {
 
 	@Override
-	protected void doTask() {
-		if (logger.isInfoEnabled()) {
-			logger.info("►►►►►►►►►►►►►►►►►►LKTaskRunner4SysConfigQuartz◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄");
-		}
-		LKQuartzManager.getInstance().initScheduler(scheduler);
-
+	public void init(List<LKJob> listJob) {
 		// 加载配置信息
 		if (logger.isInfoEnabled()) {
 			logger.info("load configs from T_SYS_CONFIG_QUARTZ.");
@@ -45,22 +38,17 @@ public class LKTaskRunner4SysConfigQuartz extends LKTaskDBRunner {
 
 		final List<SysConfigQuartzEntity> list = dao.getList(sql, SysConfigQuartzEntity.class);
 
-		if (CollectionUtils.isEmpty(list)) {
-			logger.warn("no configs configed in T_SYS_CONFIG_QUARTZ.");
-		} else {
-			if (logger.isInfoEnabled()) {
-				logger.info("loaded configs from T_SYS_CONFIG_QUARTZ.");
-			}
+		if (CollectionUtils.isNotEmpty(list)) {
 			for (final SysConfigQuartzEntity quartz : list) {
 				boolean simple = false;
 				if (LKConfigStatics.SYSTEM_DEBUG || quartz.getCronExpression().endsWith("once")) {
 					simple = true;
 				}
-				LKQuartzManager.getInstance().scheduleJob(simple, quartz.getGroupName(), quartz.getJobName(), quartz.getClassName(), quartz.getMethodName(), quartz.getCronExpression(), null);
+				listJob.add(new LKJob(simple, quartz.getGroupName(), quartz.getJobName(), quartz.getClassName(), quartz.getMethodName(), quartz.getCronExpression(), null));
 			}
 		}
 
-		LKQuartzManager.getInstance().start();
+		// 加载配置信息完成
 		if (logger.isInfoEnabled()) {
 			logger.info("load configs from T_SYS_CONFIG_QUARTZ finished.");
 		}
