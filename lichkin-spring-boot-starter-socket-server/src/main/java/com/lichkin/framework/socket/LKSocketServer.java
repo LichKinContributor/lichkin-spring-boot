@@ -78,8 +78,8 @@ public class LKSocketServer {
 		clientPool.put(client.getId(), client);
 
 		// 输出日志
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info("当前客户端连接数：【" + clientPool.size() + "】");
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("当前客户端连接数：【" + clientPool.size() + "】");
 		}
 	}
 
@@ -93,8 +93,8 @@ public class LKSocketServer {
 		clientPool.remove(clientId);
 
 		// 输出日志
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info("当前客户端连接数：【" + clientPool.size() + "】");
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("当前客户端连接数：【" + clientPool.size() + "】");
 		}
 	}
 

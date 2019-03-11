@@ -38,8 +38,8 @@ public abstract class LKSocketClient extends LKService implements Runnable {
 
 	@Override
 	public void run() {
-		if (logger.isInfoEnabled()) {
-			logger.info("客户端【" + id + "】【" + socket.getRemoteSocketAddress() + "】。 " + "连接");
+		if (logger.isDebugEnabled()) {
+			logger.debug("客户端【" + id + "】【" + socket.getRemoteSocketAddress() + "】。 " + "连接");
 		}
 
 		if ((socket == null) || socket.isClosed()) {
@@ -88,8 +88,8 @@ public abstract class LKSocketClient extends LKService implements Runnable {
 		} catch (Exception e) {
 			logger.error(e);// 读取出错，记录日志，走finally停程序。
 		} finally {
-			if (logger.isInfoEnabled()) {
-				logger.info("客户端【" + id + "】【" + socket.getRemoteSocketAddress() + "】。 " + "关闭");
+			if (logger.isDebugEnabled()) {
+				logger.debug("客户端【" + id + "】【" + socket.getRemoteSocketAddress() + "】。 " + "关闭");
 			}
 
 			// 停止客户端线程
