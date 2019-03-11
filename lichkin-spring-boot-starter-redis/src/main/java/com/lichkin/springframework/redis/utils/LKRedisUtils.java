@@ -38,7 +38,11 @@ public class LKRedisUtils {
 	public static <T> T get(RedisTemplate<String, Object> redisTemplate, String key, T defaultValue) {
 		Object obj = redisTemplate.opsForValue().get(key);
 		if (obj == null) {
-			return set(redisTemplate, key, defaultValue);
+			if (defaultValue == null) {
+				return null;
+			} else {
+				return set(redisTemplate, key, defaultValue);
+			}
 		}
 		return (T) obj;
 	}
@@ -72,7 +76,11 @@ public class LKRedisUtils {
 	public static <T> T get(RedisTemplate<String, Object> redisTemplate, String redisKey, String mapKey, T defaultValue) {
 		Object obj = redisTemplate.opsForHash().get(redisKey, mapKey);
 		if (obj == null) {
-			return set(redisTemplate, redisKey, mapKey, defaultValue);
+			if (defaultValue == null) {
+				return null;
+			} else {
+				return set(redisTemplate, redisKey, mapKey, defaultValue);
+			}
 		}
 		return (T) obj;
 	}
