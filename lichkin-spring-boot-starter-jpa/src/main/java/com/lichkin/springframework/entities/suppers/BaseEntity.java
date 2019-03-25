@@ -7,8 +7,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
-import com.lichkin.framework.defines.annotations.FieldGenerator;
-import com.lichkin.framework.defines.annotations.InsertType;
 import com.lichkin.framework.defines.entities.I_Base;
 import com.lichkin.framework.defines.enums.impl.LKUsingStatusEnum;
 
@@ -30,12 +28,10 @@ public abstract class BaseEntity extends IDEntity implements I_Base {
 
 	/** 在用状态（枚举） */
 	@Enumerated(EnumType.STRING)
-	@FieldGenerator(resultColumn = true, updateable = false, insertType = InsertType.DEFAULT_RETAIN, queryCondition = true)
 	@Column(length = 10, nullable = false)
 	private LKUsingStatusEnum usingStatus;
 
 	/** 新增操作时间（yyyyMMddHHmmssSSS） */
-	@FieldGenerator(resultColumn = true, updateable = false, insertType = InsertType.DEFAULT_RETAIN)
 	@Column(length = 17, nullable = false, updatable = false)
 	private String insertTime;
 

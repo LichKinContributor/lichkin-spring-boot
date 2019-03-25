@@ -6,7 +6,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
-import com.lichkin.framework.defines.annotations.FieldGenerator;
 import com.lichkin.framework.defines.entities.I_LoginId;
 import com.lichkin.framework.defines.enums.impl.LKOperTypeEnum;
 
@@ -27,7 +26,6 @@ public abstract class OperLogEntity extends IDEntity implements I_LoginId {
 
 	/** 操作类型（枚举） */
 	@Enumerated(EnumType.STRING)
-	@FieldGenerator(queryCondition = true, resultColumn = true)
 	@Column(length = 6, nullable = false)
 	private LKOperTypeEnum operType;
 
@@ -36,17 +34,14 @@ public abstract class OperLogEntity extends IDEntity implements I_LoginId {
 	private String loginId;
 
 	/** 请求ID */
-	@FieldGenerator(resultColumn = true)
 	@Column(length = 64, nullable = false)
 	private String requestId;
 
 	/** 请求时间（yyyyMMddHHmmssSSS） */
-	@FieldGenerator(resultColumn = true)
 	@Column(length = 17, nullable = false)
 	private String requestTime;
 
 	/** 请求IP */
-	@FieldGenerator(resultColumn = true)
 	@Column(length = 64, nullable = false)
 	private String requestIp;
 
