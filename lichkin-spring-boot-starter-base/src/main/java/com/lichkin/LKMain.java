@@ -35,6 +35,8 @@ import com.lichkin.framework.utils.LKStringUtils;
 @SpringBootApplication // 自动配置
 public class LKMain {
 
+	private static final String PROFILES_ACTIVE = "--spring.profiles.active=";
+
 	private static final String DEFAULT_LOCALE = "--lichkin.locale.default=";
 
 	private static final String IMPLEMENTED_LOCALE_ARR = "--lichkin.locale.implemented=";
@@ -50,6 +52,8 @@ public class LKMain {
 	private static final String WEB_COMPRESS = "--lichkin.web.compress=";
 
 	private static final String WEB_ADMIN_DEBUG = "--lichkin.web.admin.debug=";
+
+	private static final String WEB_SERVER_PORT = "--server.port=";
 
 	private static final String WEB_CONTEXT_PATH = "--server.servlet.context-path=";
 
@@ -75,6 +79,7 @@ public class LKMain {
 		LOGGER.warn("systemId[%s] -> main args before analyze. %s", SYSTEM_ID, ArrayUtils.toString(args));
 
 		// 默认配置属性
+		String profilesActive = LKConfigStatics.PROFILES_ACTIVE;
 		String logTag = VALUE_LOG_TAG;
 		String logLevelSystem = VALUE_LOG_LEVEL_SYSTEM;
 		String logLevelOrg = VALUE_LOG_LEVEL_ORG;
@@ -88,6 +93,7 @@ public class LKMain {
 		String webDebug = String.valueOf(LKConfigStatics.WEB_DEBUG);
 		String webCompress = String.valueOf(LKConfigStatics.WEB_COMPRESS);
 		String webContextPath = String.valueOf(LKConfigStatics.WEB_CONTEXT_PATH);
+		String webServerPort = String.valueOf(LKConfigStatics.WEB_SERVER_PORT);
 		String webAdminDebug = String.valueOf(LKConfigStatics.WEB_ADMIN_DEBUG);
 		String socketServerConfigIdx = String.valueOf(LKConfigStatics.SOCKET_SERVER_CONFIG_IDX);
 
@@ -95,7 +101,11 @@ public class LKMain {
 			// 遍历主参数
 			for (int i = args.length - 1; i >= 0; i--) {
 				final String arg = args[i];
-				if (StringUtils.startsWith(arg, MAIN_ARG_LOG_TAG)) {
+				if (StringUtils.startsWith(arg, PROFILES_ACTIVE)) {
+					profilesActive = arg.substring(PROFILES_ACTIVE.length());
+
+					args = ArrayUtils.remove(args, i);
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_LOG_TAG)) {
 					logTag = arg.substring(MAIN_ARG_LOG_TAG.length());
 
 					args = ArrayUtils.remove(args, i);
@@ -178,6 +188,12 @@ public class LKMain {
 					webContextPath = LKStringUtils.toStandardPath(LKConfigStatics.WEB_CONTEXT_PATH);
 
 					args = ArrayUtils.remove(args, i);
+				} else if (StringUtils.startsWith(arg, WEB_SERVER_PORT)) {
+					LKConfigStatics.WEB_SERVER_PORT = arg.substring(WEB_SERVER_PORT.length());
+
+					webServerPort = LKConfigStatics.WEB_SERVER_PORT;
+
+					args = ArrayUtils.remove(args, i);
 				} else if (StringUtils.startsWith(arg, WEB_ADMIN_DEBUG)) {
 					LKConfigStatics.WEB_ADMIN_DEBUG = Boolean.parseBoolean(arg.substring(WEB_ADMIN_DEBUG.length()));
 
@@ -195,6 +211,7 @@ public class LKMain {
 		}
 
 		// 重构MainArgs
+		args = ArrayUtils.add(args, PROFILES_ACTIVE + profilesActive);
 		args = ArrayUtils.add(args, MAIN_ARG_LOG_TAG + logTag);
 		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_SYSTEM + logLevelSystem);
 		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_ORG + logLevelOrg);
@@ -206,12 +223,44 @@ public class LKMain {
 		args = ArrayUtils.add(args, SYSTEM_NAME + systemName);
 		args = ArrayUtils.add(args, SYSTEM_DEBUG + systemDebug);
 
+		// ADMIN项目特有参数
+		if (ClassUtils.isPresent("com.lichkin.application.services.extend.impl.XAdminLoginService", null)) {
+			args = ArrayUtils.add(args, WEB_ADMIN_DEBUG + webAdminDebug);
+
+			if (webContextPath.equals("")) {
+				webContextPath = "/ADMIN";
+			}
+			if (webServerPort.equals("33333")) {
+				webServerPort = "18888";
+			}
+		}
+
+		// EMPLOYEE项目特有参数
+		if (ClassUtils.isPresent("com.lichkin.application.services.extend.impl.XEmployeeLoginService", null)) {
+			if (webContextPath.equals("")) {
+				webContextPath = "/EMPLOYEE";
+			}
+			if (webServerPort.equals("33333")) {
+				webServerPort = "28888";
+			}
+		}
+
+		// USER项目特有参数
+		if (ClassUtils.isPresent("com.lichkin.application.services.extend.impl.XUserLoginService", null)) {
+			if (webContextPath.equals("")) {
+				webContextPath = "/USER";
+			}
+			if (webServerPort.equals("33333")) {
+				webServerPort = "38888";
+			}
+		}
+
 		// WEB项目特有参数
 		if (ClassUtils.isPresent("org.springframework.web.context.ConfigurableWebApplicationContext", null)) {
 			args = ArrayUtils.add(args, WEB_DEBUG + webDebug);
 			args = ArrayUtils.add(args, WEB_COMPRESS + webCompress);
 			args = ArrayUtils.add(args, WEB_CONTEXT_PATH + webContextPath);
-			args = ArrayUtils.add(args, WEB_ADMIN_DEBUG + webAdminDebug);
+			args = ArrayUtils.add(args, WEB_SERVER_PORT + webServerPort);
 		}
 
 		// Socket服务端项目特有参数
