@@ -12,7 +12,9 @@ import static com.lichkin.framework.log.log4j2.LKLog4j2Log.VALUE_LOG_LEVEL_SYSTE
 import static com.lichkin.framework.log.log4j2.LKLog4j2Log.VALUE_LOG_TAG;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,29 +37,29 @@ import com.lichkin.framework.utils.LKStringUtils;
 @SpringBootApplication // 自动配置
 public class LKMain {
 
-	private static final String PROFILES_ACTIVE = "--spring.profiles.active=";
+	private static final String MAIN_ARG_PROFILES_ACTIVE = "--spring.profiles.active=";
 
-	private static final String DEFAULT_LOCALE = "--lichkin.locale.default=";
+	private static final String MAIN_ARG_DEFAULT_LOCALE = "--lichkin.locale.default=";
 
-	private static final String IMPLEMENTED_LOCALE_ARR = "--lichkin.locale.implemented=";
+	private static final String MAIN_ARG_IMPLEMENTED_LOCALE_ARR = "--lichkin.locale.implemented=";
 
-	private static final String SYSTEM_TAG = "--lichkin.system.tag=";
+	private static final String MAIN_ARG_SYSTEM_DEBUG = "--lichkin.system.debug=";
 
-	private static final String SYSTEM_NAME = "--lichkin.system.name=";
+	private static final String MAIN_ARG_SYSTEM_TAG = "--lichkin.system.tag=";
 
-	private static final String SYSTEM_DEBUG = "--lichkin.system.debug=";
+	private static final String MAIN_ARG_SYSTEM_NAME = "--lichkin.system.name=";
 
-	private static final String WEB_DEBUG = "--lichkin.web.debug=";
+	private static final String MAIN_ARG_WEB_DEBUG = "--lichkin.web.debug=";
 
-	private static final String WEB_COMPRESS = "--lichkin.web.compress=";
+	private static final String MAIN_ARG_WEB_COMPRESS = "--lichkin.web.compress=";
 
-	private static final String WEB_ADMIN_DEBUG = "--lichkin.web.admin.debug=";
+	private static final String MAIN_ARG_WEB_CONTEXT_PATH = "--server.servlet.context-path=";
 
-	private static final String WEB_SERVER_PORT = "--server.port=";
+	private static final String MAIN_ARG_WEB_SERVER_PORT = "--server.port=";
 
-	private static final String WEB_CONTEXT_PATH = "--server.servlet.context-path=";
+	private static final String MAIN_ARG_WEB_ADMIN_DEBUG = "--lichkin.web.admin.debug=";
 
-	private static final String SOCKET_SERVER_CONFIG_IDX = "--socket.server.config.idx=";
+	private static final String MAIN_ARG_SOCKET_SERVER_CONFIG_IDX = "--socket.server.config.idx=";
 
 	static {
 		LKLog4j2Initializer.init();
@@ -69,6 +71,65 @@ public class LKMain {
 	/** 系统ID */
 	public static final String SYSTEM_ID = LKRandomUtils.create(32);
 
+	/** 配置项 */
+	private static final Map<String, String> configs = new HashMap<>();
+
+	static {
+		// 激活配置
+		configs.put(MAIN_ARG_PROFILES_ACTIVE, LKConfigStatics.PROFILES_ACTIVE);
+		// 日志配置
+		configs.put(MAIN_ARG_LOG_TAG, VALUE_LOG_TAG);
+		configs.put(MAIN_ARG_LOG_LEVEL_SYSTEM, VALUE_LOG_LEVEL_SYSTEM);
+		configs.put(MAIN_ARG_LOG_LEVEL_ORG, VALUE_LOG_LEVEL_ORG);
+		configs.put(MAIN_ARG_LOG_LEVEL_NET, VALUE_LOG_LEVEL_NET);
+		configs.put(MAIN_ARG_LOG_LEVEL_IO, VALUE_LOG_LEVEL_IO);
+		// 国际化配置
+		configs.put(MAIN_ARG_DEFAULT_LOCALE, LKConfigStatics.DEFAULT_LOCALE.toString());
+		configs.put(MAIN_ARG_IMPLEMENTED_LOCALE_ARR, LKArrayUtils.toString(LKConfigStatics.IMPLEMENTED_LOCALE_ARR));
+		// 系统配置
+		configs.put(MAIN_ARG_SYSTEM_TAG, LKConfigStatics.SYSTEM_TAG);
+		configs.put(MAIN_ARG_SYSTEM_NAME, LKConfigStatics.SYSTEM_NAME);
+		configs.put(MAIN_ARG_SYSTEM_DEBUG, String.valueOf(LKConfigStatics.SYSTEM_DEBUG));
+		// WEB项目配置
+		configs.put(MAIN_ARG_WEB_DEBUG, String.valueOf(LKConfigStatics.WEB_DEBUG));
+		configs.put(MAIN_ARG_WEB_COMPRESS, String.valueOf(LKConfigStatics.WEB_COMPRESS));
+		configs.put(MAIN_ARG_WEB_CONTEXT_PATH, LKConfigStatics.WEB_CONTEXT_PATH);
+		configs.put(MAIN_ARG_WEB_SERVER_PORT, LKConfigStatics.WEB_SERVER_PORT);
+		// ADMIN项目配置
+		configs.put(MAIN_ARG_WEB_ADMIN_DEBUG, String.valueOf(LKConfigStatics.WEB_ADMIN_DEBUG));
+		// Socket项目配置
+		configs.put(MAIN_ARG_SOCKET_SERVER_CONFIG_IDX, String.valueOf(LKConfigStatics.SOCKET_SERVER_CONFIG_IDX));
+	}
+
+
+	/**
+	 * 激活配置
+	 * @param profile 配置
+	 */
+	private static void activeProfile(String profile) {
+		switch (profile) {
+			case "production":// 生产环境
+				configs.put(MAIN_ARG_LOG_LEVEL_SYSTEM, "info");
+				configs.put(MAIN_ARG_LOG_LEVEL_ORG, "warn");
+				configs.put(MAIN_ARG_LOG_LEVEL_NET, "warn");
+				configs.put(MAIN_ARG_LOG_LEVEL_IO, "warn");
+				configSystemDebug("false");
+				configWebDebug("false");
+				configWebCompress("true");
+				configWebAdminDebug("false");
+			break;
+			case "integration":// 集成环境
+				configSystemDebug("false");
+				configWebDebug("false");
+				configWebCompress("true");
+			break;
+			case "development":// 开发环境
+			break;
+			default:// 其它环境
+			break;
+		}
+	}
+
 
 	/**
 	 * 主函数
@@ -78,206 +139,271 @@ public class LKMain {
 	public static void main(String[] args) throws IOException {
 		LOGGER.warn("systemId[%s] -> main args before analyze. %s", SYSTEM_ID, ArrayUtils.toString(args));
 
-		// 默认配置属性
-		String profilesActive = LKConfigStatics.PROFILES_ACTIVE;
-		String logTag = VALUE_LOG_TAG;
-		String logLevelSystem = VALUE_LOG_LEVEL_SYSTEM;
-		String logLevelOrg = VALUE_LOG_LEVEL_ORG;
-		String logLevelNet = VALUE_LOG_LEVEL_NET;
-		String logLevelIo = VALUE_LOG_LEVEL_IO;
-		String defaultLocale = LKConfigStatics.DEFAULT_LOCALE.toString();
-		String implementedLocaleArr = LKArrayUtils.toString(LKConfigStatics.IMPLEMENTED_LOCALE_ARR);
-		String systemTag = LKConfigStatics.SYSTEM_TAG;
-		String systemName = LKConfigStatics.SYSTEM_NAME;
-		String systemDebug = String.valueOf(LKConfigStatics.SYSTEM_DEBUG);
-		String webDebug = String.valueOf(LKConfigStatics.WEB_DEBUG);
-		String webCompress = String.valueOf(LKConfigStatics.WEB_COMPRESS);
-		String webContextPath = String.valueOf(LKConfigStatics.WEB_CONTEXT_PATH);
-		String webServerPort = String.valueOf(LKConfigStatics.WEB_SERVER_PORT);
-		String webAdminDebug = String.valueOf(LKConfigStatics.WEB_ADMIN_DEBUG);
-		String socketServerConfigIdx = String.valueOf(LKConfigStatics.SOCKET_SERVER_CONFIG_IDX);
+		// 激活配置
+		for (String arg : args) {
+			if (StringUtils.startsWith(arg, MAIN_ARG_PROFILES_ACTIVE)) {
+				String[] profiles = arg.substring(MAIN_ARG_PROFILES_ACTIVE.length()).split(",");
+				for (String profile : profiles) {
+					activeProfile(profile);
+				}
+				break;
+			}
+		}
 
+		// 默认配置属性
 		if (ArrayUtils.isNotEmpty(args)) {
 			// 遍历主参数
 			for (int i = args.length - 1; i >= 0; i--) {
 				final String arg = args[i];
-				if (StringUtils.startsWith(arg, PROFILES_ACTIVE)) {
-					profilesActive = arg.substring(PROFILES_ACTIVE.length());
-
-					args = ArrayUtils.remove(args, i);
+				if (StringUtils.startsWith(arg, MAIN_ARG_PROFILES_ACTIVE)) {
+					configs.put(MAIN_ARG_PROFILES_ACTIVE, arg.substring(MAIN_ARG_PROFILES_ACTIVE.length()));
 				} else if (StringUtils.startsWith(arg, MAIN_ARG_LOG_TAG)) {
-					logTag = arg.substring(MAIN_ARG_LOG_TAG.length());
-
-					args = ArrayUtils.remove(args, i);
+					configs.put(MAIN_ARG_LOG_TAG, arg.substring(MAIN_ARG_LOG_TAG.length()));
 				} else if (StringUtils.startsWith(arg, MAIN_ARG_LOG_LEVEL_SYSTEM)) {
-					logLevelSystem = arg.substring(MAIN_ARG_LOG_LEVEL_SYSTEM.length());
-
-					args = ArrayUtils.remove(args, i);
+					configs.put(MAIN_ARG_LOG_LEVEL_SYSTEM, arg.substring(MAIN_ARG_LOG_LEVEL_SYSTEM.length()));
 				} else if (StringUtils.startsWith(arg, MAIN_ARG_LOG_LEVEL_ORG)) {
-					logLevelOrg = arg.substring(MAIN_ARG_LOG_LEVEL_ORG.length());
-
-					args = ArrayUtils.remove(args, i);
+					configs.put(MAIN_ARG_LOG_LEVEL_ORG, arg.substring(MAIN_ARG_LOG_LEVEL_ORG.length()));
 				} else if (StringUtils.startsWith(arg, MAIN_ARG_LOG_LEVEL_NET)) {
-					logLevelNet = arg.substring(MAIN_ARG_LOG_LEVEL_NET.length());
-
-					args = ArrayUtils.remove(args, i);
+					configs.put(MAIN_ARG_LOG_LEVEL_NET, arg.substring(MAIN_ARG_LOG_LEVEL_NET.length()));
 				} else if (StringUtils.startsWith(arg, MAIN_ARG_LOG_LEVEL_IO)) {
-					logLevelIo = arg.substring(MAIN_ARG_LOG_LEVEL_IO.length());
-
-					args = ArrayUtils.remove(args, i);
-				} else if (StringUtils.startsWith(arg, DEFAULT_LOCALE)) {
-					String[] strs = arg.substring(DEFAULT_LOCALE.length()).split("_");
-					if (strs.length == 1) {
-						LKConfigStatics.DEFAULT_LOCALE = new Locale(strs[0]);
-					} else {
-						LKConfigStatics.DEFAULT_LOCALE = new Locale(strs[0], strs[1]);
-					}
-
-					defaultLocale = LKConfigStatics.DEFAULT_LOCALE.toString();
-
-					args = ArrayUtils.remove(args, i);
-				} else if (StringUtils.startsWith(arg, IMPLEMENTED_LOCALE_ARR)) {
-					String[] impls = arg.substring(IMPLEMENTED_LOCALE_ARR.length()).split(",");
-					Locale[] locales = new Locale[impls.length];
-					for (int j = 0; j < impls.length; j++) {
-						String[] strs = impls[j].split("_");
-						if (strs.length == 1) {
-							locales[j] = new Locale(strs[0]);
-						} else {
-							locales[j] = new Locale(strs[0], strs[1]);
-						}
-					}
-					LKConfigStatics.IMPLEMENTED_LOCALE_ARR = locales;
-
-					implementedLocaleArr = LKArrayUtils.toString(LKConfigStatics.IMPLEMENTED_LOCALE_ARR);
-
-					args = ArrayUtils.remove(args, i);
-				} else if (StringUtils.startsWith(arg, SYSTEM_TAG)) {
-					LKConfigStatics.SYSTEM_TAG = arg.substring(SYSTEM_TAG.length());
-
-					systemTag = LKConfigStatics.SYSTEM_TAG;
-
-					args = ArrayUtils.remove(args, i);
-				} else if (StringUtils.startsWith(arg, SYSTEM_NAME)) {
-					LKConfigStatics.SYSTEM_NAME = arg.substring(SYSTEM_NAME.length());
-
-					systemName = LKConfigStatics.SYSTEM_NAME;
-
-					args = ArrayUtils.remove(args, i);
-				} else if (StringUtils.startsWith(arg, SYSTEM_DEBUG)) {
-					LKConfigStatics.SYSTEM_DEBUG = Boolean.parseBoolean(arg.substring(SYSTEM_DEBUG.length()));
-
-					systemDebug = String.valueOf(LKConfigStatics.SYSTEM_DEBUG);
-
-					args = ArrayUtils.remove(args, i);
-				} else if (StringUtils.startsWith(arg, WEB_DEBUG)) {
-					LKConfigStatics.WEB_DEBUG = Boolean.parseBoolean(arg.substring(WEB_DEBUG.length()));
-
-					webDebug = String.valueOf(LKConfigStatics.WEB_DEBUG);
-
-					args = ArrayUtils.remove(args, i);
-				} else if (StringUtils.startsWith(arg, WEB_COMPRESS)) {
-					LKConfigStatics.WEB_COMPRESS = Boolean.parseBoolean(arg.substring(WEB_COMPRESS.length()));
-
-					webCompress = String.valueOf(LKConfigStatics.WEB_COMPRESS);
-
-					args = ArrayUtils.remove(args, i);
-				} else if (StringUtils.startsWith(arg, WEB_CONTEXT_PATH)) {
-					LKConfigStatics.WEB_CONTEXT_PATH = arg.substring(WEB_CONTEXT_PATH.length());
-
-					webContextPath = LKStringUtils.toStandardPath(LKConfigStatics.WEB_CONTEXT_PATH);
-
-					args = ArrayUtils.remove(args, i);
-				} else if (StringUtils.startsWith(arg, WEB_SERVER_PORT)) {
-					LKConfigStatics.WEB_SERVER_PORT = arg.substring(WEB_SERVER_PORT.length());
-
-					webServerPort = LKConfigStatics.WEB_SERVER_PORT;
-
-					args = ArrayUtils.remove(args, i);
-				} else if (StringUtils.startsWith(arg, WEB_ADMIN_DEBUG)) {
-					LKConfigStatics.WEB_ADMIN_DEBUG = Boolean.parseBoolean(arg.substring(WEB_ADMIN_DEBUG.length()));
-
-					webAdminDebug = String.valueOf(LKConfigStatics.WEB_ADMIN_DEBUG);
-
-					args = ArrayUtils.remove(args, i);
-				} else if (StringUtils.startsWith(arg, SOCKET_SERVER_CONFIG_IDX)) {
-					LKConfigStatics.SOCKET_SERVER_CONFIG_IDX = Integer.parseInt(arg.substring(SOCKET_SERVER_CONFIG_IDX.length()));
-
-					socketServerConfigIdx = String.valueOf(LKConfigStatics.SOCKET_SERVER_CONFIG_IDX);
-
-					args = ArrayUtils.remove(args, i);
+					configs.put(MAIN_ARG_LOG_LEVEL_IO, arg.substring(MAIN_ARG_LOG_LEVEL_IO.length()));
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_DEFAULT_LOCALE)) {
+					configDefaultLocale(arg.substring(MAIN_ARG_DEFAULT_LOCALE.length()));
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_IMPLEMENTED_LOCALE_ARR)) {
+					configImplementedLocaleArr(arg.substring(MAIN_ARG_IMPLEMENTED_LOCALE_ARR.length()));
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_SYSTEM_TAG)) {
+					configSystemTag(arg.substring(MAIN_ARG_SYSTEM_TAG.length()));
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_SYSTEM_NAME)) {
+					configSystemName(arg.substring(MAIN_ARG_SYSTEM_NAME.length()));
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_SYSTEM_DEBUG)) {
+					configSystemDebug(arg.substring(MAIN_ARG_SYSTEM_DEBUG.length()));
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_WEB_DEBUG)) {
+					configWebDebug(arg.substring(MAIN_ARG_WEB_DEBUG.length()));
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_WEB_COMPRESS)) {
+					configWebCompress(arg.substring(MAIN_ARG_WEB_COMPRESS.length()));
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_WEB_CONTEXT_PATH)) {
+					configWebContextPath(arg.substring(MAIN_ARG_WEB_CONTEXT_PATH.length()));
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_WEB_SERVER_PORT)) {
+					configWebServerPort(arg.substring(MAIN_ARG_WEB_SERVER_PORT.length()));
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_WEB_ADMIN_DEBUG)) {
+					configWebAdminDebug(arg.substring(MAIN_ARG_WEB_ADMIN_DEBUG.length()));
+				} else if (StringUtils.startsWith(arg, MAIN_ARG_SOCKET_SERVER_CONFIG_IDX)) {
+					configSocketServerConfigIdx(arg.substring(MAIN_ARG_SOCKET_SERVER_CONFIG_IDX.length()));
+				} else {
+					continue;
 				}
+				args = ArrayUtils.remove(args, i);
 			}
 		}
 
 		// 重构MainArgs
-		args = ArrayUtils.add(args, PROFILES_ACTIVE + profilesActive);
-		args = ArrayUtils.add(args, MAIN_ARG_LOG_TAG + logTag);
-		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_SYSTEM + logLevelSystem);
-		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_ORG + logLevelOrg);
-		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_NET + logLevelNet);
-		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_IO + logLevelNet);
-		args = ArrayUtils.add(args, DEFAULT_LOCALE + defaultLocale);
-		args = ArrayUtils.add(args, IMPLEMENTED_LOCALE_ARR + implementedLocaleArr);
-		args = ArrayUtils.add(args, SYSTEM_TAG + systemTag);
-		args = ArrayUtils.add(args, SYSTEM_NAME + systemName);
-		args = ArrayUtils.add(args, SYSTEM_DEBUG + systemDebug);
+		args = ArrayUtils.add(args, MAIN_ARG_PROFILES_ACTIVE + configs.get(MAIN_ARG_PROFILES_ACTIVE));
+		args = ArrayUtils.add(args, MAIN_ARG_LOG_TAG + configs.get(MAIN_ARG_LOG_TAG));
+		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_SYSTEM + configs.get(MAIN_ARG_LOG_LEVEL_SYSTEM));
+		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_ORG + configs.get(MAIN_ARG_LOG_LEVEL_ORG));
+		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_NET + configs.get(MAIN_ARG_LOG_LEVEL_NET));
+		args = ArrayUtils.add(args, MAIN_ARG_LOG_LEVEL_IO + configs.get(MAIN_ARG_LOG_LEVEL_IO));
+		args = ArrayUtils.add(args, MAIN_ARG_DEFAULT_LOCALE + configs.get(MAIN_ARG_DEFAULT_LOCALE));
+		args = ArrayUtils.add(args, MAIN_ARG_IMPLEMENTED_LOCALE_ARR + configs.get(MAIN_ARG_IMPLEMENTED_LOCALE_ARR));
+		args = ArrayUtils.add(args, MAIN_ARG_SYSTEM_TAG + configs.get(MAIN_ARG_SYSTEM_TAG));
+		args = ArrayUtils.add(args, MAIN_ARG_SYSTEM_NAME + configs.get(MAIN_ARG_SYSTEM_NAME));
+		args = ArrayUtils.add(args, MAIN_ARG_SYSTEM_DEBUG + configs.get(MAIN_ARG_SYSTEM_DEBUG));
+
+		String webContextPath = configs.get(MAIN_ARG_WEB_CONTEXT_PATH);
+		String webServerPort = configs.get(MAIN_ARG_WEB_SERVER_PORT);
 
 		// ADMIN项目特有参数
 		if (ClassUtils.isPresent("com.lichkin.application.services.extend.impl.XAdminLoginService", null)) {
-			args = ArrayUtils.add(args, WEB_ADMIN_DEBUG + webAdminDebug);
+			args = ArrayUtils.add(args, MAIN_ARG_WEB_ADMIN_DEBUG + configs.get(MAIN_ARG_WEB_ADMIN_DEBUG));
 
-			if (webContextPath.equals("")) {
-				webContextPath = "/ADMIN";
+			if (StringUtils.isBlank(webContextPath) || webContextPath.equals(LKConfigStatics.DEFAULT_VALUE_WEB_CONTEXT_PATH)) {
+				configs.put(MAIN_ARG_WEB_CONTEXT_PATH, "/ADMIN");
 			}
-			if (webServerPort.equals("33333")) {
-				webServerPort = "18888";
+			if (StringUtils.isBlank(webServerPort) || webServerPort.equals(LKConfigStatics.DEFAULT_VALUE_WEB_SERVER_PORT)) {
+				configs.put(MAIN_ARG_WEB_SERVER_PORT, "18888");
 			}
 		}
 
 		// EMPLOYEE项目特有参数
 		if (ClassUtils.isPresent("com.lichkin.application.services.extend.impl.XEmployeeLoginService", null)) {
-			if (webContextPath.equals("")) {
-				webContextPath = "/EMPLOYEE";
+			if (StringUtils.isBlank(webContextPath) || webContextPath.equals(LKConfigStatics.DEFAULT_VALUE_WEB_CONTEXT_PATH)) {
+				configs.put(MAIN_ARG_WEB_CONTEXT_PATH, "/EMPLOYEE");
 			}
-			if (webServerPort.equals("33333")) {
-				webServerPort = "28888";
+			if (StringUtils.isBlank(webServerPort) || webServerPort.equals(LKConfigStatics.DEFAULT_VALUE_WEB_SERVER_PORT)) {
+				configs.put(MAIN_ARG_WEB_SERVER_PORT, "28888");
 			}
 		}
 
 		// USER项目特有参数
 		if (ClassUtils.isPresent("com.lichkin.application.services.extend.impl.XUserLoginService", null)) {
-			if (webContextPath.equals("")) {
-				webContextPath = "/USER";
+			if (StringUtils.isBlank(webContextPath) || webContextPath.equals(LKConfigStatics.DEFAULT_VALUE_WEB_CONTEXT_PATH)) {
+				configs.put(MAIN_ARG_WEB_CONTEXT_PATH, "/USER");
 			}
-			if (webServerPort.equals("33333")) {
-				webServerPort = "38888";
+			if (StringUtils.isBlank(webServerPort) || webServerPort.equals(LKConfigStatics.DEFAULT_VALUE_WEB_SERVER_PORT)) {
+				configs.put(MAIN_ARG_WEB_SERVER_PORT, "38888");
 			}
 		}
 
 		// WEB项目特有参数
 		if (ClassUtils.isPresent("org.springframework.web.context.ConfigurableWebApplicationContext", null)) {
-			args = ArrayUtils.add(args, WEB_DEBUG + webDebug);
-			args = ArrayUtils.add(args, WEB_COMPRESS + webCompress);
-			args = ArrayUtils.add(args, WEB_CONTEXT_PATH + webContextPath);
-			args = ArrayUtils.add(args, WEB_SERVER_PORT + webServerPort);
+			args = ArrayUtils.add(args, MAIN_ARG_WEB_DEBUG + configs.get(MAIN_ARG_WEB_DEBUG));
+			args = ArrayUtils.add(args, MAIN_ARG_WEB_COMPRESS + configs.get(MAIN_ARG_WEB_COMPRESS));
+			args = ArrayUtils.add(args, MAIN_ARG_WEB_CONTEXT_PATH + configs.get(MAIN_ARG_WEB_CONTEXT_PATH));
+			args = ArrayUtils.add(args, MAIN_ARG_WEB_SERVER_PORT + configs.get(MAIN_ARG_WEB_SERVER_PORT));
 		}
 
 		// Socket服务端项目特有参数
 		if (ClassUtils.isPresent("com.lichkin.framework.socket.LKSocketServer", null)) {
-			args = ArrayUtils.add(args, SOCKET_SERVER_CONFIG_IDX + socketServerConfigIdx);
+			args = ArrayUtils.add(args, MAIN_ARG_SOCKET_SERVER_CONFIG_IDX + configs.get(MAIN_ARG_SOCKET_SERVER_CONFIG_IDX));
 		}
 
 		LOGGER.warn("systemId[%s] -> main args after analyzed. %s", SYSTEM_ID, ArrayUtils.toString(args));
 
 		// 配置log4j2的参数
-		LKLog4j2Initializer.setMainArguments(logTag, logLevelSystem, logLevelOrg, logLevelNet, logLevelIo);
+		LKLog4j2Initializer.setMainArguments(
+
+				configs.get(MAIN_ARG_LOG_TAG),
+
+				configs.get(MAIN_ARG_LOG_LEVEL_SYSTEM),
+
+				configs.get(MAIN_ARG_LOG_LEVEL_ORG),
+
+				configs.get(MAIN_ARG_LOG_LEVEL_NET),
+
+				configs.get(MAIN_ARG_LOG_LEVEL_IO)
+
+		);
 
 		// 创建应用
 		final SpringApplication app = new SpringApplication(LKMain.class);
 
 		// 启动应用
 		app.run(args);
+	}
+
+
+	private static Locale toLocale(String localeStr) {
+		String[] strs = localeStr.split("_");
+		switch (strs.length) {
+			case 1:
+				return new Locale(strs[0]);
+			case 2:
+				return new Locale(strs[0], strs[1]);
+			case 3:
+				return new Locale(strs[0], strs[1], strs[2]);
+			default:
+				return null;
+		}
+	}
+
+
+	private static void configDefaultLocale(String defaultLocale) {
+		if (StringUtils.isBlank(defaultLocale)) {
+			return;
+		}
+		Locale locale = toLocale(defaultLocale);
+		if (locale == null) {
+			return;
+		}
+		LKConfigStatics.DEFAULT_LOCALE = locale;
+		configs.put(MAIN_ARG_DEFAULT_LOCALE, locale.toString());
+	}
+
+
+	private static void configImplementedLocaleArr(String implementedLocaleArr) {
+		if (StringUtils.isBlank(implementedLocaleArr)) {
+			return;
+		}
+		String[] impls = implementedLocaleArr.split(",");
+		Locale[] locales = new Locale[impls.length];
+		for (int j = 0; j < impls.length; j++) {
+			Locale locale = toLocale(impls[j]);
+			locales[j] = locale == null ? LKConfigStatics.DEFAULT_LOCALE : locale;
+		}
+		LKConfigStatics.IMPLEMENTED_LOCALE_ARR = locales;
+		configs.put(MAIN_ARG_IMPLEMENTED_LOCALE_ARR, LKArrayUtils.toString(locales));
+	}
+
+
+	private static void configSystemDebug(String systemDebug) {
+		if (StringUtils.isBlank(systemDebug)) {
+			return;
+		}
+		LKConfigStatics.SYSTEM_DEBUG = Boolean.parseBoolean(systemDebug);
+		configs.put(MAIN_ARG_SYSTEM_DEBUG, systemDebug);
+	}
+
+
+	private static void configSystemTag(String systemTag) {
+		if (StringUtils.isBlank(systemTag)) {
+			return;
+		}
+		LKConfigStatics.SYSTEM_TAG = systemTag;
+		configs.put(MAIN_ARG_SYSTEM_TAG, systemTag);
+	}
+
+
+	private static void configSystemName(String systemName) {
+		if (StringUtils.isBlank(systemName)) {
+			return;
+		}
+		LKConfigStatics.SYSTEM_NAME = systemName;
+		configs.put(MAIN_ARG_SYSTEM_NAME, systemName);
+	}
+
+
+	private static void configWebDebug(String webDebug) {
+		if (StringUtils.isBlank(webDebug)) {
+			return;
+		}
+		LKConfigStatics.WEB_DEBUG = Boolean.parseBoolean(webDebug);
+		configs.put(MAIN_ARG_WEB_DEBUG, webDebug);
+	}
+
+
+	private static void configWebCompress(String webCompress) {
+		if (StringUtils.isBlank(webCompress)) {
+			return;
+		}
+		LKConfigStatics.WEB_COMPRESS = Boolean.parseBoolean(webCompress);
+		configs.put(MAIN_ARG_WEB_COMPRESS, webCompress);
+	}
+
+
+	private static void configWebContextPath(String webContextPath) {
+		if (StringUtils.isBlank(webContextPath)) {
+			return;
+		}
+		webContextPath = LKStringUtils.toStandardPath(webContextPath);
+		LKConfigStatics.WEB_CONTEXT_PATH = webContextPath;
+		configs.put(MAIN_ARG_WEB_CONTEXT_PATH, webContextPath);
+	}
+
+
+	private static void configWebServerPort(String webServerPort) {
+		if (StringUtils.isBlank(webServerPort)) {
+			return;
+		}
+		LKConfigStatics.WEB_SERVER_PORT = webServerPort;
+		configs.put(MAIN_ARG_WEB_SERVER_PORT, webServerPort);
+	}
+
+
+	private static void configWebAdminDebug(String webAdminDebug) {
+		if (StringUtils.isBlank(webAdminDebug)) {
+			return;
+		}
+		LKConfigStatics.WEB_ADMIN_DEBUG = Boolean.parseBoolean(webAdminDebug);
+		configs.put(MAIN_ARG_WEB_ADMIN_DEBUG, webAdminDebug);
+	}
+
+
+	private static void configSocketServerConfigIdx(String socketServerConfigIdx) {
+		if (StringUtils.isBlank(socketServerConfigIdx)) {
+			return;
+		}
+		LKConfigStatics.SOCKET_SERVER_CONFIG_IDX = Integer.parseInt(socketServerConfigIdx);
+		configs.put(MAIN_ARG_SOCKET_SERVER_CONFIG_IDX, socketServerConfigIdx);
 	}
 
 }
